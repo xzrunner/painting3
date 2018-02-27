@@ -4,6 +4,7 @@
 #include <rvg.h>
 #include <shaderlab/Blackboard.h>
 #include <shaderlab/ShaderMgr.h>
+#include <shaderlab/RenderContext.h>
 #include <shaderlab/Shape3Shader.h>
 
 namespace pt3
@@ -16,8 +17,8 @@ void PrimitiveDraw::Init()
 
 void PrimitiveDraw::SetColor(uint32_t abgr)
 {
-	sl::ShaderMgr* mgr = sl::Blackboard::Instance()->GetShaderMgr();
-	auto shader = static_cast<sl::Shape3Shader*>(mgr->GetShader(sl::SHAPE3));
+	auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
+	auto shader = static_cast<sl::Shape3Shader*>(shader_mgr.GetShader(sl::SHAPE3));
 	shader->SetColor(abgr);
 }
 
@@ -285,7 +286,7 @@ void PrimitiveDraw::Points(const std::vector<sm::vec3>& points)
 
 void PrimitiveDraw::SetShader(int shader_type)
 {
-	sl::Blackboard::Instance()->GetShaderMgr()->SetShader(
+	sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr().SetShader(
 		static_cast<sl::ShaderType>(shader_type));
 }
 
