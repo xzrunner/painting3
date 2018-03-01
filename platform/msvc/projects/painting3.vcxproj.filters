@@ -13,6 +13,9 @@
     <Filter Include="data\camera">
       <UniqueIdentifier>{001a8710-7ed5-43d2-80c2-6367986cfc77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ctx">
+      <UniqueIdentifier>{3269d8fd-8c20-4ec5-bd27-479b9e3978ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp">
@@ -23,6 +26,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Viewport.cpp">
       <Filter>data\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WndCtxStack.cpp">
+      <Filter>ctx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WindowContext.cpp">
+      <Filter>ctx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Viewport.h">
       <Filter>data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\WndCtxStack.h">
+      <Filter>ctx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\WindowContext.h">
+      <Filter>ctx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
