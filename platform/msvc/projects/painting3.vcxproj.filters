@@ -27,10 +27,10 @@
     <ClCompile Include="..\..\..\source\Viewport.cpp">
       <Filter>data\camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WndCtxStack.cpp">
+    <ClCompile Include="..\..\..\source\WindowContext.cpp">
       <Filter>ctx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WindowContext.cpp">
+    <ClCompile Include="..\..\..\source\Blackboard.cpp">
       <Filter>ctx</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,10 +50,10 @@
     <ClInclude Include="..\..\..\include\painting3\Viewport.h">
       <Filter>data\camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\WndCtxStack.h">
+    <ClInclude Include="..\..\..\include\painting3\WindowContext.h">
       <Filter>ctx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\WindowContext.h">
+    <ClInclude Include="..\..\..\include\painting3\Blackboard.h">
       <Filter>ctx</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,6 +19,11 @@ public:
 	void UpdateProjection() const;
 	void UpdateViewport() const;
 
+	void Bind() {
+		UpdateMVP();
+		UpdateViewport();
+	}
+
 	const sm::mat4& GetModelViewMat() const { return m_mv_mat; }
 
 private:

@@ -11,20 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\Blackboard.cpp" />
     <ClCompile Include="..\..\..\source\Camera.cpp" />
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp" />
     <ClCompile Include="..\..\..\source\Viewport.cpp" />
     <ClCompile Include="..\..\..\source\WindowContext.cpp" />
-    <ClCompile Include="..\..\..\source\WndCtxStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\AABB.h" />
+    <ClInclude Include="..\..\..\include\painting3\Blackboard.h" />
     <ClInclude Include="..\..\..\include\painting3\Camera.h" />
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h" />
     <ClInclude Include="..\..\..\include\painting3\Ray.h" />
     <ClInclude Include="..\..\..\include\painting3\Viewport.h" />
     <ClInclude Include="..\..\..\include\painting3\WindowContext.h" />
-    <ClInclude Include="..\..\..\include\painting3\WndCtxStack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl" />
