@@ -2,6 +2,7 @@
 
 #include <SM_Vector.h>
 #include <SM_Matrix.h>
+#include <SM_Cube.h>
 
 #include <vector>
 
@@ -25,12 +26,12 @@ public:
 
 	static void Cube(const AABB& aabb);
 	static void Cube(const sm::mat4& mat, const AABB& aabb);
-	static void Cube(const sm::vec3& min, const sm::vec3& max);
-	static void Cube(const sm::vec3& min, const sm::vec3& max, int texid);
+	static void Cube(const sm::cube& cube);
+	static void Cube(const sm::cube& cube, int texid);
 
 	static void Cross(const sm::vec3& center, const sm::vec3& size);
 
-	static void Grids(const sm::vec3& min, const sm::vec3& max, const sm::vec3& size);
+	static void Grids(const sm::cube& cube, const sm::vec3& size);
 
 	static void Points(const std::vector<sm::vec3>& points);
 

@@ -44,23 +44,22 @@ void PrimitiveDraw::Rect(const sm::vec3& p0, const sm::vec3& p1)
 
 void PrimitiveDraw::Cube(const AABB& aabb)
 {
-	PrimitiveDraw::Cube(aabb.Min(), aabb.Max());
+	PrimitiveDraw::Cube(aabb.Cube());
 }
 
 void PrimitiveDraw::Cube(const sm::mat4& mat, const AABB& aabb)
 {
-	const sm::vec3& min = aabb.Min();
-	const sm::vec3& max = aabb.Max();
-
+	auto min = aabb.Min();
+	auto max = aabb.Max();
 	sm::vec3 vertices[] = {
-		mat * min,
-		mat * sm::vec3(max.x, min.y, min.z),
-		mat * sm::vec3(max.x, max.y, min.z),
-		mat * sm::vec3(min.x, max.y, min.z),
-		mat * sm::vec3(min.x, min.y, max.z),
-		mat * sm::vec3(max.x, min.y, max.z),
-		mat * max,
-		mat * sm::vec3(min.x, max.y, max.z)
+		mat * sm::vec3(min[0], min[1], min[2]),
+		mat * sm::vec3(max[0], min[1], min[2]),
+		mat * sm::vec3(max[0], max[1], min[2]),
+		mat * sm::vec3(min[0], max[1], min[2]),
+		mat * sm::vec3(min[0], min[1], max[2]),
+		mat * sm::vec3(max[0], min[1], max[2]),
+		mat * sm::vec3(max[0], max[1], max[2]),
+		mat * sm::vec3(min[0], max[1], max[2])
 	};
 
 	// bottom
@@ -80,17 +79,19 @@ void PrimitiveDraw::Cube(const sm::mat4& mat, const AABB& aabb)
 	Line(vertices[3], vertices[7]);
 }
 
-void PrimitiveDraw::Cube(const sm::vec3& min, const sm::vec3& max)
+void PrimitiveDraw::Cube(const sm::cube& cube)
 {
+	auto& min = cube.min;
+	auto& max = cube.max;
 	sm::vec3 vertices[] = {
-		min,
-		sm::vec3(max.x, min.y, min.z),
-		sm::vec3(max.x, max.y, min.z),
-		sm::vec3(min.x, max.y, min.z),
-		sm::vec3(min.x, min.y, max.z),
-		sm::vec3(max.x, min.y, max.z),
-		max,
-		sm::vec3(min.x, max.y, max.z)
+		sm::vec3(min[0], min[1], min[2]),
+		sm::vec3(max[0], min[1], min[2]),
+		sm::vec3(max[0], max[1], min[2]),
+		sm::vec3(min[0], max[1], min[2]),
+		sm::vec3(min[0], min[1], max[2]),
+		sm::vec3(max[0], min[1], max[2]),
+		sm::vec3(max[0], max[1], max[2]),
+		sm::vec3(min[0], max[1], max[2])
 	};
 
 	// bottom
@@ -110,7 +111,7 @@ void PrimitiveDraw::Cube(const sm::vec3& min, const sm::vec3& max)
 	Line(vertices[3], vertices[7]);
 }
 
-void PrimitiveDraw::Cube(const sm::vec3& min, const sm::vec3& max, int texid)
+void PrimitiveDraw::Cube(const sm::cube& cube, int texid)
 {
 	//float vertices[2 * 6 * 3 * 3];
 	//int idx_vert = 0;
@@ -244,25 +245,25 @@ void PrimitiveDraw::Cross(const sm::vec3& center, const sm::vec3& size)
 	rvg_lines3(vertices, 6);
 }
 
-void PrimitiveDraw::Grids(const sm::vec3& min, const sm::vec3& max, const sm::vec3& size)
+void PrimitiveDraw::Grids(const sm::cube& cube, const sm::vec3& size)
 {
 	std::vector<sm::vec3> lines;
-	int cx = size.x ? static_cast<int>(ceil(max.x - min.x) / size.x) : 1;
-	int cy = size.y ? static_cast<int>(ceil(max.y - min.y) / size.y) : 1;
-	int cz = size.z ? static_cast<int>(ceil(max.z - min.z) / size.z) : 1;
+	int cx = size.x ? static_cast<int>(ceil(cube.Width())  / size.x) : 1;
+	int cy = size.y ? static_cast<int>(ceil(cube.Height()) / size.y) : 1;
+	int cz = size.z ? static_cast<int>(ceil(cube.Depth())  / size.z) : 1;
 	lines.reserve(cx * cy * cz * 2);
 
-	for (float z = min.z; z <= max.z; z += size.z) {
-		for (float x = min.y; x <= max.x; x += size.x) {
-			lines.push_back(sm::vec3(x, min.y, z));
-			lines.push_back(sm::vec3(x, max.y, z));
+	for (float z = cube.zmin; z <= cube.zmax; z += size.z) {
+		for (float x = cube.xmin; x <= cube.xmax; x += size.x) {
+			lines.push_back(sm::vec3(x, cube.ymin, z));
+			lines.push_back(sm::vec3(x, cube.ymax, z));
 			if (size.x == 0) {
 				break;
 			}
 		}
-		for (float y = min.y; y <= max.y; y += size.y) {
-			lines.push_back(sm::vec3(min.x, y, z));
-			lines.push_back(sm::vec3(max.x, y, z));
+		for (float y = cube.ymin; y <= cube.ymax; y += size.y) {
+			lines.push_back(sm::vec3(cube.xmin, y, z));
+			lines.push_back(sm::vec3(cube.xmax, y, z));
 			if (size.x == 0) {
 				break;
 			}
