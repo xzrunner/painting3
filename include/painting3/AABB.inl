@@ -4,15 +4,14 @@ namespace pt3
 {
 
 inline AABB::AABB()
-	: m_position(0, 0, 0)
 {
+	MakeEmpty();
 }
 
 inline AABB::AABB(const sm::cube& cube)
 	: m_cube(cube)
 	, m_position(0, 0, 0)
 { 
-	MakeEmpty(); 
 }
 
 inline void AABB::MakeEmpty() 
