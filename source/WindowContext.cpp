@@ -1,6 +1,5 @@
 #include "painting3/WindowContext.h"
 
-#include <shaderlab/SubjectMVP3.h>
 #include <shaderlab/Blackboard.h>
 #include <shaderlab/RenderContext.h>
 #include <unirender/RenderContext.h>
