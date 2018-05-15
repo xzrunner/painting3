@@ -25,6 +25,7 @@ public:
 	}
 
 	const sm::mat4& GetModelViewMat() const { return m_mv_mat; }
+	const sm::mat4& GetProjMat() const { return m_proj_mat; }
 
 private:
 	sm::mat4 m_mv_mat;
