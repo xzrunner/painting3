@@ -33,6 +33,9 @@
     <ClCompile Include="..\..\..\source\Blackboard.cpp">
       <Filter>ctx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\EffectsManager.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Blackboard.h">
       <Filter>ctx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\EffectsManager.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

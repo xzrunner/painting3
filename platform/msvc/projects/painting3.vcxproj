@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Blackboard.cpp" />
     <ClCompile Include="..\..\..\source\Camera.cpp" />
+    <ClCompile Include="..\..\..\source\EffectsManager.cpp" />
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp" />
     <ClCompile Include="..\..\..\source\Viewport.cpp" />
     <ClCompile Include="..\..\..\source\WindowContext.cpp" />
@@ -21,6 +22,7 @@
     <ClInclude Include="..\..\..\include\painting3\AABB.h" />
     <ClInclude Include="..\..\..\include\painting3\Blackboard.h" />
     <ClInclude Include="..\..\..\include\painting3\Camera.h" />
+    <ClInclude Include="..\..\..\include\painting3\EffectsManager.h" />
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h" />
     <ClInclude Include="..\..\..\include\painting3\Ray.h" />
     <ClInclude Include="..\..\..\include\painting3\Viewport.h" />
