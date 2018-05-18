@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SM_Cube.h>
+#include <SM_Matrix.h>
 
 namespace pt3
 {
@@ -14,6 +15,7 @@ public:
 	void MakeEmpty();
 
 	void Combine(const sm::vec3& pos);
+	void Combine(const sm::cube& cube, const sm::mat4& mat);
 
 	void Translate(const sm::vec3& offset);
 
