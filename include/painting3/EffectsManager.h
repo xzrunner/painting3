@@ -19,6 +19,7 @@ public:
 	{
 		EFFECT_DEFAULT = 0,
 		EFFECT_DEFAULT_NO_TEX,
+		EFFECT_SKINNED,
 
 		EFFECT_MAX_COUNT,
 	};
@@ -33,6 +34,8 @@ public:
 	void SetProjMat(EffectType effect, const sm::mat4& mat);
 	void SetModelViewMat(EffectType effect, const sm::mat4& mat);
 	void SetNormalMat(EffectType effect, const sm::mat4& mat);
+
+	void SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int n);
 
 private:
 	std::unique_ptr<ur::Shader> m_effects[EFFECT_MAX_COUNT];
