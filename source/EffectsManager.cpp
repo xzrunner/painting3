@@ -26,11 +26,11 @@ EffectsManager::EffectsManager()
 	skinned_layout.push_back(ur::VertexAttrib("blend_indices", 4, 1));
 	skinned_layout.push_back(ur::VertexAttrib("blend_weights", 4, 1));
 
-	m_effects[EFFECT_DEFAULT] = std::make_unique<ur::Shader>(
+	m_effects[EFFECT_DEFAULT] = ur::CreateShaderFromFile(
 		&rc, "shaders/default.vs", "shaders/default.fs", default_layout);
-	m_effects[EFFECT_DEFAULT_NO_TEX] = std::make_unique<ur::Shader>(
+	m_effects[EFFECT_DEFAULT_NO_TEX] = ur::CreateShaderFromFile(
 		&rc, "shaders/default.vs", "shaders/default_no_tex.fs", default_layout);
-	m_effects[EFFECT_SKINNED] = std::make_unique<ur::Shader>(
+	m_effects[EFFECT_SKINNED] = ur::CreateShaderFromFile(
 		&rc, "shaders/skinned.vs", "shaders/default.fs", skinned_layout);
 }
 
