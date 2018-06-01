@@ -15,6 +15,7 @@
     <ClCompile Include="..\..\..\source\Camera.cpp" />
     <ClCompile Include="..\..\..\source\EffectsManager.cpp" />
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp" />
+    <ClCompile Include="..\..\..\source\ViewFrustum.cpp" />
     <ClCompile Include="..\..\..\source\Viewport.cpp" />
     <ClCompile Include="..\..\..\source\WindowContext.cpp" />
   </ItemGroup>
@@ -25,6 +26,7 @@
     <ClInclude Include="..\..\..\include\painting3\EffectsManager.h" />
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h" />
     <ClInclude Include="..\..\..\include\painting3\Ray.h" />
+    <ClInclude Include="..\..\..\include\painting3\ViewFrustum.h" />
     <ClInclude Include="..\..\..\include\painting3\Viewport.h" />
     <ClInclude Include="..\..\..\include\painting3\WindowContext.h" />
   </ItemGroup>

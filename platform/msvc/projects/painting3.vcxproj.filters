@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\..\source\EffectsManager.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\ViewFrustum.cpp">
+      <Filter>data\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\EffectsManager.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\ViewFrustum.h">
+      <Filter>data\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
