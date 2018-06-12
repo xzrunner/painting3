@@ -19,6 +19,8 @@ public:
 	bool CubeFrustumTest(float x, float y, float z, float size) const;
 	bool SphereInFrustum(float x, float y, float z, float radius) const;
 
+	const auto& GetViewFrustum() const { return m_view_frustum; }
+
 private:
 	mutable float m_view_frustum[6][4];
 

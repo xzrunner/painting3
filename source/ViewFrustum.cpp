@@ -1,3 +1,5 @@
+// from "Focus On 3D Terrain Programming"
+
 #include "painting3/ViewFrustum.h"
 #include "painting3/Camera.h"
 
