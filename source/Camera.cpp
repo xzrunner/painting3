@@ -5,8 +5,8 @@
 namespace pt3
 {
 
-static const float ZNEAR  = 0.1f;
-static const float ZFAR   = 100;
+static const float ZNEAR  = 0.01f;
+static const float ZFAR   = 1000;
 static const float ASPECT = 90;
 
 Camera::Camera()
