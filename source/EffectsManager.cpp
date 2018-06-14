@@ -221,4 +221,9 @@ void EffectsManager::SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int
 	}
 }
 
+void EffectsManager::SetUserEffect(std::unique_ptr<ur::Shader>& user_et)
+{
+	m_effects[EFFECT_USER] = std::move(user_et);
+}
+
 }
