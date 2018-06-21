@@ -27,6 +27,8 @@ public:
 	const sm::mat4& GetModelViewMat() const { return m_mv_mat; }
 	const sm::mat4& GetProjMat() const { return m_proj_mat; }
 
+	sm::ivec2 GetScreenSize() { return sm::ivec2(m_screen_width, m_screen_height); }
+
 private:
 	sm::mat4 m_mv_mat;
 	sm::mat4 m_proj_mat;
