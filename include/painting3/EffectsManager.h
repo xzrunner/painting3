@@ -17,7 +17,9 @@ class EffectsManager
 public:
 	enum EffectType
 	{
-		EFFECT_DEFAULT = 0,
+		EFFECT_NULL = 0,
+
+		EFFECT_DEFAULT,
 		EFFECT_DEFAULT_NO_TEX,
 		EFFECT_SKINNED,
 
