@@ -157,11 +157,11 @@ EffectsManager::EffectsManager()
 	skinned_layout.push_back(ur::VertexAttrib("blend_weights", 4, 1));
 
 	std::vector<std::string> textures;
-	m_effects[EFFECT_DEFAULT] = std::make_unique<ur::Shader>(
+	m_effects[EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
 		&rc, default_vs, default_fs, textures, default_layout);
-	m_effects[EFFECT_DEFAULT_NO_TEX] = std::make_unique<ur::Shader>(
+	m_effects[EFFECT_DEFAULT_NO_TEX] = std::make_shared<ur::Shader>(
 		&rc, default_vs, no_tex_fs, textures, default_layout);
-	m_effects[EFFECT_SKINNED] = std::make_unique<ur::Shader>(
+	m_effects[EFFECT_SKINNED] = std::make_shared<ur::Shader>(
 		&rc, skinned_vs, default_fs, textures, skinned_layout);
 }
 
@@ -208,7 +208,6 @@ void EffectsManager::SetModelViewMat(EffectType effect, const sm::mat4& mat)
 
 void EffectsManager::SetNormalMat(EffectType effect, const sm::mat4& mat)
 {
-
 	if (effect < EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMat3("u_normal_matrix", sm::mat3(mat).x);
 	}
@@ -219,11 +218,6 @@ void EffectsManager::SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int
 	if (effect < EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMultiMat4("u_bone_matrix", &mat->x[0], n);
 	}
-}
-
-void EffectsManager::SetUserEffect(std::unique_ptr<ur::Shader>& user_et)
-{
-	m_effects[EFFECT_USER] = std::move(user_et);
 }
 
 }
