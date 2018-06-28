@@ -133,6 +133,38 @@ void main()
 
 )";
 
+const char* morph_vs = R"(
+
+attribute vec4 position;
+attribute vec3 normal;
+attribute vec2 texcoord;
+
+uniform mat4 u_projection;
+uniform mat4 u_modelview;
+
+varying vec2 v_texcoord;
+
+void main()
+{
+	gl_Position = u_projection * u_modelview * position;
+	v_texcoord = texcoord;
+}
+
+)";
+
+const char* morph_fs = R"(
+
+uniform sampler2D u_texture0;
+
+varying vec2 v_texcoord;
+
+void main()
+{
+	gl_FragColor = texture2D(u_texture0, v_texcoord);
+}
+
+)";
+
 }
 
 namespace pt3
@@ -163,6 +195,8 @@ EffectsManager::EffectsManager()
 		&rc, default_vs, no_tex_fs, textures, default_layout);
 	m_effects[EFFECT_SKINNED] = std::make_shared<ur::Shader>(
 		&rc, skinned_vs, default_fs, textures, skinned_layout);
+	m_effects[EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
+		&rc, morph_vs, morph_fs, textures, default_layout);
 }
 
 void EffectsManager::Use(EffectType effect)
