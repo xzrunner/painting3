@@ -7,6 +7,8 @@
 #include <unirender/Blackboard.h>
 #include <unirender/Shader.h>
 #include <unirender/VertexAttrib.h>
+#include <shaderlab/Blackboard.h>
+#include <shaderlab/RenderContext.h>
 
 namespace
 {
@@ -67,6 +69,9 @@ void EffectsManager::Use(EffectType effect)
 {
 	if (effect < EFFECT_MAX_COUNT) {
 		m_effects[effect]->Use();
+
+		auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
+		shader_mgr.SetShader(sl::EXTERN_SHADER);
 	}
 }
 
