@@ -42,6 +42,8 @@ public:
 
 	void SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int n);
 
+	void SetMorphAnimBlend(float blend);
+
 	void SetUserEffect(std::shared_ptr<ur::Shader>& user_et) {
 		m_effects[EFFECT_USER] = user_et;
 	}

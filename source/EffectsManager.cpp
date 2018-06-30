@@ -50,9 +50,11 @@ EffectsManager::EffectsManager()
 	skinned_layout.push_back(ur::VertexAttrib("blend_weights", 4, 1, 40, 36));
 
 	CU_VEC<ur::VertexAttrib> morph_layout;
-	morph_layout.push_back(ur::VertexAttrib("position", 3, 4, 24, 0));
-	morph_layout.push_back(ur::VertexAttrib("normal",   3, 4, 24, 12));
-	morph_layout.push_back(ur::VertexAttrib("texcoord", 2, 4, 0, 0));
+	morph_layout.push_back(ur::VertexAttrib("pose1_vert",   3, 4, 24, 0));
+	morph_layout.push_back(ur::VertexAttrib("pose1_normal", 3, 4, 24, 12));
+	morph_layout.push_back(ur::VertexAttrib("pose2_vert",   3, 4, 24, 0));
+	morph_layout.push_back(ur::VertexAttrib("pose2_normal", 3, 4, 24, 12));
+	morph_layout.push_back(ur::VertexAttrib("texcoord",     2, 4, 0, 0));
 
 	std::vector<std::string> textures;
 	m_effects[EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
@@ -121,6 +123,11 @@ void EffectsManager::SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int
 	if (effect < EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMultiMat4("u_bone_matrix", &mat->x[0], n);
 	}
+}
+
+void EffectsManager::SetMorphAnimBlend(float blend)
+{
+	m_effects[EFFECT_MORPH_TARGET]->SetFloat("u_blend", blend);
 }
 
 }
