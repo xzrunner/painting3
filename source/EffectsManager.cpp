@@ -36,16 +36,21 @@ EffectsManager::EffectsManager()
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
 	CU_VEC<ur::VertexAttrib> default_layout;
-	default_layout.push_back(ur::VertexAttrib("position", 3, 4));
-	default_layout.push_back(ur::VertexAttrib("normal",   3, 4));
-	default_layout.push_back(ur::VertexAttrib("texcoord", 2, 4));
+	default_layout.push_back(ur::VertexAttrib("position", 3, 4, 32, 0));
+	default_layout.push_back(ur::VertexAttrib("normal",   3, 4, 32, 12));
+	default_layout.push_back(ur::VertexAttrib("texcoord", 2, 4, 32, 24));
 
 	CU_VEC<ur::VertexAttrib> skinned_layout;
-	skinned_layout.push_back(ur::VertexAttrib("position",      3, 4));
-	skinned_layout.push_back(ur::VertexAttrib("normal",        3, 4));
-	skinned_layout.push_back(ur::VertexAttrib("texcoord",      2, 4));
-	skinned_layout.push_back(ur::VertexAttrib("blend_indices", 4, 1));
-	skinned_layout.push_back(ur::VertexAttrib("blend_weights", 4, 1));
+	skinned_layout.push_back(ur::VertexAttrib("position",      3, 4, 40, 0));
+	skinned_layout.push_back(ur::VertexAttrib("normal",        3, 4, 40, 12));
+	skinned_layout.push_back(ur::VertexAttrib("texcoord",      2, 4, 40, 24));
+	skinned_layout.push_back(ur::VertexAttrib("blend_indices", 4, 1, 40, 32));
+	skinned_layout.push_back(ur::VertexAttrib("blend_weights", 4, 1, 40, 36));
+
+	CU_VEC<ur::VertexAttrib> morph_layout;
+	morph_layout.push_back(ur::VertexAttrib("position", 3, 4, 24, 0));
+	morph_layout.push_back(ur::VertexAttrib("normal",   3, 4, 24, 12));
+	morph_layout.push_back(ur::VertexAttrib("texcoord", 2, 4, 0, 0));
 
 	std::vector<std::string> textures;
 	m_effects[EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
@@ -55,7 +60,7 @@ EffectsManager::EffectsManager()
 	m_effects[EFFECT_SKINNED] = std::make_shared<ur::Shader>(
 		&rc, skinned_vs, default_fs, textures, skinned_layout);
 	m_effects[EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
-		&rc, morph_vs, morph_fs, textures, default_layout);
+		&rc, morph_vs, morph_fs, textures, morph_layout);
 }
 
 void EffectsManager::Use(EffectType effect)
