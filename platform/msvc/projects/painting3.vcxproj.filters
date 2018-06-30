@@ -16,6 +16,9 @@
     <Filter Include="ctx">
       <UniqueIdentifier>{3269d8fd-8c20-4ec5-bd27-479b9e3978ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="render\shader">
+      <UniqueIdentifier>{29ead7e4-7bae-493c-a609-22ab0561b25f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp">
@@ -72,6 +75,15 @@
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl">
       <Filter>data\bb</Filter>
+    </None>
+    <None Include="..\..\..\include\painting3\skinned.glsl">
+      <Filter>render\shader</Filter>
+    </None>
+    <None Include="..\..\..\include\painting3\default.glsl">
+      <Filter>render\shader</Filter>
+    </None>
+    <None Include="..\..\..\include\painting3\morph.glsl">
+      <Filter>render\shader</Filter>
     </None>
   </ItemGroup>
 </Project>
