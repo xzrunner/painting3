@@ -79,11 +79,14 @@ EffectsManager::EffectsManager()
 
 void EffectsManager::Use(EffectType effect)
 {
-	if (effect < EFFECT_MAX_COUNT) {
+	if (effect < EFFECT_MAX_COUNT)
+	{
 		m_effects[effect]->Use();
 
 		auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
 		shader_mgr.SetShader(sl::EXTERN_SHADER);
+
+		ur::Blackboard::Instance()->GetRenderContext().SetDepthFormat(ur::DEPTH_LESS_EQUAL);
 	}
 }
 
