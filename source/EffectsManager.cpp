@@ -2,11 +2,14 @@
 #include "painting3/default.glsl"
 #include "painting3/skinned.glsl"
 #include "painting3/morph.glsl"
+#include "painting3/bsp.glsl"
 
 #include <cu/cu_stl.h>
 #include <unirender/Blackboard.h>
 #include <unirender/Shader.h>
 #include <unirender/VertexAttrib.h>
+#include <unirender/typedef.h>
+#include <unirender/RenderContext.h>
 #include <shaderlab/Blackboard.h>
 #include <shaderlab/RenderContext.h>
 
@@ -56,6 +59,11 @@ EffectsManager::EffectsManager()
 	morph_layout.push_back(ur::VertexAttrib("pose2_normal", 3, 4, 24, 12));
 	morph_layout.push_back(ur::VertexAttrib("texcoord",     2, 4, 0, 0));
 
+	CU_VEC<ur::VertexAttrib> bsp_layout;
+	bsp_layout.push_back(ur::VertexAttrib("pos",            3, 4, 28, 0));
+	bsp_layout.push_back(ur::VertexAttrib("texcoord",       2, 4, 28, 12));
+	bsp_layout.push_back(ur::VertexAttrib("texcoord_light", 2, 4, 28, 20));
+
 	std::vector<std::string> textures;
 	m_effects[EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
 		&rc, default_vs, default_fs, textures, default_layout);
@@ -65,6 +73,8 @@ EffectsManager::EffectsManager()
 		&rc, skinned_vs, default_fs, textures, skinned_layout);
 	m_effects[EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
 		&rc, morph_vs, morph_fs, textures, morph_layout);
+	m_effects[EFFECT_BSP] = std::make_shared<ur::Shader>(
+		&rc, bsp_vs, bsp_fs, textures, bsp_layout);
 }
 
 void EffectsManager::Use(EffectType effect)
