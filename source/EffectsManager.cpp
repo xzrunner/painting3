@@ -64,17 +64,22 @@ EffectsManager::EffectsManager()
 	bsp_layout.push_back(ur::VertexAttrib("texcoord",       2, 4, 28, 12));
 	bsp_layout.push_back(ur::VertexAttrib("texcoord_light", 2, 4, 28, 20));
 
-	std::vector<std::string> textures;
+	std::vector<std::string> default_textures;
+
+	std::vector<std::string> bsp_textures;
+	bsp_textures.push_back("u_base_tex");
+	bsp_textures.push_back("u_light_tex");
+
 	m_effects[EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
-		&rc, default_vs, default_fs, textures, default_layout);
+		&rc, default_vs, default_fs, default_textures, default_layout);
 	m_effects[EFFECT_DEFAULT_NO_TEX] = std::make_shared<ur::Shader>(
-		&rc, default_vs, no_tex_fs, textures, default_layout);
+		&rc, default_vs, no_tex_fs, default_textures, default_layout);
 	m_effects[EFFECT_SKINNED] = std::make_shared<ur::Shader>(
-		&rc, skinned_vs, default_fs, textures, skinned_layout);
+		&rc, skinned_vs, default_fs, default_textures, skinned_layout);
 	m_effects[EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
-		&rc, morph_vs, morph_fs, textures, morph_layout);
+		&rc, morph_vs, morph_fs, default_textures, morph_layout);
 	m_effects[EFFECT_BSP] = std::make_shared<ur::Shader>(
-		&rc, bsp_vs, bsp_fs, textures, bsp_layout);
+		&rc, bsp_vs, bsp_fs, bsp_textures, bsp_layout);
 }
 
 void EffectsManager::Use(EffectType effect)
