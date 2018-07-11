@@ -95,6 +95,15 @@ void EffectsManager::Use(EffectType effect)
 	}
 }
 
+std::shared_ptr<ur::Shader> EffectsManager::GetShader(EffectType effect)
+{
+	if (effect < EFFECT_MAX_COUNT) {
+		return m_effects[effect];
+	} else {
+		return nullptr;
+	}
+}
+
 void EffectsManager::SetMaterial(EffectType effect, const sm::vec3& ambient, const sm::vec3& diffuse, const sm::vec3& specular, float shininess)
 {
 	if (effect >= EFFECT_MAX_COUNT) {
