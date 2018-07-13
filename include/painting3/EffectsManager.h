@@ -30,9 +30,7 @@ public:
 		EFFECT_MAX_COUNT,
 	};
 
-	void Use(EffectType effect);
-
-	std::shared_ptr<ur::Shader> GetShader(EffectType effect);
+	std::shared_ptr<ur::Shader> Use(EffectType effect);
 
 	void SetMaterial(EffectType effect, const sm::vec3& ambient,
 		const sm::vec3& diffuse, const sm::vec3& specular, float shininess);

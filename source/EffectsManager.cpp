@@ -82,7 +82,7 @@ EffectsManager::EffectsManager()
 		&rc, bsp_vs, bsp_fs, bsp_textures, bsp_layout);
 }
 
-void EffectsManager::Use(EffectType effect)
+std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 {
 	if (effect < EFFECT_MAX_COUNT)
 	{
@@ -92,14 +92,11 @@ void EffectsManager::Use(EffectType effect)
 		shader_mgr.SetShader(sl::EXTERN_SHADER);
 
 		ur::Blackboard::Instance()->GetRenderContext().SetDepthFormat(ur::DEPTH_LESS_EQUAL);
-	}
-}
 
-std::shared_ptr<ur::Shader> EffectsManager::GetShader(EffectType effect)
-{
-	if (effect < EFFECT_MAX_COUNT) {
 		return m_effects[effect];
-	} else {
+	}
+	else
+	{
 		return nullptr;
 	}
 }
