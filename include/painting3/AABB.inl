@@ -42,4 +42,13 @@ inline void AABB::Translate(const sm::vec3& offset)
 	m_position += offset;
 }
 
+inline void AABB::Scale(const sm::vec3& scale)
+{
+	m_cube.Scale(scale);
+
+	m_position.x *= scale.x;
+	m_position.y *= scale.y;
+	m_position.z *= scale.z;
+}
+
 }

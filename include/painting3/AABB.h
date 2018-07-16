@@ -18,6 +18,7 @@ public:
 	void Combine(const sm::cube& cube, const sm::mat4& mat);
 
 	void Translate(const sm::vec3& offset);
+	void Scale(const sm::vec3& scale);
 
 	const float* Max() const { return m_cube.max; }
 	const float* Min() const { return m_cube.min; }
