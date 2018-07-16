@@ -47,7 +47,7 @@ sm::vec3 Viewport::TransPos3ScreenToDir(const sm::vec2& screen, const Camera& ca
 	float y = - (screen.y - hh) / hh * tan_half_fovy;
 	float z = 1;
 
-	return cam.GetRotateMat().Inverted() * sm::vec3(x, y, z);
+	return (cam.GetRotateMat().Inverted() * sm::vec3(x, y, z)).Normalized();
 }
 
 sm::vec3 Viewport::MapToSphere(const sm::vec2& touchpoint) const
