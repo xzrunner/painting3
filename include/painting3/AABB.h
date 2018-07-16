@@ -24,6 +24,7 @@ public:
 	const float* Min() const { return m_cube.min; }
 
 	auto& Cube() const { return m_cube; }
+	auto& Position() const { return m_position; }
 
 private:
 	sm::cube m_cube;
