@@ -207,12 +207,30 @@ void PrimitiveDraw::Cube(const sm::cube& cube, int texid)
 	//vertices[idx_vert++] = max.x; vertices[idx_vert++] = max.y; vertices[idx_vert++] = min.z;
 	//texcoords[idx_tex++] = 1; texcoords[idx_tex++] = 0;
 	//vertices[idx_vert++] = max.x; vertices[idx_vert++] = max.y; vertices[idx_vert++] = max.z;
-	//texcoords[idx_tex++] = 1; texcoords[idx_tex++] = 1;	
+	//texcoords[idx_tex++] = 1; texcoords[idx_tex++] = 1;
 
 	//enode3d::ShaderMgr* mgr = enode3d::ShaderMgr::Instance();
 	//mgr->Sprite();
 
 	//mgr->DrawTri(vertices, texcoords, 2 * 6 * 3, texid);
+}
+
+void PrimitiveDraw::Arc(const sm::vec3& center, float radius, const sm::vec3& axis,
+	                    const sm::vec3& normal, float start_angle, float end_angle)
+{
+	static const int NUM = 10;
+
+	std::vector<sm::vec3> vertices;
+	vertices.resize(NUM);
+	for (int i = 0; i < NUM; ++i)
+	{
+		float angle = start_angle + (end_angle - start_angle) * (static_cast<float>(i) / (NUM - 1));
+		auto mat = sm::mat4::RotatedAxis(normal, angle);
+		vertices[i] = mat * (axis * radius);
+	}
+
+	SetShader(sl::SHAPE3);
+	rvg_polyline3(&vertices[0].x, NUM, false);
 }
 
 void PrimitiveDraw::Cross(const sm::vec3& center, const sm::vec3& size)

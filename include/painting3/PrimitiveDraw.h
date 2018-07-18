@@ -29,6 +29,9 @@ public:
 	static void Cube(const sm::cube& cube);
 	static void Cube(const sm::cube& cube, int texid);
 
+	static void Arc(const sm::vec3& center, float radius, const sm::vec3& axis,
+		const sm::vec3& normal, float start_angle, float end_angle);
+
 	static void Cross(const sm::vec3& center, const sm::vec3& size);
 
 	static void Grids(const sm::cube& cube, const sm::vec3& size);
