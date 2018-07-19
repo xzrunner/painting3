@@ -31,7 +31,7 @@ Camera::Camera(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
 	, m_angle_of_view(ASPECT)
 {
 	m_distance = (pos - target).Length();
-	InitUVN(up);
+	CalcUVN(up);
 }
 
 void Camera::Slide(float du, float dv, float dn)
@@ -165,7 +165,7 @@ void Camera::Reset()
 
 	m_distance = (m_target - m_pos).Length();
 
-	InitUVN(m_init_up);
+	CalcUVN(m_init_up);
 }
 
 void Camera::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
@@ -179,10 +179,10 @@ void Camera::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& 
 
 	m_distance = (m_target - m_pos).Length();
 
-	InitUVN(up);
+	CalcUVN(up);
 }
 
-void Camera::InitUVN(const sm::vec3& up)
+void Camera::CalcUVN(const sm::vec3& up)
 {
 	m_n = (m_target - m_pos).Normalized();
 	m_v = up.Normalized();

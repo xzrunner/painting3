@@ -48,7 +48,7 @@ public:
 	void Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
 private:
-	void InitUVN(const sm::vec3& up);
+	void CalcUVN(const sm::vec3& up);
 
 private:
 	// pos
