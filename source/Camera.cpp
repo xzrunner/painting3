@@ -120,6 +120,8 @@ void Camera::Move(const sm::vec3& dir, float offset)
 	m_pos += dir * offset;
 	m_distance = (m_target - m_pos).Length();
 	m_target = m_pos + m_n * m_distance;
+
+	CalcUVN(m_init_up);
 }
 
 void Camera::AimAtTarget()
