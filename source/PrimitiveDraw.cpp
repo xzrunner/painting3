@@ -233,6 +233,59 @@ void PrimitiveDraw::Arc(const sm::vec3& center, float radius, const sm::vec3& ax
 	rvg_polyline3(&vertices[0].x, NUM, false);
 }
 
+void PrimitiveDraw::Circle(const sm::vec3& center, const sm::vec3& normal, float radius, bool filling)
+{
+	static const int NUM = 16;
+
+	// rotate normal 90 degree
+	sm::vec3 r_vec;
+	if (normal.x != 0 || normal.y != 0) {
+		r_vec.x = -normal.y;
+		r_vec.y = normal.x;
+		r_vec.z = 0;
+	} else {
+		r_vec.x = 1;
+		r_vec.y = 0;
+		r_vec.z = 0;
+	}
+
+	if (!filling)
+	{
+		std::vector<sm::vec3> vertices;
+		vertices.resize(NUM);
+		for (int i = 0; i < NUM; ++i) {
+			float angle = SM_PI * 2 * (static_cast<float>(i) / (NUM - 1));
+			auto mat = sm::mat4::RotatedAxis(normal, angle);
+			vertices[i] = center + mat * (r_vec * radius);
+		}
+
+		SetShader(sl::SHAPE3);
+		rvg_polyline3(&vertices[0].x, vertices.size(), true);
+	}
+	else
+	{
+		std::vector<sm::vec3> vertices;
+		vertices.resize(NUM * 2 + 2);
+		int ptr = 0;
+		bool empty = true;
+		for (int i = 0; i < NUM; ++i)
+		{
+			float angle = SM_PI * 2 * (static_cast<float>(i) / (NUM - 1));
+			auto mat = sm::mat4::RotatedAxis(normal, angle);
+			vertices[ptr++] = center + mat * (r_vec * radius);
+			if (empty) {
+				vertices[ptr++] = vertices[0];
+				empty = false;
+			}
+			vertices[ptr++] = center;
+		}
+		vertices[ptr++] = vertices[NUM * 2];
+
+		SetShader(sl::SHAPE3);
+		rvg_triangle_strip3(&vertices[0].x, vertices.size());
+	}
+}
+
 void PrimitiveDraw::Cross(const sm::vec3& center, const sm::vec3& size)
 {
 	float vertices[18];

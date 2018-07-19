@@ -31,6 +31,8 @@ public:
 
 	static void Arc(const sm::vec3& center, float radius, const sm::vec3& axis,
 		const sm::vec3& normal, float start_angle, float end_angle);
+	static void Circle(const sm::vec3& center, const sm::vec3& normal, float radius,
+		bool filling = true);
 
 	static void Cross(const sm::vec3& center, const sm::vec3& size);
 
