@@ -12,6 +12,9 @@ class Viewport
 public:
 	Viewport();
 
+	float Width() const { return m_width; }
+	float Height() const { return m_height; }
+
 	void SetSize(float width, float height);
 
 	sm::vec2 TransPos3ProjectToScreen(const sm::vec3& proj, const Camera& cam) const;
