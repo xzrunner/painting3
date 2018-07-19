@@ -91,6 +91,9 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 		auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
 		shader_mgr.SetShader(sl::EXTERN_SHADER);
 
+		// flush shader status
+		shader_mgr.BindRenderShader(nullptr, sl::EXTERN_SHADER);
+
 		ur::Blackboard::Instance()->GetRenderContext().SetDepthFormat(ur::DEPTH_LESS_EQUAL);
 
 		return m_effects[effect];
