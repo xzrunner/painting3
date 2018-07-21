@@ -226,7 +226,7 @@ void PrimitiveDraw::Arc(const sm::vec3& center, float radius, const sm::vec3& ax
 	{
 		float angle = start_angle + (end_angle - start_angle) * (static_cast<float>(i) / (NUM - 1));
 		auto mat = sm::mat4::RotatedAxis(normal, angle);
-		vertices[i] = mat * (axis * radius);
+		vertices[i] = center + mat * (axis * radius);
 	}
 
 	SetShader(sl::SHAPE3);
