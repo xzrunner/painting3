@@ -38,6 +38,9 @@ CU_SINGLETON_DEFINITION(EffectsManager);
 
 EffectsManager::EffectsManager()
 {
+	auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
+	shader_mgr.FlushShader();
+
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
 	CU_VEC<ur::VertexAttrib> default_layout;
@@ -86,13 +89,13 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 {
 	if (effect < EFFECT_MAX_COUNT)
 	{
-		m_effects[effect]->Use();
-
 		auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
 		shader_mgr.SetShader(sl::EXTERN_SHADER);
 
 		// flush shader status
 		shader_mgr.BindRenderShader(nullptr, sl::EXTERN_SHADER);
+
+		m_effects[effect]->Use();
 
 		ur::Blackboard::Instance()->GetRenderContext().SetDepthFormat(ur::DEPTH_LESS_EQUAL);
 
