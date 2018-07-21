@@ -14,6 +14,10 @@ void Viewport::SetSize(float width, float height)
 {
 	m_width  = width;
 	m_height = height;
+
+	float hw = m_width * 0.5f;
+	float hh = m_height * 0.5f;
+	m_2d_proj_mat_inv = sm::mat4::Orthographic(-hw, hw, -hh, hh, 1, -1).Inverted();
 }
 
 sm::vec2 Viewport::TransPos3ProjectToScreen(const sm::vec3& proj, const Camera& cam) const
@@ -48,6 +52,12 @@ sm::vec3 Viewport::TransPos3ScreenToDir(const sm::vec2& screen, const Camera& ca
 	float z = 1;
 
 	return (cam.GetRotateMat().Inverted() * sm::vec3(x, y, z)).Normalized();
+}
+
+sm::vec2 Viewport::TransPosProj3ToProj2(const sm::vec3& proj, const sm::mat4& cam_mat) const
+{
+	auto pos = cam_mat * sm::vec4(proj.x, proj.y, proj.z, 1);
+	return m_2d_proj_mat_inv * (sm::vec2(pos.x, pos.y) / pos.w);
 }
 
 sm::vec3 Viewport::MapToSphere(const sm::vec2& touchpoint) const
