@@ -27,6 +27,7 @@ public:
 	static void Cube(const AABB& aabb);
 	static void Cube(const sm::mat4& mat, const AABB& aabb);
 	static void Cube(const sm::cube& cube);
+	static void Cube(const sm::mat4& mat, const sm::cube& cube);
 	static void Cube(const sm::cube& cube, int texid);
 
 	static void Arc(const sm::vec3& center, float radius, const sm::vec3& axis,
@@ -39,6 +40,8 @@ public:
 	static void Grids(const sm::cube& cube, const sm::vec3& size);
 
 	static void Points(const std::vector<sm::vec3>& points);
+	static void Polyline(const std::vector<sm::vec3>& polyline, bool loop);
+	static void Polygon(const std::vector<sm::vec3>& polygon);
 
 private:
 	static void SetShader(int shader_type);

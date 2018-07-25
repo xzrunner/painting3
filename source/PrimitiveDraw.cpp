@@ -6,6 +6,7 @@
 #include <shaderlab/ShaderMgr.h>
 #include <shaderlab/RenderContext.h>
 #include <shaderlab/Shape3Shader.h>
+#include <unirender/typedef.h>
 
 namespace pt3
 {
@@ -49,8 +50,18 @@ void PrimitiveDraw::Cube(const AABB& aabb)
 
 void PrimitiveDraw::Cube(const sm::mat4& mat, const AABB& aabb)
 {
-	auto min = aabb.Min();
-	auto max = aabb.Max();
+	PrimitiveDraw::Cube(mat, aabb.Cube());
+}
+
+void PrimitiveDraw::Cube(const sm::cube& cube)
+{
+	Cube(sm::mat4(), cube);
+}
+
+void PrimitiveDraw::Cube(const sm::mat4& mat, const sm::cube& cube)
+{
+	auto& min = cube.min;
+	auto& max = cube.max;
 	sm::vec3 vertices[] = {
 		mat * sm::vec3(min[0], min[1], min[2]),
 		mat * sm::vec3(max[0], min[1], min[2]),
@@ -60,38 +71,6 @@ void PrimitiveDraw::Cube(const sm::mat4& mat, const AABB& aabb)
 		mat * sm::vec3(max[0], min[1], max[2]),
 		mat * sm::vec3(max[0], max[1], max[2]),
 		mat * sm::vec3(min[0], max[1], max[2])
-	};
-
-	// bottom
-	Line(vertices[0], vertices[1]);
-	Line(vertices[1], vertices[2]);
-	Line(vertices[2], vertices[3]);
-	Line(vertices[3], vertices[0]);
-	// top
-	Line(vertices[4], vertices[5]);
-	Line(vertices[5], vertices[6]);
-	Line(vertices[6], vertices[7]);
-	Line(vertices[7], vertices[4]);
-	// middle
-	Line(vertices[0], vertices[4]);
-	Line(vertices[1], vertices[5]);
-	Line(vertices[2], vertices[6]);
-	Line(vertices[3], vertices[7]);
-}
-
-void PrimitiveDraw::Cube(const sm::cube& cube)
-{
-	auto& min = cube.min;
-	auto& max = cube.max;
-	sm::vec3 vertices[] = {
-		sm::vec3(min[0], min[1], min[2]),
-		sm::vec3(max[0], min[1], min[2]),
-		sm::vec3(max[0], max[1], min[2]),
-		sm::vec3(min[0], max[1], min[2]),
-		sm::vec3(min[0], min[1], max[2]),
-		sm::vec3(max[0], min[1], max[2]),
-		sm::vec3(max[0], max[1], max[2]),
-		sm::vec3(min[0], max[1], max[2])
 	};
 
 	// bottom
@@ -353,6 +332,33 @@ void PrimitiveDraw::Points(const std::vector<sm::vec3>& points)
 	SetShader(sl::SHAPE3);
 	for (auto& p : points) {
 		rvg_point3(p.x, p.y, p.z);
+	}
+}
+
+void PrimitiveDraw::Polyline(const std::vector<sm::vec3>& polyline, bool loop)
+{
+	if (polyline.size() < 2) {
+		return;
+	}
+
+	SetShader(sl::SHAPE3);
+	rvg_polyline3(&polyline[0].x, polyline.size(), loop);
+}
+
+void PrimitiveDraw::Polygon(const std::vector<sm::vec3>& polygon)
+{
+	if (polygon.size() < 2) {
+		return;
+	}
+
+	SetShader(sl::SHAPE3);
+	auto& mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
+	sl::Shape3Shader* shader = static_cast<sl::Shape3Shader*>(mgr.GetShader(sl::SHAPE3));
+	shader->SetType(ur::DRAW_TRIANGLES);
+	for (int i = 1, n = polygon.size(); i < n - 1; ++i) {
+		shader->Draw(&polygon[0].x, 1);
+		shader->Draw(&polygon[i].x, 1);
+		shader->Draw(&polygon[i+1].x, 1);
 	}
 }
 
