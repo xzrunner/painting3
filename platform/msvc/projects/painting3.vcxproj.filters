@@ -47,9 +47,6 @@
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\Ray.h">
-      <Filter>data</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\AABB.h">
       <Filter>data\bb</Filter>
     </ClInclude>
