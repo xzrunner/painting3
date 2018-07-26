@@ -39,6 +39,7 @@ public:
 
 	static void Grids(const sm::cube& cube, const sm::vec3& size);
 
+	static void Point(const sm::vec3& point);
 	static void Points(const std::vector<sm::vec3>& points);
 	static void Polyline(const std::vector<sm::vec3>& polyline, bool loop);
 	static void Polygon(const std::vector<sm::vec3>& polygon);

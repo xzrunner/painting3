@@ -327,6 +327,12 @@ void PrimitiveDraw::Grids(const sm::cube& cube, const sm::vec3& size)
 	rvg_lines3(&lines[0].x, lines.size());
 }
 
+void PrimitiveDraw::Point(const sm::vec3& p)
+{
+	SetShader(sl::SHAPE3);
+	rvg_point3(p.x, p.y, p.z);
+}
+
 void PrimitiveDraw::Points(const std::vector<sm::vec3>& points)
 {
 	SetShader(sl::SHAPE3);
