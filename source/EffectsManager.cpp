@@ -97,7 +97,7 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 
 		m_effects[effect]->Use();
 
-		ur::Blackboard::Instance()->GetRenderContext().SetDepthFormat(ur::DEPTH_LESS_EQUAL);
+//		ur::Blackboard::Instance()->GetRenderContext().SetDepthTest(ur::DEPTH_LESS_EQUAL);
 
 		return m_effects[effect];
 	}
