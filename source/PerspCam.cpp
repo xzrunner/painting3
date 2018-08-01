@@ -1,4 +1,4 @@
-#include "painting3/Camera.h"
+#include "painting3/PerspCam.h"
 
 #include <sm_const.h>
 
@@ -9,7 +9,7 @@ static const float ZNEAR  = 0.01f;
 static const float ZFAR   = 1000;
 static const float ASPECT = 90;
 
-Camera::Camera()
+PerspCam::PerspCam()
 	: m_distance(0)
 	, m_znear(ZNEAR)
 	, m_zfar(ZFAR)
@@ -18,7 +18,7 @@ Camera::Camera()
 {
 }
 
-Camera::Camera(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
+PerspCam::PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
 	: m_pos(pos)
 	, m_target(target)
 	, m_distance(0)
@@ -34,7 +34,42 @@ Camera::Camera(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
 	CalcUVN(up);
 }
 
-void Camera::Slide(float du, float dv, float dn)
+void PerspCam::OnSize(float w, float h)
+{
+	SetAspect(w / h);
+}
+
+sm::mat4 PerspCam::GetModelViewMat() const
+{
+	sm::mat4 mat;
+	float* m = mat.x;
+	m[0] = m_u.x; m[4] = m_u.y; m[8] = m_u.z; m[12] = -m_pos.Dot(m_u);
+	m[1] = m_v.x; m[5] = m_v.y; m[9] = m_v.z; m[13] = -m_pos.Dot(m_v);
+	m[2] = m_n.x; m[6] = m_n.y; m[10]= m_n.z; m[14] = -m_pos.Dot(m_n);
+	m[3] = 0;     m[7] = 0;     m[11]= 0;     m[15] = 1.0;
+	return mat;
+}
+
+sm::mat4 PerspCam::GetProjectionMat() const
+{
+	//return sm::mat4::Perspective(m_angle_of_view, m_aspect, m_znear, m_zfar);
+
+	float scale = tan(m_angle_of_view * 0.5f * SM_DEG_TO_RAD) * m_znear;
+	auto mat_proj = sm::mat4::Perspective(-m_aspect * scale, m_aspect * scale, -scale, scale, m_znear, m_zfar);
+	return mat_proj;
+}
+
+void PerspCam::Reset()
+{
+	m_pos    = m_init_pos;
+	m_target = m_init_target;
+
+	m_distance = (m_target - m_pos).Length();
+
+	CalcUVN(m_init_up);
+}
+
+void PerspCam::Slide(float du, float dv, float dn)
 {
 	m_pos.x    = m_pos.x + du * m_u.x + dv * m_v.x + dn * m_n.x;
 	m_pos.y    = m_pos.y + du * m_u.y + dv * m_v.y + dn * m_n.y;
@@ -44,7 +79,7 @@ void Camera::Slide(float du, float dv, float dn)
 	m_target.z = m_target.x + du * m_u.z + dv * m_v.z + dn * m_n.z;
 }
 
-void Camera::Roll(float angle)
+void PerspCam::Roll(float angle)
 {
 	float cs = cos(angle * SM_DEG_TO_RAD);
 	float sn = sin(angle * SM_DEG_TO_RAD);
@@ -60,7 +95,7 @@ void Camera::Roll(float angle)
 	m_v.z = sn * t.z + cs * s.z;
 }
 
-void Camera::Yaw(float angle)
+void PerspCam::Yaw(float angle)
 {
 	float cs = cos(angle * SM_DEG_TO_RAD);
 	float sn = sin(angle * SM_DEG_TO_RAD);
@@ -76,7 +111,7 @@ void Camera::Yaw(float angle)
 	m_u.z = sn * t.z + cs * s.z;
 }
 
-void Camera::Pitch(float angle)
+void PerspCam::Pitch(float angle)
 {
 	float cs = cos(angle * SM_DEG_TO_RAD);
 	float sn = sin(angle * SM_DEG_TO_RAD);
@@ -92,14 +127,14 @@ void Camera::Pitch(float angle)
 	m_n.z = sn * t.z + cs * s.z;
 }
 
-void Camera::SetUpDir(const sm::vec3& up)
+void PerspCam::SetUpDir(const sm::vec3& up)
 {
 	m_v = up;
 	m_u = m_v.Cross(m_n).Normalized();
 	m_v = m_n.Cross(m_u).Normalized();
 }
 
-void Camera::Translate(float dx, float dy)
+void PerspCam::Translate(float dx, float dy)
 {
 	sm::vec3 tx = - m_u * dx,
 		     ty = m_v * dy;
@@ -109,13 +144,13 @@ void Camera::Translate(float dx, float dy)
 	m_target += ty;
 }
 
-void Camera::MoveToward(float offset)
+void PerspCam::MoveToward(float offset)
 {
 	m_pos += m_n * offset;
 	m_distance = (m_target - m_pos).Length();
 }
 
-void Camera::Move(const sm::vec3& dir, float offset)
+void PerspCam::Move(const sm::vec3& dir, float offset)
 {
 	m_pos += dir * offset;
 	m_distance = (m_target - m_pos).Length();
@@ -124,32 +159,12 @@ void Camera::Move(const sm::vec3& dir, float offset)
 	CalcUVN(m_init_up);
 }
 
-void Camera::AimAtTarget()
+void PerspCam::AimAtTarget()
 {
 	m_pos = m_target - m_n * m_distance;
 }
 
-sm::mat4 Camera::GetModelViewMat() const
-{
-	sm::mat4 mat;
-	float* m = mat.x;
-	m[0] = m_u.x; m[4] = m_u.y; m[8] = m_u.z; m[12] = -m_pos.Dot(m_u);
-	m[1] = m_v.x; m[5] = m_v.y; m[9] = m_v.z; m[13] = -m_pos.Dot(m_v);
-	m[2] = m_n.x; m[6] = m_n.y; m[10]= m_n.z; m[14] = -m_pos.Dot(m_n);
-	m[3] = 0;     m[7] = 0;     m[11]= 0;     m[15] = 1.0;
-	return mat;
-}
-
-sm::mat4 Camera::GetProjectionMat() const
-{
-	//return sm::mat4::Perspective(m_angle_of_view, m_aspect, m_znear, m_zfar);
-
-	float scale = tan(m_angle_of_view * 0.5f * SM_DEG_TO_RAD) * m_znear;
-	auto mat_proj = sm::mat4::Perspective(-m_aspect * scale, m_aspect * scale, -scale, scale, m_znear, m_zfar);
-	return mat_proj;
-}
-
-sm::mat4 Camera::GetRotateMat() const
+sm::mat4 PerspCam::GetRotateMat() const
 {
 	sm::mat4 mat;
 	float* m = mat.x;
@@ -160,17 +175,7 @@ sm::mat4 Camera::GetRotateMat() const
 	return mat;
 }
 
-void Camera::Reset()
-{
-	m_pos    = m_init_pos;
-	m_target = m_init_target;
-
-	m_distance = (m_target - m_pos).Length();
-
-	CalcUVN(m_init_up);
-}
-
-void Camera::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
+void PerspCam::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
 {
 	m_init_pos    = pos;
 	m_init_target = target;
@@ -184,7 +189,7 @@ void Camera::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& 
 	CalcUVN(up);
 }
 
-void Camera::CalcUVN(const sm::vec3& up)
+void PerspCam::CalcUVN(const sm::vec3& up)
 {
 	m_n = (m_target - m_pos).Normalized();
 	m_v = up.Normalized();

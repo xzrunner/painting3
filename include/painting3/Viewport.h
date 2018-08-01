@@ -6,7 +6,7 @@
 namespace pt3
 {
 
-class Camera;
+class PerspCam;
 
 class Viewport
 {
@@ -18,8 +18,8 @@ public:
 
 	void SetSize(float width, float height);
 
-	sm::vec2 TransPos3ProjectToScreen(const sm::vec3& proj, const Camera& cam) const;
-	sm::vec3 TransPos3ScreenToDir(const sm::vec2& screen, const Camera& cam) const;
+	sm::vec2 TransPos3ProjectToScreen(const sm::vec3& proj, const PerspCam& cam) const;
+	sm::vec3 TransPos3ScreenToDir(const sm::vec2& screen, const PerspCam& cam) const;
 
 	sm::vec2 TransPosProj3ToProj2(const sm::vec3& proj, const sm::mat4& cam_mat) const;
 

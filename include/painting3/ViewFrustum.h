@@ -5,14 +5,14 @@
 namespace pt3
 {
 
-class Camera;
+class ICamera;
 
 class ViewFrustum
 {
 public:
 	ViewFrustum();
 
-	void CalculateViewFrustum(const Camera& cam) const;
+	void CalculateViewFrustum(const ICamera& cam) const;
 
 	bool VertexFrustumTest(float x, float y, float z,
 		bool test_lr = true, bool test_tb = true, bool test_nf = true) const;

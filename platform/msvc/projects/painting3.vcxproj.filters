@@ -24,9 +24,6 @@
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\Camera.cpp">
-      <Filter>data\camera</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\Viewport.cpp">
       <Filter>data\camera</Filter>
     </ClCompile>
@@ -42,6 +39,12 @@
     <ClCompile Include="..\..\..\source\ViewFrustum.cpp">
       <Filter>data\camera</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\PerspCam.cpp">
+      <Filter>data\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\OrthoCam.cpp">
+      <Filter>data\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h">
@@ -49,9 +52,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\AABB.h">
       <Filter>data\bb</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\Camera.h">
-      <Filter>data\camera</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Viewport.h">
       <Filter>data\camera</Filter>
@@ -66,6 +66,18 @@
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\ViewFrustum.h">
+      <Filter>data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\PerspCam.h">
+      <Filter>data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\OrthoCam.h">
+      <Filter>data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\ICamera.h">
+      <Filter>data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\CamType.h">
       <Filter>data\camera</Filter>
     </ClInclude>
   </ItemGroup>

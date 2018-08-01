@@ -1,16 +1,27 @@
 #pragma once
 
+#include "painting3/ICamera.h"
+
 #include <SM_Vector.h>
 #include <SM_Matrix.h>
 
 namespace pt3
 {
 
-class Camera
+class PerspCam : public ICamera
 {
 public:
-	Camera();
-	Camera(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
+	PerspCam();
+	PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
+
+	virtual CamType Type() const { return CAM_PERSPECTIVE; }
+
+	virtual void OnSize(float w, float h) override;
+
+	virtual sm::mat4 GetModelViewMat() const override;
+	virtual sm::mat4 GetProjectionMat() const override;
+
+	virtual void Reset() override;
 
 	void Slide(float du, float dv, float dn);
 
@@ -31,8 +42,6 @@ public:
 	float GetDistance() const { return m_distance; }
 	const sm::vec3& GetUpDir() const { return m_v; }
 
-	sm::mat4 GetModelViewMat() const;
-	sm::mat4 GetProjectionMat() const;
 	sm::mat4 GetRotateMat() const;
 
 	float GetNear() const { return m_znear; }
@@ -44,7 +53,6 @@ public:
 	
 	void SetAspect(float aspect) { m_aspect = aspect; }
 
-	void Reset();
 	void Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
 private:
@@ -68,6 +76,6 @@ private:
 	float m_aspect;
 	float m_angle_of_view;
 
-}; // Camera
+}; // PerspCam
 
 }

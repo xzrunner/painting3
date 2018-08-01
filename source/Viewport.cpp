@@ -1,5 +1,5 @@
 #include "painting3/Viewport.h"
-#include "painting3/Camera.h"
+#include "painting3/PerspCam.h"
 
 namespace pt3
 {
@@ -20,7 +20,7 @@ void Viewport::SetSize(float width, float height)
 	m_2d_proj_mat_inv = sm::mat4::Orthographic(-hw, hw, -hh, hh, 1, -1).Inverted();
 }
 
-sm::vec2 Viewport::TransPos3ProjectToScreen(const sm::vec3& proj, const Camera& cam) const
+sm::vec2 Viewport::TransPos3ProjectToScreen(const sm::vec3& proj, const PerspCam& cam) const
 {
 	float fovy = cam.GetAngleOfView();
 	float aspect = cam.GetAspect();
@@ -38,7 +38,7 @@ sm::vec2 Viewport::TransPos3ProjectToScreen(const sm::vec3& proj, const Camera& 
 	return sm::vec2(sx, sy);
 }
 
-sm::vec3 Viewport::TransPos3ScreenToDir(const sm::vec2& screen, const Camera& cam) const
+sm::vec3 Viewport::TransPos3ScreenToDir(const sm::vec2& screen, const PerspCam& cam) const
 {
 	float fovy = cam.GetAngleOfView();
 	float aspect = cam.GetAspect();
