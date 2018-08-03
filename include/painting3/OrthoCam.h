@@ -1,11 +1,11 @@
 #pragma once
 
-#include "painting3/ICamera.h"
+#include <painting0/Camera.h>
 
 namespace pt3
 {
 
-class OrthoCam : public ICamera
+class OrthoCam : public pt0::Camera
 {
 public:
 	enum ViewPlaneType
@@ -18,9 +18,13 @@ public:
 public:
 	OrthoCam(ViewPlaneType vp, float scale = 1);
 
-	virtual CamType Type() const { return CAM_ORTHO; }
+	virtual pt0::CamTypeID TypeID() const override { 
+		return pt0::GetCamTypeID<OrthoCam>(); 
+	}
 
 	virtual void OnSize(float w, float h) override;
+
+	virtual void Bind() const override {}
 
 	virtual sm::mat4 GetModelViewMat() const override;
 	virtual sm::mat4 GetProjectionMat() const override;

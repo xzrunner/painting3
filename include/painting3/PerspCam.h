@@ -1,6 +1,6 @@
 #pragma once
 
-#include "painting3/ICamera.h"
+#include <painting0/Camera.h>
 
 #include <SM_Vector.h>
 #include <SM_Matrix.h>
@@ -8,15 +8,19 @@
 namespace pt3
 {
 
-class PerspCam : public ICamera
+class PerspCam : public pt0::Camera
 {
 public:
 	PerspCam();
 	PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
-	virtual CamType Type() const { return CAM_PERSPECTIVE; }
+	virtual pt0::CamTypeID TypeID() const override { 
+		return pt0::GetCamTypeID<PerspCam>(); 
+	}
 
 	virtual void OnSize(float w, float h) override;
+
+	virtual void Bind() const override {}
 
 	virtual sm::mat4 GetModelViewMat() const override;
 	virtual sm::mat4 GetProjectionMat() const override;

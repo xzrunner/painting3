@@ -74,12 +74,6 @@
     <ClInclude Include="..\..\..\include\painting3\OrthoCam.h">
       <Filter>data\camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\ICamera.h">
-      <Filter>data\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\CamType.h">
-      <Filter>data\camera</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl">

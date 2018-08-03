@@ -2,17 +2,17 @@
 
 #pragma once
 
+namespace pt0 { class Camera; }
+
 namespace pt3
 {
-
-class ICamera;
 
 class ViewFrustum
 {
 public:
 	ViewFrustum();
 
-	void CalculateViewFrustum(const ICamera& cam) const;
+	void CalculateViewFrustum(const pt0::Camera& cam) const;
 
 	bool VertexFrustumTest(float x, float y, float z,
 		bool test_lr = true, bool test_tb = true, bool test_nf = true) const;

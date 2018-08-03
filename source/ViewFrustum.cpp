@@ -1,7 +1,8 @@
 // from "Focus On 3D Terrain Programming"
 
 #include "painting3/ViewFrustum.h"
-#include "painting3/ICamera.h"
+
+#include <painting0/Camera.h>
 
 #include <string.h>
 
@@ -25,7 +26,7 @@ ViewFrustum::ViewFrustum()
 	memset(m_view_frustum, 0, sizeof(m_view_frustum));
 }
 
-void ViewFrustum::CalculateViewFrustum(const ICamera& cam) const
+void ViewFrustum::CalculateViewFrustum(const pt0::Camera& cam) const
 {
 	auto proj_mat = cam.GetProjectionMat();
 	auto proj_ptr = proj_mat.x;
