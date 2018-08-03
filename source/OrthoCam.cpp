@@ -11,6 +11,7 @@ OrthoCam::OrthoCam(ViewPlaneType vp, float scale)
 
 void OrthoCam::OnSize(float w, float h)
 {
+	m_scale  = 1 / (h * 0.5f);
 	m_width  = w;
 	m_height = h;
 }
