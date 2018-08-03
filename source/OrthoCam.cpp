@@ -4,21 +4,24 @@ namespace pt3
 {
 
 OrthoCam::OrthoCam(ViewPlaneType vp, float scale)
-	: m_view_plane(vp)
-	, m_aspect(1)
+	: m_scale(scale)
+	, m_view_plane(vp)
 {
-	m_scale.Set(scale, scale);
 }
 
 void OrthoCam::OnSize(float w, float h)
 {
-	m_aspect = w / h;
+	m_width  = w;
+	m_height = h;
 }
 
-sm::mat4 OrthoCam::GetModelViewMat() const 
+sm::mat4 OrthoCam::GetModelViewMat() const
 {
+	sm::vec2 mv_pos = -m_position;
+	float mv_scale = 1 / m_scale;
+
 	// scale
-	auto scale_mat = sm::mat4::Scaled(m_scale.x, m_scale.y, m_scale.y);
+	auto scale_mat = sm::mat4::Scaled(mv_scale, mv_scale, mv_scale);
 
 	// rotate
 	sm::mat4 rot_mat;
@@ -35,16 +38,38 @@ sm::mat4 OrthoCam::GetModelViewMat() const
 	}
 
 	// translate
-	auto trans_mat = sm::mat4::Translated(m_pos.x, m_pos.y, 0);
+	auto trans_mat = sm::mat4::Translated(mv_pos.x / m_scale, mv_pos.y / m_scale, 0);
 
 	return scale_mat * rot_mat * trans_mat;
 }
 
-sm::mat4 OrthoCam::GetProjectionMat() const 
+sm::mat4 OrthoCam::GetProjectionMat() const
 {
-	float hh = 1;
-	float hw = hh * m_aspect;
-	return sm::mat4::Orthographic(-hw, hw, -hh, hh, 1, -1);
+	float hw = m_width * 0.5f;
+	float hh = m_height * 0.5f;
+	const float max = std::numeric_limits<float>::max();
+	return sm::mat4::Orthographic(-hw, hw, -hh, hh, max, -max);
+}
+
+void OrthoCam::Reset()
+{
+	m_position.Set(0, 0);
+	m_scale = 1;
+}
+
+void OrthoCam::Translate(const sm::vec2& offset)
+{
+	m_position += offset * m_scale;
+}
+
+void OrthoCam::Scale(float scale, float x, float y, float width, float height)
+{
+	float new_scale = m_scale * scale;
+	float hw = width * 0.5f,
+		  hh = height * 0.5f;
+	m_position.x = (x - hw) * m_scale + m_position.x - (x - hw) * new_scale;
+	m_position.y = (y - hh) * m_scale + m_position.y - (y - hh) * new_scale;
+	m_scale = new_scale;
 }
 
 }

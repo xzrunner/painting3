@@ -25,19 +25,19 @@ public:
 	virtual sm::mat4 GetModelViewMat() const override;
 	virtual sm::mat4 GetProjectionMat() const override;
 
-	virtual void Reset() override {}
+	virtual void Reset() override;
 
-private:
-	void CalcUVN(const sm::vec3& up);
+	void Translate(const sm::vec2& offset);
+	void Scale(float scale, float x, float y, float width, float height);
 
 private:
 	// modelview
-	sm::vec2 m_scale;
-	sm::vec2 m_pos;
+	float    m_scale;
+	sm::vec2 m_position;
 	ViewPlaneType m_view_plane;
 
 	// projection
-	float m_aspect;
+	float m_width, m_height;
 
 }; // OrthoCam
 
