@@ -194,8 +194,7 @@ void PrimitiveDraw::Cube(const sm::cube& cube, int texid)
 	//mgr->DrawTri(vertices, texcoords, 2 * 6 * 3, texid);
 }
 
-void PrimitiveDraw::Arc(const sm::vec3& center, float radius, const sm::vec3& axis,
-	                    const sm::vec3& normal, float start_angle, float end_angle)
+void PrimitiveDraw::Arc(const sm::mat4& mat, float radius, float start_angle, float end_angle)
 {
 	static const int NUM = 10;
 
@@ -204,8 +203,7 @@ void PrimitiveDraw::Arc(const sm::vec3& center, float radius, const sm::vec3& ax
 	for (int i = 0; i < NUM; ++i)
 	{
 		float angle = start_angle + (end_angle - start_angle) * (static_cast<float>(i) / (NUM - 1));
-		auto mat = sm::mat4::RotatedAxis(normal, angle);
-		vertices[i] = center + mat * (axis * radius);
+		vertices[i] = mat * (sm::mat4::RotatedZ(angle * SM_RAD_TO_DEG) * sm::vec3(radius, 0, 0));
 	}
 
 	SetShader(sl::SHAPE3);
