@@ -19,6 +19,9 @@
     <Filter Include="render\shader">
       <UniqueIdentifier>{29ead7e4-7bae-493c-a609-22ab0561b25f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data\material">
+      <UniqueIdentifier>{5e9069d3-947c-46c7-945a-1f3775e1a898}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\OrthoCam.cpp">
       <Filter>data\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RenderSystem.cpp">
+      <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\OrthoCam.h">
       <Filter>data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\Material.h">
+      <Filter>data\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\RenderSystem.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
