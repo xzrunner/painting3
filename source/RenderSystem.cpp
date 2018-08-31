@@ -58,6 +58,13 @@ void RenderSystem::DrawMaterial(const Material& material, const RenderParams& pa
 	dst->diffuse   = material.diffuse;
 	dst->specular  = material.specular;
 	dst->shininess = material.shininess;
+	dst->diffuse_tex = -1;
+	if (material.diffuse_tex)
+	{
+		dst->diffuse_tex = 0;
+		m_mat_sphere->textures.clear();
+		m_mat_sphere->textures.push_back({ "unknown", material.diffuse_tex });
+	}
 
 	DrawMesh(*m_mat_sphere, params);
 }
