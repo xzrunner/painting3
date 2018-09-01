@@ -138,7 +138,7 @@ void RenderSystem::CreateMaterialSphere() const
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_NORMALS;
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_TEXCOORDS;
 	mesh->material = 0;
-	mesh->effect = EffectsManager::EFFECT_DEFAULT_NO_TEX;
+	mesh->effect = EffectsManager::EFFECT_DEFAULT;
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
