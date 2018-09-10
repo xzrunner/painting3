@@ -95,7 +95,9 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 		// flush shader status
 		shader_mgr.BindRenderShader(nullptr, sl::EXTERN_SHADER);
 
-		m_effects[effect]->Use();
+		if (m_effects[effect]) {
+			m_effects[effect]->Use();
+		}
 
 //		ur::Blackboard::Instance()->GetRenderContext().SetDepthTest(ur::DEPTH_LESS_EQUAL);
 
