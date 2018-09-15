@@ -22,6 +22,9 @@
     <Filter Include="data\material">
       <UniqueIdentifier>{5e9069d3-947c-46c7-945a-1f3775e1a898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data\shader">
+      <UniqueIdentifier>{6333dd07-dfed-45c7-9398-c6147ce87b58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\RenderSystem.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Shader.cpp">
+      <Filter>data\shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\RenderSystem.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\Shader.h">
+      <Filter>data\shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,13 +14,13 @@ public:
 	PerspCam();
 	PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
-	virtual pt0::CamTypeID TypeID() const override { 
-		return pt0::GetCamTypeID<PerspCam>(); 
+	virtual pt0::CamTypeID TypeID() const override {
+		return pt0::GetCamTypeID<PerspCam>();
 	}
 
 	virtual void OnSize(float w, float h) override;
 
-	virtual void Bind() const override {}
+	virtual void Bind() const override;
 
 	virtual sm::mat4 GetModelViewMat() const override;
 	virtual sm::mat4 GetProjectionMat() const override;
@@ -54,13 +54,15 @@ public:
 	float GetAngleOfView() const { return m_angle_of_view; }
 
 	const sm::vec3 GetToward() const { return m_n; }
-	
+
 	void SetAspect(float aspect) { m_aspect = aspect; }
 
 	void Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
 private:
 	void CalcUVN(const sm::vec3& up);
+
+	void UpdateRender() const;
 
 private:
 	// pos

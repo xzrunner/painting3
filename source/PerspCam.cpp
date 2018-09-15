@@ -1,4 +1,6 @@
 #include "painting3/PerspCam.h"
+#include "painting3/Blackboard.h"
+#include "painting3/WindowContext.h"
 
 #include <sm_const.h>
 
@@ -32,11 +34,18 @@ PerspCam::PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& 
 {
 	m_distance = (pos - target).Length();
 	CalcUVN(up);
+
+	UpdateRender();
 }
 
 void PerspCam::OnSize(float w, float h)
 {
 	SetAspect(w / h);
+}
+
+void PerspCam::Bind() const
+{
+	UpdateRender();
 }
 
 sm::mat4 PerspCam::GetModelViewMat() const
@@ -67,6 +76,8 @@ void PerspCam::Reset()
 	m_distance = (m_target - m_pos).Length();
 
 	CalcUVN(m_init_up);
+
+	UpdateRender();
 }
 
 void PerspCam::Slide(float du, float dv, float dn)
@@ -77,6 +88,8 @@ void PerspCam::Slide(float du, float dv, float dn)
 	m_target.x = m_target.x + du * m_u.x + dv * m_v.x + dn * m_n.x;
 	m_target.y = m_target.x + du * m_u.y + dv * m_v.y + dn * m_n.y;
 	m_target.z = m_target.x + du * m_u.z + dv * m_v.z + dn * m_n.z;
+
+	UpdateRender();
 }
 
 void PerspCam::Roll(float angle)
@@ -93,6 +106,8 @@ void PerspCam::Roll(float angle)
 	m_v.x = sn * t.x + cs * s.x;
 	m_v.y = sn * t.y + cs * s.y;
 	m_v.z = sn * t.z + cs * s.z;
+
+	UpdateRender();
 }
 
 void PerspCam::Yaw(float angle)
@@ -109,6 +124,8 @@ void PerspCam::Yaw(float angle)
 	m_u.x = sn * t.x + cs * s.x;
 	m_u.y = sn * t.y + cs * s.y;
 	m_u.z = sn * t.z + cs * s.z;
+
+	UpdateRender();
 }
 
 void PerspCam::Pitch(float angle)
@@ -125,6 +142,8 @@ void PerspCam::Pitch(float angle)
 	m_n.x = sn * t.x + cs * s.x;
 	m_n.y = sn * t.y + cs * s.y;
 	m_n.z = sn * t.z + cs * s.z;
+
+	UpdateRender();
 }
 
 void PerspCam::SetUpDir(const sm::vec3& up)
@@ -132,6 +151,8 @@ void PerspCam::SetUpDir(const sm::vec3& up)
 	m_v = up;
 	m_u = m_v.Cross(m_n).Normalized();
 	m_v = m_n.Cross(m_u).Normalized();
+
+	UpdateRender();
 }
 
 void PerspCam::Translate(float dx, float dy)
@@ -142,12 +163,16 @@ void PerspCam::Translate(float dx, float dy)
 	m_pos += ty;
 	m_target += tx;
 	m_target += ty;
+
+	UpdateRender();
 }
 
 void PerspCam::MoveToward(float offset)
 {
 	m_pos += m_n * offset;
 	m_distance = (m_target - m_pos).Length();
+
+	UpdateRender();
 }
 
 void PerspCam::Move(const sm::vec3& dir, float offset)
@@ -157,11 +182,15 @@ void PerspCam::Move(const sm::vec3& dir, float offset)
 	m_target = m_pos + m_n * m_distance;
 
 	CalcUVN(m_init_up);
+	UpdateRender();
 }
 
 void PerspCam::AimAtTarget()
 {
 	m_pos = m_target - m_n * m_distance;
+
+	CalcUVN(m_init_up);
+	UpdateRender();
 }
 
 sm::mat4 PerspCam::GetRotateMat() const
@@ -187,6 +216,8 @@ void PerspCam::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3
 	m_distance = (m_target - m_pos).Length();
 
 	CalcUVN(up);
+
+	UpdateRender();
 }
 
 void PerspCam::CalcUVN(const sm::vec3& up)
@@ -195,6 +226,16 @@ void PerspCam::CalcUVN(const sm::vec3& up)
 	m_v = up.Normalized();
 	m_u = m_v.Cross(m_n).Normalized();
 	m_v = m_n.Cross(m_u).Normalized();
+}
+
+void PerspCam::UpdateRender() const
+{
+	auto& wc = Blackboard::Instance()->GetWindowContext();
+	if (!wc) {
+		return;
+	}
+
+	wc->SetModelView(GetModelViewMat());
 }
 
 }
