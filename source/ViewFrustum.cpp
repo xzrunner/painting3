@@ -31,7 +31,7 @@ void ViewFrustum::CalculateViewFrustum(const pt0::Camera& cam) const
 	auto proj_mat = cam.GetProjectionMat();
 	auto proj_ptr = proj_mat.x;
 
-	auto mv_mat = cam.GetModelViewMat();
+	auto mv_mat = cam.GetViewMat();
 	auto mv_ptr = mv_mat.x;
 
 	float clip[16];

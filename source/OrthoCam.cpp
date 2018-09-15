@@ -16,7 +16,7 @@ void OrthoCam::OnSize(float w, float h)
 	m_height = h;
 }
 
-sm::mat4 OrthoCam::GetModelViewMat() const
+sm::mat4 OrthoCam::GetViewMat() const
 {
 	sm::vec2 mv_pos = -m_position;
 	float mv_scale = 1 / m_scale;

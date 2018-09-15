@@ -26,7 +26,7 @@ namespace pt3
 
 		virtual void Bind() const override {}
 
-		virtual sm::mat4 GetModelViewMat() const override;
+		virtual sm::mat4 GetViewMat() const override;
 		virtual sm::mat4 GetProjectionMat() const override;
 
 		virtual void Reset() override;

@@ -24,7 +24,7 @@ boost::signals2::connection WindowContext::DoOnProj(const OnProj::slot_type& slo
 	return m_on_proj.connect(slot);
 }
 
-void WindowContext::SetModelView(const sm::mat4& mt)
+void WindowContext::SetView(const sm::mat4& mt)
 {
 	if (m_mv_mat == mt) {
 		return;
@@ -32,7 +32,7 @@ void WindowContext::SetModelView(const sm::mat4& mt)
 
 	m_mv_mat = mt;
 
-	UpdateModelView();
+	UpdateView();
 }
 
 void WindowContext::SetProjection(const sm::mat4& mt)
@@ -54,13 +54,7 @@ void WindowContext::SetScreen(int width, int height)
 	UpdateViewport();
 }
 
-void WindowContext::UpdateMVP() const
-{
-	UpdateModelView();
-	UpdateProjection();
-}
-
-void WindowContext::UpdateModelView() const
+void WindowContext::UpdateView() const
 {
 	sl::Blackboard::Instance()->GetRenderContext().GetSubMVP3().NotifyModelview(m_mv_mat);
 
@@ -82,6 +76,13 @@ void WindowContext::UpdateViewport() const
 
 	auto& ur_rc = ur::Blackboard::Instance()->GetRenderContext();
 	ur_rc.SetViewport(0, 0, m_screen_width, m_screen_height);
+}
+
+void WindowContext::Bind()
+{
+	UpdateView();
+	UpdateProjection();
+	UpdateViewport();
 }
 
 }

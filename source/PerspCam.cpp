@@ -48,7 +48,7 @@ void PerspCam::Bind() const
 	UpdateRender();
 }
 
-sm::mat4 PerspCam::GetModelViewMat() const
+sm::mat4 PerspCam::GetViewMat() const
 {
 	sm::mat4 mat;
 	float* m = mat.x;
@@ -235,7 +235,7 @@ void PerspCam::UpdateRender() const
 		return;
 	}
 
-	wc->SetModelView(GetModelViewMat());
+	wc->SetView(GetViewMat());
 }
 
 }
