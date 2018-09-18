@@ -9,12 +9,8 @@
 namespace pt3
 {
 
-Shader::Shader(WindowContext& wc, ur::RenderContext* rc, const char* vs, const char* fs,
-	           const std::vector<std::string>& textures, const CU_VEC<ur::VertexAttrib>& va_list,
-               const std::string& view_name, const std::string& proj_name)
-	: ur::Shader(rc, vs, fs, textures, va_list)
-	, m_view_name(view_name)
-	, m_proj_name(proj_name)
+Shader::Shader(WindowContext& wc, ur::RenderContext* rc, const pt0::Shader::Params& params)
+	: pt0::Shader(rc, params)
 {
 	m_conn_view = wc.DoOnView(boost::bind(&Shader::UpdateViewMat, this, _1));
 	m_conn_proj = wc.DoOnProj(boost::bind(&Shader::UpdateProjMat, this, _1));
@@ -39,7 +35,7 @@ void Shader::UpdateViewMat(const sm::mat4& view_mat)
 
 	Use();
 
-	SetMat4(m_view_name.c_str(), view_mat.x);
+	SetMat4(m_uniform_names.view_mat.c_str(), view_mat.x);
 }
 
 void Shader::UpdateProjMat(const sm::mat4& proj_mat)
@@ -55,7 +51,7 @@ void Shader::UpdateProjMat(const sm::mat4& proj_mat)
 
 	Use();
 
-	SetMat4(m_proj_name.c_str(), proj_mat.x);
+	SetMat4(m_uniform_names.proj_mat.c_str(), proj_mat.x);
 }
 
 }
