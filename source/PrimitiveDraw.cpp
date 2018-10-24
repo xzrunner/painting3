@@ -1,11 +1,7 @@
 #include "painting3/PrimitiveDraw.h"
 #include "painting3/AABB.h"
 
-#include <rvg.h>
-#include <shaderlab/Blackboard.h>
-#include <shaderlab/ShaderMgr.h>
-#include <shaderlab/RenderContext.h>
-#include <shaderlab/Shape3Shader.h>
+//#include <rvg.h>
 #include <unirender/typedef.h>
 
 namespace pt3
@@ -13,34 +9,34 @@ namespace pt3
 
 void PrimitiveDraw::Init()
 {
-	rvg_style_init();
+//	rvg_style_init();
 }
 
 void PrimitiveDraw::SetColor(uint32_t abgr)
 {
-	auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
-	auto shader = static_cast<sl::Shape3Shader*>(shader_mgr.GetShader(sl::SHAPE3));
-	shader->SetColor(abgr);
+	//auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
+	//auto shader = static_cast<sl::Shape3Shader*>(shader_mgr.GetShader(sl::SHAPE3));
+	//shader->SetColor(abgr);
 }
 
 void PrimitiveDraw::Line(const sm::vec3& p0, const sm::vec3& p1)
 {
-	SetShader(sl::SHAPE3);
-	rvg_line3(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z);
+	//SetShader(sl::SHAPE3);
+	//rvg_line3(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z);
 }
 
 void PrimitiveDraw::TriLine(const sm::vec3& p0, const sm::vec3& p1, const sm::vec3& p2)
 {
-	sm::vec3 vertices[] = {p0, p1, p1, p2, p2, p0};
-	SetShader(sl::SHAPE3);
-	rvg_lines3(&vertices[0].x, 6);
+	//sm::vec3 vertices[] = {p0, p1, p1, p2, p2, p0};
+	//SetShader(sl::SHAPE3);
+	//rvg_lines3(&vertices[0].x, 6);
 }
 
 void PrimitiveDraw::Rect(const sm::vec3& p0, const sm::vec3& p1)
 {
-	SetShader(sl::SHAPE3);
-	assert(p0.y == p1.y);
-	rvg_rect3_on_y(p0.x, p0.z, p1.x, p1.z, p0.y, true);
+	//SetShader(sl::SHAPE3);
+	//assert(p0.y == p1.y);
+	//rvg_rect3_on_y(p0.x, p0.z, p1.x, p1.z, p0.y, true);
 }
 
 void PrimitiveDraw::Cube(const AABB& aabb)
@@ -196,101 +192,101 @@ void PrimitiveDraw::Cube(const sm::cube& cube, int texid)
 
 void PrimitiveDraw::Arc(const sm::mat4& mat, float radius, float start_angle, float end_angle)
 {
-	static const int NUM = 10;
+	//static const int NUM = 10;
 
-	std::vector<sm::vec3> vertices;
-	vertices.resize(NUM);
-	for (int i = 0; i < NUM; ++i)
-	{
-		float angle = start_angle + (end_angle - start_angle) * (static_cast<float>(i) / (NUM - 1));
-		vertices[i] = mat * (sm::mat4::RotatedZ(angle * SM_RAD_TO_DEG) * sm::vec3(radius, 0, 0));
-	}
+	//std::vector<sm::vec3> vertices;
+	//vertices.resize(NUM);
+	//for (int i = 0; i < NUM; ++i)
+	//{
+	//	float angle = start_angle + (end_angle - start_angle) * (static_cast<float>(i) / (NUM - 1));
+	//	vertices[i] = mat * (sm::mat4::RotatedZ(angle * SM_RAD_TO_DEG) * sm::vec3(radius, 0, 0));
+	//}
 
-	SetShader(sl::SHAPE3);
-	rvg_polyline3(&vertices[0].x, NUM, false);
+	//SetShader(sl::SHAPE3);
+	//rvg_polyline3(&vertices[0].x, NUM, false);
 }
 
 void PrimitiveDraw::Circle(const sm::vec3& center, const sm::vec3& normal, float radius, bool filling)
 {
-	static const int NUM = 16;
+	//static const int NUM = 16;
 
-	// rotate normal 90 degree
-	sm::vec3 r_vec;
-	if (normal.x != 0 || normal.y != 0) {
-		r_vec.x = -normal.y;
-		r_vec.y = normal.x;
-		r_vec.z = 0;
-	} else {
-		r_vec.x = 1;
-		r_vec.y = 0;
-		r_vec.z = 0;
-	}
+	//// rotate normal 90 degree
+	//sm::vec3 r_vec;
+	//if (normal.x != 0 || normal.y != 0) {
+	//	r_vec.x = -normal.y;
+	//	r_vec.y = normal.x;
+	//	r_vec.z = 0;
+	//} else {
+	//	r_vec.x = 1;
+	//	r_vec.y = 0;
+	//	r_vec.z = 0;
+	//}
 
-	if (!filling)
-	{
-		std::vector<sm::vec3> vertices;
-		vertices.resize(NUM);
-		for (int i = 0; i < NUM; ++i) {
-			float angle = SM_PI * 2 * (static_cast<float>(i) / (NUM - 1));
-			auto mat = sm::mat4::RotatedAxis(normal, angle);
-			vertices[i] = center + mat * (r_vec * radius);
-		}
+	//if (!filling)
+	//{
+	//	std::vector<sm::vec3> vertices;
+	//	vertices.resize(NUM);
+	//	for (int i = 0; i < NUM; ++i) {
+	//		float angle = SM_PI * 2 * (static_cast<float>(i) / (NUM - 1));
+	//		auto mat = sm::mat4::RotatedAxis(normal, angle);
+	//		vertices[i] = center + mat * (r_vec * radius);
+	//	}
 
-		SetShader(sl::SHAPE3);
-		rvg_polyline3(&vertices[0].x, vertices.size(), true);
-	}
-	else
-	{
-		std::vector<sm::vec3> vertices;
-		vertices.resize(NUM * 2 + 2);
-		int ptr = 0;
-		bool empty = true;
-		for (int i = 0; i < NUM; ++i)
-		{
-			float angle = SM_PI * 2 * (static_cast<float>(i) / (NUM - 1));
-			auto mat = sm::mat4::RotatedAxis(normal, angle);
-			vertices[ptr++] = center + mat * (r_vec * radius);
-			if (empty) {
-				vertices[ptr++] = vertices[0];
-				empty = false;
-			}
-			vertices[ptr++] = center;
-		}
-		vertices[ptr++] = vertices[NUM * 2];
+	//	SetShader(sl::SHAPE3);
+	//	rvg_polyline3(&vertices[0].x, vertices.size(), true);
+	//}
+	//else
+	//{
+	//	std::vector<sm::vec3> vertices;
+	//	vertices.resize(NUM * 2 + 2);
+	//	int ptr = 0;
+	//	bool empty = true;
+	//	for (int i = 0; i < NUM; ++i)
+	//	{
+	//		float angle = SM_PI * 2 * (static_cast<float>(i) / (NUM - 1));
+	//		auto mat = sm::mat4::RotatedAxis(normal, angle);
+	//		vertices[ptr++] = center + mat * (r_vec * radius);
+	//		if (empty) {
+	//			vertices[ptr++] = vertices[0];
+	//			empty = false;
+	//		}
+	//		vertices[ptr++] = center;
+	//	}
+	//	vertices[ptr++] = vertices[NUM * 2];
 
-		SetShader(sl::SHAPE3);
-		rvg_triangle_strip3(&vertices[0].x, vertices.size());
-	}
+	//	SetShader(sl::SHAPE3);
+	//	rvg_triangle_strip3(&vertices[0].x, vertices.size());
+	//}
 }
 
 void PrimitiveDraw::Cross(const sm::vec3& center, const sm::vec3& size)
 {
-	float vertices[18];
-	int idx = 0;
+	//float vertices[18];
+	//int idx = 0;
 
-	vertices[idx++] = center.x - size.x;
-	vertices[idx++] = center.y;
-	vertices[idx++] = center.z;
-	vertices[idx++] = center.x + size.x;
-	vertices[idx++] = center.y;
-	vertices[idx++] = center.z;
+	//vertices[idx++] = center.x - size.x;
+	//vertices[idx++] = center.y;
+	//vertices[idx++] = center.z;
+	//vertices[idx++] = center.x + size.x;
+	//vertices[idx++] = center.y;
+	//vertices[idx++] = center.z;
 
-	vertices[idx++] = center.x;
-	vertices[idx++] = center.y - size.y;
-	vertices[idx++] = center.z;
-	vertices[idx++] = center.x;
-	vertices[idx++] = center.y + size.y;
-	vertices[idx++] = center.z;
+	//vertices[idx++] = center.x;
+	//vertices[idx++] = center.y - size.y;
+	//vertices[idx++] = center.z;
+	//vertices[idx++] = center.x;
+	//vertices[idx++] = center.y + size.y;
+	//vertices[idx++] = center.z;
 
-	vertices[idx++] = center.x;
-	vertices[idx++] = center.y;
-	vertices[idx++] = center.z - size.x;
-	vertices[idx++] = center.x;
-	vertices[idx++] = center.y;
-	vertices[idx++] = center.z + size.z;
+	//vertices[idx++] = center.x;
+	//vertices[idx++] = center.y;
+	//vertices[idx++] = center.z - size.x;
+	//vertices[idx++] = center.x;
+	//vertices[idx++] = center.y;
+	//vertices[idx++] = center.z + size.z;
 
-	SetShader(sl::SHAPE3);
-	rvg_lines3(vertices, 6);
+	//SetShader(sl::SHAPE3);
+	//rvg_lines3(vertices, 6);
 }
 
 void PrimitiveDraw::Grids(const sm::cube& cube, const sm::vec3& size)
@@ -321,22 +317,22 @@ void PrimitiveDraw::Grids(const sm::cube& cube, const sm::vec3& size)
 		}
 	}
 
-	SetShader(sl::SHAPE3);
-	rvg_lines3(&lines[0].x, lines.size());
+	//SetShader(sl::SHAPE3);
+	//rvg_lines3(&lines[0].x, lines.size());
 }
 
 void PrimitiveDraw::Point(const sm::vec3& p)
 {
-	SetShader(sl::SHAPE3);
-	rvg_point3(p.x, p.y, p.z);
+	//SetShader(sl::SHAPE3);
+	//rvg_point3(p.x, p.y, p.z);
 }
 
 void PrimitiveDraw::Points(const std::vector<sm::vec3>& points)
 {
-	SetShader(sl::SHAPE3);
-	for (auto& p : points) {
-		rvg_point3(p.x, p.y, p.z);
-	}
+	//SetShader(sl::SHAPE3);
+	//for (auto& p : points) {
+	//	rvg_point3(p.x, p.y, p.z);
+	//}
 }
 
 void PrimitiveDraw::Polyline(const std::vector<sm::vec3>& polyline, bool loop)
@@ -345,31 +341,31 @@ void PrimitiveDraw::Polyline(const std::vector<sm::vec3>& polyline, bool loop)
 		return;
 	}
 
-	SetShader(sl::SHAPE3);
-	rvg_polyline3(&polyline[0].x, polyline.size(), loop);
+	//SetShader(sl::SHAPE3);
+	//rvg_polyline3(&polyline[0].x, polyline.size(), loop);
 }
 
 void PrimitiveDraw::Polygon(const std::vector<sm::vec3>& polygon)
 {
-	if (polygon.size() < 2) {
-		return;
-	}
+	//if (polygon.size() < 2) {
+	//	return;
+	//}
 
-	SetShader(sl::SHAPE3);
-	auto& mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
-	sl::Shape3Shader* shader = static_cast<sl::Shape3Shader*>(mgr.GetShader(sl::SHAPE3));
-	shader->SetType(ur::DRAW_TRIANGLES);
-	for (int i = 1, n = polygon.size(); i < n - 1; ++i) {
-		shader->Draw(&polygon[0].x, 1);
-		shader->Draw(&polygon[i].x, 1);
-		shader->Draw(&polygon[i+1].x, 1);
-	}
+	//SetShader(sl::SHAPE3);
+	//auto& mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
+	//sl::Shape3Shader* shader = static_cast<sl::Shape3Shader*>(mgr.GetShader(sl::SHAPE3));
+	//shader->SetType(ur::DRAW_TRIANGLES);
+	//for (int i = 1, n = polygon.size(); i < n - 1; ++i) {
+	//	shader->Draw(&polygon[0].x, 1);
+	//	shader->Draw(&polygon[i].x, 1);
+	//	shader->Draw(&polygon[i+1].x, 1);
+	//}
 }
 
 void PrimitiveDraw::SetShader(int shader_type)
 {
-	sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr().SetShader(
-		static_cast<sl::ShaderType>(shader_type));
+	//sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr().SetShader(
+	//	static_cast<sl::ShaderType>(shader_type));
 }
 
 }

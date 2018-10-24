@@ -10,8 +10,6 @@
 #include <unirender/VertexAttrib.h>
 #include <unirender/typedef.h>
 #include <unirender/RenderContext.h>
-#include <shaderlab/Blackboard.h>
-#include <shaderlab/RenderContext.h>
 
 namespace
 {
@@ -38,9 +36,6 @@ CU_SINGLETON_DEFINITION(EffectsManager);
 
 EffectsManager::EffectsManager()
 {
-	auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
-	shader_mgr.FlushShader();
-
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
 	CU_VEC<ur::VertexAttrib> default_layout;
@@ -89,12 +84,6 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 {
 	if (effect < EFFECT_MAX_COUNT)
 	{
-		auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
-		shader_mgr.SetShader(sl::EXTERN_SHADER);
-
-		// flush shader status
-		shader_mgr.BindRenderShader(nullptr, sl::EXTERN_SHADER);
-
 		if (m_effects[effect]) {
 			m_effects[effect]->Use();
 		}

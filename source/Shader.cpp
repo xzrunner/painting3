@@ -1,11 +1,6 @@
 #include "painting3/Shader.h"
 #include "painting3/WindowContext.h"
 
-// todo: rm dependence of shaderlab
-#include <shaderlab/Blackboard.h>
-#include <shaderlab/RenderContext.h>
-#include <shaderlab/ShaderMgr.h>
-
 namespace pt3
 {
 
@@ -29,10 +24,6 @@ void Shader::UpdateViewMat(const sm::mat4& view_mat)
 	}
 	m_view_mat = view_mat;
 
-	auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
-	shader_mgr.SetShader(sl::EXTERN_SHADER);
-	shader_mgr.BindRenderShader(nullptr, sl::EXTERN_SHADER);
-
 	Use();
 
 	SetMat4(m_uniform_names.view_mat.c_str(), view_mat.x);
@@ -44,10 +35,6 @@ void Shader::UpdateProjMat(const sm::mat4& proj_mat)
 		return;
 	}
 	m_proj_mat = proj_mat;
-
-	auto& shader_mgr = sl::Blackboard::Instance()->GetRenderContext().GetShaderMgr();
-	shader_mgr.SetShader(sl::EXTERN_SHADER);
-	shader_mgr.BindRenderShader(nullptr, sl::EXTERN_SHADER);
 
 	Use();
 

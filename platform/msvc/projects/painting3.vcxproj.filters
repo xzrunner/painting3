@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\..\source\RenderSystem.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\MaterialRenderer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\source\Shader.cpp">
       <Filter>data\shader</Filter>
     </ClCompile>
@@ -90,6 +93,9 @@
       <Filter>data\material</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\RenderSystem.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\MaterialRenderer.h">
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Shader.h">

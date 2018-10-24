@@ -1,7 +1,5 @@
 #include "painting3/WindowContext.h"
 
-#include <shaderlab/Blackboard.h>
-#include <shaderlab/RenderContext.h>
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
 
@@ -56,15 +54,11 @@ void WindowContext::SetScreen(int width, int height)
 
 void WindowContext::UpdateView() const
 {
-	sl::Blackboard::Instance()->GetRenderContext().GetSubMVP3().NotifyModelview(m_mv_mat);
-
 	m_on_view(m_mv_mat);
 }
 
 void WindowContext::UpdateProjection() const
 {
-	sl::Blackboard::Instance()->GetRenderContext().GetSubMVP3().NotifyProjection(m_proj_mat);
-
 	m_on_proj(m_proj_mat);
 }
 
