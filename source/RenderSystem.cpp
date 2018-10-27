@@ -1,8 +1,7 @@
 #include "painting3/RenderSystem.h"
 #include "painting3/EffectsManager.h"
-#include "painting3/Blackboard.h"
 #include "painting3/WindowContext.h"
-#include "painting3/PrimitiveDraw.h"
+#include "painting3/Blackboard.h"
 #include "painting3/Material.h"
 
 #include <model/typedef.h>
@@ -12,9 +11,11 @@
 #include <model/ParametricEquations.h>
 #include <model/MorphTargetAnim.h>
 #include <model/QuakeMapEntity.h>
+#include <tessellation/Painter.h>
 #include <unirender/Shader.h>
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
+#include <painting2/RenderSystem.h>
 #include <quake/Lightmaps.h>
 
 namespace
@@ -336,25 +337,25 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, int 
 	}
 }
 
-void RenderSystem::DrawSkeletalNodeDebug(const model::ModelInstance& model_inst, int node_idx, const RenderParams& params)
-{
-	auto& model = *model_inst.GetModel();
-	auto& g_trans = model_inst.GetGlobalTrans();
-
-	auto& nodes = static_cast<model::SkeletalAnim*>(model.ext.get())->GetAllNodes();
-	auto& node = *nodes[node_idx];
-	for (auto& child : node.children)
-	{
-		auto& ptrans = g_trans[node_idx];
-		auto& ctrans = g_trans[child];
-		PrimitiveDraw::Line(params.mt * ptrans.GetTranslate(), params.mt * ctrans.GetTranslate());
-
-		assert(node.meshes.empty());
-		for (auto& child : node.children) {
-			DrawSkeletalNodeDebug(model_inst, child, params);
-		}
-	}
-}
+//void RenderSystem::DrawSkeletalNodeDebug(const model::ModelInstance& model_inst, int node_idx, const RenderParams& params)
+//{
+//	auto& model = *model_inst.GetModel();
+//	auto& g_trans = model_inst.GetGlobalTrans();
+//
+//	auto& nodes = static_cast<model::SkeletalAnim*>(model.ext.get())->GetAllNodes();
+//	auto& node = *nodes[node_idx];
+//	for (auto& child : node.children)
+//	{
+//		auto& ptrans = g_trans[node_idx];
+//		auto& ctrans = g_trans[child];
+//		PrimitiveDraw::Line(params.mt * ptrans.GetTranslate(), params.mt * ctrans.GetTranslate());
+//
+//		assert(node.meshes.empty());
+//		for (auto& child : node.children) {
+//			DrawSkeletalNodeDebug(model_inst, child, params);
+//		}
+//	}
+//}
 
 void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& params)
 {
@@ -413,13 +414,16 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
 	}
 }
 
-void RenderSystem::DrawQuakeMapEntity(const model::QuakeMapEntity& entity,
-	                                  const RenderParams& params)
-{
-	PrimitiveDraw::SetColor(0xff0000ff);
-	for (auto& brush : entity.GetMapEntity()->brushes) {
-		PrimitiveDraw::Cube(params.mt_trans, brush.geometry->GetAABB());
-	}
-}
+//void RenderSystem::DrawQuakeMapEntity(const model::QuakeMapEntity& entity,
+//	                                  const RenderParams& params)
+//{
+//	tess::Painter pt;
+//	for (auto& brush : entity.GetMapEntity()->brushes) {
+//		pt.AddCube(brush.geometry->GetAABB(), [&](const sm::vec3& pos3)->sm::vec2 {
+//			return .TransPosProj3ToProj2(params.mt_trans * pos3, cam_mat);
+//		}, 0xff0000ff);
+//	}
+//	pt2::RenderSystem::DrawPainter(pt);
+//}
 
 }

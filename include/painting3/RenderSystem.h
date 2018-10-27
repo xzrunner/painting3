@@ -44,11 +44,11 @@ private:
 	static void DrawMorphAnim(const model::Model& model, const RenderParams& params);
 
 	static void DrawSkeletalNode(const model::ModelInstance& model, int node_idx, const RenderParams& params);
-	static void DrawSkeletalNodeDebug(const model::ModelInstance& model, int node_idx, const RenderParams& params);
+	//static void DrawSkeletalNodeDebug(const model::ModelInstance& model, int node_idx, const RenderParams& params);
 
 	static void DrawQuakeBSP(const model::Model& model, const RenderParams& params);
 
-	static void DrawQuakeMapEntity(const model::QuakeMapEntity& entity, const RenderParams& params);
+	//static void DrawQuakeMapEntity(const model::QuakeMapEntity& entity, const RenderParams& params);
 
 private:
 	mutable std::unique_ptr<model::Model> m_mat_sphere = nullptr;

@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\source\PrimitiveDraw.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\Viewport.cpp">
       <Filter>data\camera</Filter>
     </ClCompile>
@@ -62,9 +59,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\painting3\PrimitiveDraw.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\AABB.h">
       <Filter>data\bb</Filter>
     </ClInclude>
