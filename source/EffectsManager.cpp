@@ -74,6 +74,8 @@ EffectsManager::EffectsManager()
 		&rc, default_vs, no_tex_fs, default_textures, default_layout);
 	m_effects[EFFECT_SKINNED] = std::make_shared<ur::Shader>(
 		&rc, skinned_vs, default_fs, default_textures, skinned_layout);
+	m_effects[EFFECT_SKINNED_NO_TEX] = std::make_shared<ur::Shader>(
+		&rc, skinned_vs, no_tex_fs, default_textures, skinned_layout);
 	m_effects[EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
 		&rc, morph_vs, morph_fs, default_textures, morph_layout);
 	m_effects[EFFECT_BSP] = std::make_shared<ur::Shader>(
