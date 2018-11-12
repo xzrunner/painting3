@@ -172,7 +172,8 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 			material->specular, material->shininess);
 
 		if (mesh->effect == EffectsManager::EFFECT_DEFAULT ||
-			mesh->effect == EffectsManager::EFFECT_DEFAULT_NO_TEX) {
+			mesh->effect == EffectsManager::EFFECT_DEFAULT_NO_TEX ||
+			mesh->effect == EffectsManager::EFFECT_COLOR) {
 			mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
 			mgr->SetNormalMat(effect_type, params.mt);
 		}

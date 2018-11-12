@@ -37,6 +37,7 @@
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl" />
     <None Include="..\..\..\include\painting3\bsp.glsl" />
+    <None Include="..\..\..\include\painting3\color.glsl" />
     <None Include="..\..\..\include\painting3\default.glsl" />
     <None Include="..\..\..\include\painting3\morph.glsl" />
     <None Include="..\..\..\include\painting3\skinned.glsl" />

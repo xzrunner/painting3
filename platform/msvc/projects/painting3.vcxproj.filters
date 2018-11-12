@@ -106,5 +106,8 @@
     <None Include="..\..\..\include\painting3\bsp.glsl">
       <Filter>render\shader</Filter>
     </None>
+    <None Include="..\..\..\include\painting3\color.glsl">
+      <Filter>render\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
