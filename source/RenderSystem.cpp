@@ -66,13 +66,13 @@ void RenderSystem::DrawMaterial(const Material& material, const RenderParams& pa
 		m_mat_sphere->textures.clear();
 		m_mat_sphere->textures.push_back({ "unknown", material.diffuse_tex });
 		for (auto& mesh : m_mat_sphere->meshes) {
-			mesh->effect = EffectsManager::EFFECT_DEFAULT;
+			mesh->effect = model::EFFECT_DEFAULT;
 		}
 	}
 	else
 	{
 		for (auto& mesh : m_mat_sphere->meshes) {
-			mesh->effect = EffectsManager::EFFECT_DEFAULT_NO_TEX;
+			mesh->effect = model::EFFECT_DEFAULT_NO_TEX;
 		}
 	}
 
@@ -148,7 +148,7 @@ void RenderSystem::CreateMaterialSphere() const
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_NORMALS;
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_TEXCOORDS;
 	mesh->material = 0;
-	mesh->effect = EffectsManager::EFFECT_DEFAULT;
+	mesh->effect = model::EFFECT_DEFAULT;
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
@@ -170,9 +170,9 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 			}
 		}
 
-		auto effect_type = EffectsManager::EffectType(mesh->effect);
+		auto effect_type = model::EffectType(mesh->effect);
 		if (params.user_effect) {
-			effect_type = EffectsManager::EFFECT_USER;
+			effect_type = model::EFFECT_USER;
 		}
 		auto effect = mgr->Use(effect_type);
 		if (!effect) {
@@ -193,9 +193,9 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 			mgr->SetMaterial(effect_type, material->ambient, material->diffuse,
 				material->specular, material->shininess);
 
-			if (effect_type == EffectsManager::EFFECT_DEFAULT ||
-				effect_type == EffectsManager::EFFECT_DEFAULT_NO_TEX ||
-				effect_type == EffectsManager::EFFECT_COLOR) {
+			if (effect_type == model::EFFECT_DEFAULT ||
+				effect_type == model::EFFECT_DEFAULT_NO_TEX ||
+				effect_type == model::EFFECT_COLOR) {
 				mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
 				mgr->SetNormalMat(effect_type, params.mt);
 			}
@@ -249,7 +249,7 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const RenderParams& 
 			rc.BindTexture(tex_id, 0);
 		}
 
-		auto effect_type = EffectsManager::EffectType(mesh->effect);
+		auto effect_type = model::EffectType(mesh->effect);
 		auto effect = mgr->Use(effect_type);
 
 		mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
@@ -325,7 +325,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, int 
 				ur::Blackboard::Instance()->GetRenderContext().BindTexture(tex_id, 0);
 			}
 
-			auto effect_type = EffectsManager::EffectType(mesh->effect);
+			auto effect_type = model::EffectType(mesh->effect);
 			auto effect = mgr->Use(effect_type);
 			auto mode = effect->GetDrawMode();
 
@@ -387,7 +387,7 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
 	rc.SetCull(ur::CULL_DISABLE);
 
 	auto mgr = EffectsManager::Instance();
-	auto effect_type = EffectsManager::EFFECT_BSP;
+	auto effect_type = model::EFFECT_BSP;
 	auto effect = mgr->Use(effect_type);
 	auto mode = effect->GetDrawMode();
 	mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);

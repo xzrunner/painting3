@@ -3,6 +3,7 @@
 #include <cu/cu_macro.h>
 #include <SM_Vector.h>
 #include <SM_Matrix.h>
+#include <model/EffectType.h>
 
 #include <vector>
 #include <memory>
@@ -15,44 +16,27 @@ namespace pt3
 class EffectsManager
 {
 public:
-	enum EffectType
-	{
-		EFFECT_NULL = 0,
+	std::shared_ptr<ur::Shader> Use(model::EffectType effect);
 
-		EFFECT_DEFAULT,
-		EFFECT_DEFAULT_NO_TEX,
-		EFFECT_COLOR,
-		EFFECT_SKINNED,
-		EFFECT_SKINNED_NO_TEX,
-		EFFECT_MORPH_TARGET,
-		EFFECT_BSP,
-
-		EFFECT_USER,
-
-		EFFECT_MAX_COUNT,
-	};
-
-	std::shared_ptr<ur::Shader> Use(EffectType effect);
-
-	void SetMaterial(EffectType effect, const sm::vec3& ambient,
+	void SetMaterial(model::EffectType effect, const sm::vec3& ambient,
 		const sm::vec3& diffuse, const sm::vec3& specular, float shininess);
 
-	void SetLightPosition(EffectType effect, const sm::vec3& pos);
+	void SetLightPosition(model::EffectType effect, const sm::vec3& pos);
 
-	void SetProjMat(EffectType effect, const sm::mat4& mat);
-	void SetModelViewMat(EffectType effect, const sm::mat4& mat);
-	void SetNormalMat(EffectType effect, const sm::mat4& mat);
+	void SetProjMat(model::EffectType effect, const sm::mat4& mat);
+	void SetModelViewMat(model::EffectType effect, const sm::mat4& mat);
+	void SetNormalMat(model::EffectType effect, const sm::mat4& mat);
 
-	void SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int n);
+	void SetBoneMatrixes(model::EffectType effect, const sm::mat4* mat, int n);
 
 	void SetMorphAnimBlend(float blend);
 
 	void SetUserEffect(std::shared_ptr<ur::Shader>& user_et) {
-		m_effects[EFFECT_USER] = user_et;
+		m_effects[model::EFFECT_USER] = user_et;
 	}
 
 private:
-	std::shared_ptr<ur::Shader> m_effects[EFFECT_MAX_COUNT];
+	std::shared_ptr<ur::Shader> m_effects[model::EFFECT_MAX_COUNT];
 
 	CU_SINGLETON_DECLARATION(EffectsManager);
 

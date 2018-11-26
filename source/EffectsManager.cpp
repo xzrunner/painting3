@@ -75,25 +75,25 @@ EffectsManager::EffectsManager()
 	bsp_textures.push_back("u_base_tex");
 	bsp_textures.push_back("u_light_tex");
 
-	m_effects[EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_DEFAULT] = std::make_shared<ur::Shader>(
 		&rc, default_vs, default_fs, default_textures, default_layout);
-	m_effects[EFFECT_DEFAULT_NO_TEX] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_DEFAULT_NO_TEX] = std::make_shared<ur::Shader>(
 		&rc, default_vs, no_tex_fs, default_textures, default_layout);
-	m_effects[EFFECT_COLOR] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_COLOR] = std::make_shared<ur::Shader>(
 		&rc, color_vs, no_tex_fs, default_textures, color_layout);
-	m_effects[EFFECT_SKINNED] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_SKINNED] = std::make_shared<ur::Shader>(
 		&rc, skinned_vs, default_fs, default_textures, skinned_layout);
-	m_effects[EFFECT_SKINNED_NO_TEX] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_SKINNED_NO_TEX] = std::make_shared<ur::Shader>(
 		&rc, skinned_vs, no_tex_fs, default_textures, skinned_layout);
-	m_effects[EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_MORPH_TARGET] = std::make_shared<ur::Shader>(
 		&rc, morph_vs, morph_fs, default_textures, morph_layout);
-	m_effects[EFFECT_BSP] = std::make_shared<ur::Shader>(
+	m_effects[model::EFFECT_BSP] = std::make_shared<ur::Shader>(
 		&rc, bsp_vs, bsp_fs, bsp_textures, bsp_layout);
 }
 
-std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
+std::shared_ptr<ur::Shader> EffectsManager::Use(model::EffectType effect)
 {
-	if (effect < EFFECT_MAX_COUNT)
+	if (effect < model::EFFECT_MAX_COUNT)
 	{
 		if (m_effects[effect]) {
 			m_effects[effect]->Use();
@@ -109,9 +109,9 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(EffectType effect)
 	}
 }
 
-void EffectsManager::SetMaterial(EffectType effect, const sm::vec3& ambient, const sm::vec3& diffuse, const sm::vec3& specular, float shininess)
+void EffectsManager::SetMaterial(model::EffectType effect, const sm::vec3& ambient, const sm::vec3& diffuse, const sm::vec3& specular, float shininess)
 {
-	if (effect >= EFFECT_MAX_COUNT) {
+	if (effect >= model::EFFECT_MAX_COUNT) {
 		return;
 	}
 
@@ -122,44 +122,44 @@ void EffectsManager::SetMaterial(EffectType effect, const sm::vec3& ambient, con
 	e->SetFloat("u_shininess", shininess);
 }
 
-void EffectsManager::SetLightPosition(EffectType effect, const sm::vec3& pos)
+void EffectsManager::SetLightPosition(model::EffectType effect, const sm::vec3& pos)
 {
-	if (effect < EFFECT_MAX_COUNT) {
+	if (effect < model::EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetVec3("u_light_position", pos.xyz);
 	}
 }
 
-void EffectsManager::SetProjMat(EffectType effect, const sm::mat4& mat)
+void EffectsManager::SetProjMat(model::EffectType effect, const sm::mat4& mat)
 {
-	if (effect < EFFECT_MAX_COUNT) {
+	if (effect < model::EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMat4("u_projection", mat.x);
 	}
 }
 
-void EffectsManager::SetModelViewMat(EffectType effect, const sm::mat4& mat)
+void EffectsManager::SetModelViewMat(model::EffectType effect, const sm::mat4& mat)
 {
-	if (effect < EFFECT_MAX_COUNT) {
+	if (effect < model::EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMat4("u_modelview", mat.x);
 	}
 }
 
-void EffectsManager::SetNormalMat(EffectType effect, const sm::mat4& mat)
+void EffectsManager::SetNormalMat(model::EffectType effect, const sm::mat4& mat)
 {
-	if (effect < EFFECT_MAX_COUNT) {
+	if (effect < model::EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMat3("u_normal_matrix", sm::mat3(mat).x);
 	}
 }
 
-void EffectsManager::SetBoneMatrixes(EffectType effect, const sm::mat4* mat, int n)
+void EffectsManager::SetBoneMatrixes(model::EffectType effect, const sm::mat4* mat, int n)
 {
-	if (effect < EFFECT_MAX_COUNT) {
+	if (effect < model::EFFECT_MAX_COUNT) {
 		m_effects[effect]->SetMultiMat4("u_bone_matrix", &mat->x[0], n);
 	}
 }
 
 void EffectsManager::SetMorphAnimBlend(float blend)
 {
-	m_effects[EFFECT_MORPH_TARGET]->SetFloat("u_blend", blend);
+	m_effects[model::EFFECT_MORPH_TARGET]->SetFloat("u_blend", blend);
 }
 
 }
