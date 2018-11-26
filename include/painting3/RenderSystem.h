@@ -27,6 +27,8 @@ public:
 
 	DrawType type = DRAW_MESH;
 
+	bool user_effect = false;
+
 }; // RenderParams
 
 class RenderSystem

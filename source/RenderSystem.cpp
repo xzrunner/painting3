@@ -65,6 +65,15 @@ void RenderSystem::DrawMaterial(const Material& material, const RenderParams& pa
 		dst->diffuse_tex = 0;
 		m_mat_sphere->textures.clear();
 		m_mat_sphere->textures.push_back({ "unknown", material.diffuse_tex });
+		for (auto& mesh : m_mat_sphere->meshes) {
+			mesh->effect = EffectsManager::EFFECT_DEFAULT;
+		}
+	}
+	else
+	{
+		for (auto& mesh : m_mat_sphere->meshes) {
+			mesh->effect = EffectsManager::EFFECT_DEFAULT_NO_TEX;
+		}
 	}
 
 	DrawMesh(*m_mat_sphere, params);
@@ -162,22 +171,36 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 		}
 
 		auto effect_type = EffectsManager::EffectType(mesh->effect);
+		if (params.user_effect) {
+			effect_type = EffectsManager::EFFECT_USER;
+		}
 		auto effect = mgr->Use(effect_type);
-		effect->DrawBefore(tex);
-
-		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-		mgr->SetModelViewMat(effect_type, params.mt.x);
-
-		mgr->SetMaterial(effect_type, material->ambient, material->diffuse,
-			material->specular, material->shininess);
-
-		if (mesh->effect == EffectsManager::EFFECT_DEFAULT ||
-			mesh->effect == EffectsManager::EFFECT_DEFAULT_NO_TEX ||
-			mesh->effect == EffectsManager::EFFECT_COLOR) {
-			mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
-			mgr->SetNormalMat(effect_type, params.mt);
+		if (!effect) {
+			return;
 		}
 
+		if (params.user_effect)
+		{
+			effect->SetMat4("u_model", sm::mat4().x);
+		}
+		else
+		{
+			effect->DrawBefore(tex);
+
+			mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
+			mgr->SetModelViewMat(effect_type, params.mt.x);
+
+			mgr->SetMaterial(effect_type, material->ambient, material->diffuse,
+				material->specular, material->shininess);
+
+			if (effect_type == EffectsManager::EFFECT_DEFAULT ||
+				effect_type == EffectsManager::EFFECT_DEFAULT_NO_TEX ||
+				effect_type == EffectsManager::EFFECT_COLOR) {
+				mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
+				mgr->SetNormalMat(effect_type, params.mt);
+			}
+		}
+	
 		auto& geo = mesh->geometry;
 		auto mode = effect->GetDrawMode();
 		for (auto& sub : geo.sub_geometries)
