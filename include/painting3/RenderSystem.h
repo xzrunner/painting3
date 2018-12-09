@@ -6,6 +6,7 @@
 #include <memory>
 
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; }
+namespace ur { class Texture3D; }
 
 namespace pt3
 {
@@ -37,6 +38,8 @@ public:
 	void DrawMaterial(const Material& material, const RenderParams& params) const;
 
 	static void DrawModel(const model::ModelInstance& model, const RenderParams& params);
+
+	static void DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params);
 
 private:
 	void CreateMaterialSphere() const;

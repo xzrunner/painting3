@@ -15,8 +15,11 @@
 #include <unirender/Shader.h>
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
+#include <unirender/Texture3D.h>
 #include <painting2/RenderSystem.h>
 #include <quake/Lightmaps.h>
+#include <rendergraph/RenderMgr.h>
+#include <rendergraph/Tex3dRenderer.h>
 
 namespace
 {
@@ -110,6 +113,43 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 	}
 }
 
+void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params)
+{
+	float hw = t3d.Width() * 0.5f;
+	float hh = t3d.Height() * 0.5f;
+	float hd = t3d.Depth() * 0.5f;
+	hh /= hw;
+	hd /= hw;
+	hw = 0.5f;
+
+	const int slice_n = 200;
+	for (int i = 0; i < slice_n + 1; ++i)
+	{
+		// calc vertices
+		sm::vec3 vertices[4], texcoords[4];
+
+		const float z = -hd + hd * 2 / slice_n * i;
+		vertices[0] = sm::vec3(-hw, -hh, z);
+		vertices[1] = sm::vec3( hw, -hh, z);
+		vertices[2] = sm::vec3( hw,  hh, z);
+		vertices[3] = sm::vec3(-hw,  hh, z);
+		// trans
+		for (auto& v : vertices) {
+			v = params.mt_trans * v;
+		}
+
+		const float slice = 1.0f / slice_n * i;
+		texcoords[0] = sm::vec3(0, 0, slice);
+		texcoords[1] = sm::vec3(1, 0, slice);
+		texcoords[2] = sm::vec3(1, 1, slice);
+		texcoords[3] = sm::vec3(0, 1, slice);
+
+		auto sr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::TEX3D);
+		std::static_pointer_cast<rg::Tex3dRenderer>(sr)->
+			DrawCube(vertices[0].xyz, texcoords[0].xyz, t3d.TexID(), 0xffffffff);
+	}
+}
+
 void RenderSystem::CreateMaterialSphere() const
 {
 	m_mat_sphere = std::make_unique<model::Model>();
@@ -200,7 +240,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 				mgr->SetNormalMat(effect_type, params.mt);
 			}
 		}
-	
+
 		auto& geo = mesh->geometry;
 		auto mode = effect->GetDrawMode();
 		for (auto& sub : geo.sub_geometries)

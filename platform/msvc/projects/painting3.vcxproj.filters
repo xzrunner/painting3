@@ -25,6 +25,9 @@
     <Filter Include="data\shader">
       <UniqueIdentifier>{6333dd07-dfed-45c7-9398-c6147ce87b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data\component">
+      <UniqueIdentifier>{1f13740d-56e5-4ab7-9b2c-e70c87c7f8ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Viewport.cpp">
@@ -53,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Shader.cpp">
       <Filter>data\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Texture3D.cpp">
+      <Filter>data\component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Shader.h">
       <Filter>data\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\Texture3D.h">
+      <Filter>data\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
