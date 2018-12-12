@@ -115,11 +115,11 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 
 void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params)
 {
-	float hw = t3d.Width() * 0.5f;
-	float hh = t3d.Height() * 0.5f;
-	float hd = t3d.Depth() * 0.5f;
-	hh /= hw;
-	hd /= hw;
+	float hw = t3d.Width();
+	float hh = t3d.Height();
+	float hd = t3d.Depth();
+	hh /= hw * 2;
+	hd /= hw * 2;
 	hw = 0.5f;
 
 	const int slice_n = 200;
