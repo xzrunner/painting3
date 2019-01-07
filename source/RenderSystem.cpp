@@ -16,6 +16,7 @@
 #include <unirender/RenderContext.h>
 #include <unirender/Blackboard.h>
 #include <unirender/Texture3D.h>
+#include <painting0/Shader.h>
 #include <painting2/RenderSystem.h>
 #include <quake/Lightmaps.h>
 #include <rendergraph/RenderMgr.h>
@@ -218,6 +219,11 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 		if (!effect) {
 			return;
 		}
+
+        auto& res = params.resolution;
+        if (res.x != 0 && res.y != 0) {
+            std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(res.x, res.y);
+        }
 
 		if (params.user_effect)
 		{

@@ -30,6 +30,8 @@ public:
 
 	bool user_effect = false;
 
+    sm::ivec2 resolution;
+
 }; // RenderParams
 
 class RenderSystem
