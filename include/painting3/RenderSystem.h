@@ -30,23 +30,33 @@ public:
 
 	bool user_effect = false;
 
-    sm::ivec2 resolution;
-
 }; // RenderParams
+
+struct RenderContext
+{
+    RenderContext() {
+        resolution.MakeInvalid();
+        cam_pos.MakeInvalid();
+    }
+
+    sm::ivec2 resolution;
+    sm::vec3  cam_pos;
+
+}; // RenderContext
 
 class RenderSystem
 {
 public:
-	void DrawMaterial(const Material& material, const RenderParams& params) const;
+	void DrawMaterial(const Material& material, const RenderParams& params, const RenderContext& ctx = RenderContext()) const;
 
-	static void DrawModel(const model::ModelInstance& model, const RenderParams& params);
+	static void DrawModel(const model::ModelInstance& model, const RenderParams& params, const RenderContext& ctx = RenderContext());
 
 	static void DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params);
 
 private:
 	void CreateMaterialSphere() const;
 
-	static void DrawMesh(const model::Model& model, const RenderParams& params);
+	static void DrawMesh(const model::Model& model, const RenderParams& params, const RenderContext& ctx);
 
 	static void DrawMorphAnim(const model::Model& model, const RenderParams& params);
 

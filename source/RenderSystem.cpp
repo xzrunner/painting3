@@ -52,7 +52,7 @@ RenderSystem::RenderSystem()
 {
 }
 
-void RenderSystem::DrawMaterial(const Material& material, const RenderParams& params) const
+void RenderSystem::DrawMaterial(const Material& material, const RenderParams& params, const RenderContext& ctx) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere();
@@ -80,10 +80,10 @@ void RenderSystem::DrawMaterial(const Material& material, const RenderParams& pa
 		}
 	}
 
-	DrawMesh(*m_mat_sphere, params);
+	DrawMesh(*m_mat_sphere, params, ctx);
 }
 
-void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const RenderParams& params)
+void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const RenderParams& params, const RenderContext& ctx)
 {
 	auto& model = model_inst.GetModel();
 	auto& ext = model->ext;
@@ -102,7 +102,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 			DrawQuakeBSP(*model, params);
 			break;
 		case model::EXT_QUAKE_MAP:
-			DrawMesh(*model, params);
+			DrawMesh(*model, params, ctx);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
 			break;
@@ -110,7 +110,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 	}
 	else
 	{
-		DrawMesh(*model, params);
+		DrawMesh(*model, params, ctx);
 	}
 }
 
@@ -193,7 +193,7 @@ void RenderSystem::CreateMaterialSphere() const
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
-void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& params)
+void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& params, const RenderContext& ctx)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -220,10 +220,15 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 			return;
 		}
 
-        auto& res = params.resolution;
-        if (res.x != 0 && res.y != 0) {
-            std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(res.x, res.y);
+        if (ctx.resolution.IsValid()) {
+            std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(
+                ctx.resolution.x, ctx.resolution.y
+            );
         }
+        if (ctx.cam_pos.IsValid()) {
+            std::static_pointer_cast<pt0::Shader>(effect)->SetCamraPos(ctx.cam_pos);
+        }
+
 
 		if (params.user_effect)
 		{
