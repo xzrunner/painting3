@@ -193,6 +193,18 @@ void PerspCam::AimAtTarget()
 	UpdateRender();
 }
 
+void PerspCam::SetPosAndAngle(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
+{
+    m_pos = pos;
+    m_target = target;
+
+    m_distance = (m_target - m_pos).Length();
+
+    CalcUVN(up);
+
+    UpdateRender();
+}
+
 sm::mat4 PerspCam::GetRotateMat() const
 {
 	sm::mat4 mat;

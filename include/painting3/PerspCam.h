@@ -46,6 +46,8 @@ public:
 	float GetDistance() const { return m_distance; }
 	const sm::vec3& GetUpDir() const { return m_v; }
 
+    void SetPosAndAngle(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
+
 	sm::mat4 GetRotateMat() const;
 
 	float GetNear() const { return m_znear; }
