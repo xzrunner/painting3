@@ -55,16 +55,18 @@ public:
 	float GetAspect() const { return m_aspect; }
 	float GetAngleOfView() const { return m_angle_of_view; }
 
-	const sm::vec3 GetToward() const { return m_n; }
+    void SetAspect(float aspect);
+    void SetAngleOfView(float aov);
 
-	void SetAspect(float aspect) { m_aspect = aspect; }
+	const sm::vec3 GetToward() const { return m_n; }
 
 	void Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
 private:
 	void CalcUVN(const sm::vec3& up);
 
-	void UpdateRender() const;
+	void UpdateViewMat() const;
+    void UpdateProjMat() const;
 
 private:
 	// pos

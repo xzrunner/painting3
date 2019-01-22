@@ -9,7 +9,7 @@ namespace pt3
 
 static const float ZNEAR  = 0.01f;
 static const float ZFAR   = 1000;
-static const float ASPECT = 90;
+static const float ASPECT = 45;
 
 PerspCam::PerspCam()
 	: m_distance(0)
@@ -35,7 +35,7 @@ PerspCam::PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& 
 	m_distance = (pos - target).Length();
 	CalcUVN(up);
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::OnSize(float w, float h)
@@ -45,7 +45,7 @@ void PerspCam::OnSize(float w, float h)
 
 void PerspCam::Bind() const
 {
-	UpdateRender();
+	UpdateViewMat();
 }
 
 sm::mat4 PerspCam::GetViewMat() const
@@ -77,7 +77,7 @@ void PerspCam::Reset()
 
 	CalcUVN(m_init_up);
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::Slide(float du, float dv, float dn)
@@ -89,7 +89,7 @@ void PerspCam::Slide(float du, float dv, float dn)
 	m_target.y = m_target.x + du * m_u.y + dv * m_v.y + dn * m_n.y;
 	m_target.z = m_target.x + du * m_u.z + dv * m_v.z + dn * m_n.z;
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::Roll(float angle)
@@ -107,7 +107,7 @@ void PerspCam::Roll(float angle)
 	m_v.y = sn * t.y + cs * s.y;
 	m_v.z = sn * t.z + cs * s.z;
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::Yaw(float angle)
@@ -125,7 +125,7 @@ void PerspCam::Yaw(float angle)
 	m_u.y = sn * t.y + cs * s.y;
 	m_u.z = sn * t.z + cs * s.z;
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::Pitch(float angle)
@@ -143,7 +143,7 @@ void PerspCam::Pitch(float angle)
 	m_n.y = sn * t.y + cs * s.y;
 	m_n.z = sn * t.z + cs * s.z;
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::SetUpDir(const sm::vec3& up)
@@ -152,7 +152,7 @@ void PerspCam::SetUpDir(const sm::vec3& up)
 	m_u = m_v.Cross(m_n).Normalized();
 	m_v = m_n.Cross(m_u).Normalized();
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::Translate(float dx, float dy)
@@ -164,7 +164,7 @@ void PerspCam::Translate(float dx, float dy)
 	m_target += tx;
 	m_target += ty;
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::MoveToward(float offset)
@@ -172,7 +172,7 @@ void PerspCam::MoveToward(float offset)
 	m_pos += m_n * offset;
 	m_distance = (m_target - m_pos).Length();
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::Move(const sm::vec3& dir, float offset)
@@ -182,7 +182,7 @@ void PerspCam::Move(const sm::vec3& dir, float offset)
 	m_target = m_pos + m_n * m_distance;
 
 	CalcUVN(m_init_up);
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::AimAtTarget()
@@ -190,7 +190,7 @@ void PerspCam::AimAtTarget()
 	m_pos = m_target - m_n * m_distance;
 
 	CalcUVN(m_init_up);
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::SetPosAndAngle(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
@@ -202,7 +202,7 @@ void PerspCam::SetPosAndAngle(const sm::vec3& pos, const sm::vec3& target, const
 
     CalcUVN(up);
 
-    UpdateRender();
+    UpdateViewMat();
 }
 
 sm::mat4 PerspCam::GetRotateMat() const
@@ -214,6 +214,18 @@ sm::mat4 PerspCam::GetRotateMat() const
 	m[2] = m_n.x; m[6] = m_n.y; m[10] = m_n.z; m[14] = 0;
 	m[3] = 0;     m[7] = 0;     m[11] = 0;     m[15] = 1.0;
 	return mat;
+}
+
+void PerspCam::SetAspect(float aspect) 
+{ 
+    m_aspect = aspect; 
+    UpdateProjMat();
+}
+
+void PerspCam::SetAngleOfView(float aov) 
+{ 
+    m_angle_of_view = aov; 
+    UpdateProjMat();
 }
 
 void PerspCam::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up)
@@ -229,7 +241,7 @@ void PerspCam::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3
 
 	CalcUVN(up);
 
-	UpdateRender();
+	UpdateViewMat();
 }
 
 void PerspCam::CalcUVN(const sm::vec3& up)
@@ -240,7 +252,7 @@ void PerspCam::CalcUVN(const sm::vec3& up)
 	m_v = m_n.Cross(m_u).Normalized();
 }
 
-void PerspCam::UpdateRender() const
+void PerspCam::UpdateViewMat() const
 {
 	auto& wc = Blackboard::Instance()->GetWindowContext();
 	if (!wc) {
@@ -248,6 +260,16 @@ void PerspCam::UpdateRender() const
 	}
 
 	wc->SetView(GetViewMat());
+}
+
+void PerspCam::UpdateProjMat() const
+{
+    auto& wc = Blackboard::Instance()->GetWindowContext();
+    if (!wc) {
+        return;
+    }
+
+    wc->SetProjection(GetProjectionMat());
 }
 
 }
