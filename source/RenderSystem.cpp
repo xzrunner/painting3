@@ -116,9 +116,9 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 
 void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params)
 {
-	float hw = t3d.Width();
-	float hh = t3d.Height();
-	float hd = t3d.Depth();
+	float hw = static_cast<float>(t3d.Width());
+	float hh = static_cast<float>(t3d.Height());
+	float hd = static_cast<float>(t3d.Depth());
 	hh /= hw * 2;
 	hd /= hw * 2;
 	hw = 0.5f;
@@ -155,7 +155,7 @@ void RenderSystem::CreateMaterialSphere() const
 {
 	m_mat_sphere = std::make_unique<model::Model>();
 
-	auto sphere = std::make_unique<model::Sphere>(1);
+	auto sphere = std::make_unique<model::Sphere>(1.0f);
 
 	const int vertex_type = model::VERTEX_FLAG_NORMALS | model::VERTEX_FLAG_TEXCOORDS;
 	const int stride = 8;
@@ -222,7 +222,8 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 
         if (ctx.resolution.IsValid()) {
             std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(
-                ctx.resolution.x, ctx.resolution.y
+                static_cast<float>(ctx.resolution.x), 
+                static_cast<float>(ctx.resolution.y)
             );
         }
         if (ctx.cam_pos.IsValid()) {
