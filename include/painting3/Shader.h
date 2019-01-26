@@ -19,9 +19,10 @@ class WindowContext;
 class Shader : public pt0::Shader
 {
 public:
-	Shader(WindowContext& wc, ur::RenderContext* rc,
-		const pt0::Shader::Params& params);
+	Shader(ur::RenderContext* rc, const pt0::Shader::Params& params);
 	virtual ~Shader();
+
+    void AddNotify(WindowContext& wc);
 
 private:
 	void UpdateViewMat(const sm::mat4& view_mat);
@@ -31,8 +32,7 @@ private:
 	sm::mat4 m_view_mat;
 	sm::mat4 m_proj_mat;
 
-	boost::signals2::connection m_conn_view;
-	boost::signals2::connection m_conn_proj;
+    std::vector<std::pair<boost::signals2::connection, boost::signals2::connection>> m_notifies;
 
 }; // Shader
 
