@@ -21,6 +21,7 @@
 #include <quake/Lightmaps.h>
 #include <rendergraph/RenderMgr.h>
 #include <rendergraph/Tex3dRenderer.h>
+#include <rendergraph/MeshRenderer.h>
 
 namespace
 {
@@ -149,6 +150,12 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 		std::static_pointer_cast<rg::Tex3dRenderer>(sr)->
 			DrawCube(vertices[0].xyz, texcoords[0].xyz, t3d.TexID(), 0xffffffff);
 	}
+}
+
+void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t color)
+{
+    auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
+    std::static_pointer_cast<rg::MeshRenderer>(mr)->DrawLines(num, positions, color);
 }
 
 void RenderSystem::CreateMaterialSphere() const

@@ -53,6 +53,8 @@ public:
 
 	static void DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params);
 
+    static void DrawLines3D(size_t num, const float* positions, uint32_t color);
+
 private:
 	void CreateMaterialSphere() const;
 
