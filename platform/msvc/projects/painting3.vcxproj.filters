@@ -19,9 +19,6 @@
     <Filter Include="render\shader">
       <UniqueIdentifier>{29ead7e4-7bae-493c-a609-22ab0561b25f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="data\material">
-      <UniqueIdentifier>{5e9069d3-947c-46c7-945a-1f3775e1a898}</UniqueIdentifier>
-    </Filter>
     <Filter Include="data\shader">
       <UniqueIdentifier>{6333dd07-dfed-45c7-9398-c6147ce87b58}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     <ClCompile Include="..\..\..\source\Texture3D.cpp">
       <Filter>data\component</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\MaterialMgr.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\AABB.h">
@@ -86,9 +86,6 @@
     <ClInclude Include="..\..\..\include\painting3\OrthoCam.h">
       <Filter>data\camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\Material.h">
-      <Filter>data\material</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\RenderSystem.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -97,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Texture3D.h">
       <Filter>data\component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\MaterialMgr.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

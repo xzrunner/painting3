@@ -2,7 +2,6 @@
 #include "painting3/EffectsManager.h"
 #include "painting3/WindowContext.h"
 #include "painting3/Blackboard.h"
-#include "painting3/Material.h"
 
 #include <model/typedef.h>
 #include <model/BspModel.h>
@@ -17,10 +16,12 @@
 #include <unirender/Blackboard.h>
 #include <unirender/Texture3D.h>
 #include <painting0/Shader.h>
+#include <painting0/Material.h>
+#include <painting0/RenderPass.h>
 #include <painting2/RenderSystem.h>
 #include <quake/Lightmaps.h>
 #include <rendergraph/RenderMgr.h>
-#include <rendergraph/Tex3dRenderer.h>
+#include <rendergraph/VolumeRenderer.h>
 #include <rendergraph/MeshRenderer.h>
 
 namespace
@@ -53,38 +54,39 @@ RenderSystem::RenderSystem()
 {
 }
 
-void RenderSystem::DrawMaterial(const Material& material, const RenderParams& params, const RenderContext& ctx) const
+void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParams& params, const RenderContext& ctx) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere();
 	}
 
-	auto& dst = m_mat_sphere->materials[0];
-	dst->ambient   = material.ambient;
-	dst->diffuse   = material.diffuse;
-	dst->specular  = material.specular;
-	dst->shininess = material.shininess;
-	dst->diffuse_tex = -1;
-	if (material.diffuse_tex)
-	{
-		dst->diffuse_tex = 0;
-		m_mat_sphere->textures.clear();
-		m_mat_sphere->textures.push_back({ "unknown", material.diffuse_tex });
-		for (auto& mesh : m_mat_sphere->meshes) {
-			mesh->effect = model::EFFECT_DEFAULT;
-		}
-	}
-	else
-	{
+	//auto& dst = m_mat_sphere->materials[0];
+	//dst->ambient   = material.ambient;
+	//dst->diffuse   = material.diffuse;
+	//dst->specular  = material.specular;
+	//dst->shininess = material.shininess;
+	//dst->diffuse_tex = -1;
+	//if (material.diffuse_tex)
+	//{
+	//	dst->diffuse_tex = 0;
+	//	m_mat_sphere->textures.clear();
+	//	m_mat_sphere->textures.push_back({ "unknown", material.diffuse_tex });
+	//	for (auto& mesh : m_mat_sphere->meshes) {
+	//		mesh->effect = model::EFFECT_DEFAULT;
+	//	}
+	//}
+	//else
+	//{
 		for (auto& mesh : m_mat_sphere->meshes) {
 			mesh->effect = model::EFFECT_DEFAULT_NO_TEX;
 		}
-	}
+	//}
 
-	DrawMesh(*m_mat_sphere, params, ctx);
+    DrawMesh(*m_mat_sphere, { material }, params, ctx);
 }
 
-void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const RenderParams& params, const RenderContext& ctx)
+void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
+                             const RenderParams& params, const RenderContext& ctx)
 {
 	auto& model = model_inst.GetModel();
 	auto& ext = model->ext;
@@ -93,17 +95,17 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 		switch (ext->Type())
 		{
 		case model::EXT_MORPH_TARGET:
-			DrawMorphAnim(*model, params);
+			DrawMorphAnim(*model, materials, params);
 			break;
 		case model::EXT_SKELETAL:
-			DrawSkeletalNode(model_inst, 0, params);
+			DrawSkeletalNode(model_inst, materials, 0, params);
 			//DrawSkeletalNodeDebug(model, 0, params.mt);
 			break;
 		case model::EXT_QUAKE_BSP:
 			DrawQuakeBSP(*model, params);
 			break;
 		case model::EXT_QUAKE_MAP:
-			DrawMesh(*model, params, ctx);
+			DrawMesh(*model, materials, params, ctx);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
 			break;
@@ -111,7 +113,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const Rende
 	}
 	else
 	{
-		DrawMesh(*model, params, ctx);
+		DrawMesh(*model, materials, params, ctx);
 	}
 }
 
@@ -147,7 +149,7 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 		texcoords[3] = sm::vec3(0, 1, slice);
 
 		auto sr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::TEX3D);
-		std::static_pointer_cast<rg::Tex3dRenderer>(sr)->
+		std::static_pointer_cast<rg::VolumeRenderer>(sr)->
 			DrawCube(vertices[0].xyz, texcoords[0].xyz, t3d.TexID(), 0xffffffff);
 	}
 }
@@ -157,6 +159,14 @@ void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t colo
     auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
     std::static_pointer_cast<rg::MeshRenderer>(mr)->DrawLines(num, positions, color);
 }
+
+//void RenderSystem::DrawPasses(const std::vector<pt0::RenderPass>& passes)
+//{
+//    for (auto& pass : passes)
+//    {
+//
+//    }
+//}
 
 void RenderSystem::CreateMaterialSphere() const
 {
@@ -200,7 +210,8 @@ void RenderSystem::CreateMaterialSphere() const
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
-void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& params, const RenderContext& ctx)
+void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
+                            const RenderParams& params, const RenderContext& ctx)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -229,8 +240,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 
         if (ctx.resolution.IsValid()) {
             std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(
-                static_cast<float>(ctx.resolution.x), 
-                static_cast<float>(ctx.resolution.y)
+                static_cast<float>(ctx.resolution.x), static_cast<float>(ctx.resolution.y)
             );
         }
         if (ctx.cam_pos.IsValid()) {
@@ -249,8 +259,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 			mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
 			mgr->SetModelViewMat(effect_type, params.mt.x);
 
-			mgr->SetMaterial(effect_type, material->ambient, material->diffuse,
-				material->specular, material->shininess);
+            materials[mesh->material].Bind(*effect);
 
 			if (effect_type == model::EFFECT_DEFAULT ||
 				effect_type == model::EFFECT_DEFAULT_NO_TEX ||
@@ -290,7 +299,9 @@ void RenderSystem::DrawMesh(const model::Model& model, const RenderParams& param
 	}
 }
 
-void RenderSystem::DrawMorphAnim(const model::Model& model, const RenderParams& params)
+void RenderSystem::DrawMorphAnim(const model::Model& model,
+                                 const std::vector<pt0::Material>& materials,
+                                 const RenderParams& params)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -315,8 +326,7 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const RenderParams& 
 		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
 		mgr->SetNormalMat(effect_type, params.mt);
 
-		mgr->SetMaterial(effect_type, material->ambient, material->diffuse,
-			material->specular, material->shininess);
+        materials[mesh->material].Bind(*effect);
 
 		mgr->SetModelViewMat(effect_type, params.mt.x);
 
@@ -356,7 +366,8 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const RenderParams& 
 	}
 }
 
-void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, int node_idx, const RenderParams& params)
+void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
+                                    int node_idx, const RenderParams& params)
 {
 	auto& model = *model_inst.GetModel();
 	auto& g_trans = model_inst.GetGlobalTrans();
@@ -366,7 +377,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, int 
 	{
 		assert(node.meshes.empty());
 		for (auto& child : node.children) {
-			DrawSkeletalNode(model_inst, child, params);
+			DrawSkeletalNode(model_inst, materials, child, params);
 		}
 	}
 	else
@@ -400,8 +411,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, int 
 			mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
 			mgr->SetNormalMat(effect_type, child_mat);
 
-			mgr->SetMaterial(effect_type, material->ambient, material->diffuse,
-				material->specular, material->shininess);
+            materials[mesh->material].Bind(*effect);
 
 			mgr->SetModelViewMat(effect_type, child_mat.x);
 

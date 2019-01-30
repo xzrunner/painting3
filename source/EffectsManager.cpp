@@ -109,19 +109,6 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(model::EffectType effect)
 	}
 }
 
-void EffectsManager::SetMaterial(model::EffectType effect, const sm::vec3& ambient, const sm::vec3& diffuse, const sm::vec3& specular, float shininess)
-{
-	if (effect >= model::EFFECT_MAX_COUNT) {
-		return;
-	}
-
-	auto& e = m_effects[effect];
-	e->SetVec3("u_ambient_material", ambient.xyz);
-	e->SetVec3("u_diffuse_material", diffuse.xyz);
-	e->SetVec3("u_specular_material", specular.xyz);
-	e->SetFloat("u_shininess", shininess);
-}
-
 void EffectsManager::SetLightPosition(model::EffectType effect, const sm::vec3& pos)
 {
 	if (effect < model::EFFECT_MAX_COUNT) {

@@ -18,9 +18,6 @@ class EffectsManager
 public:
 	std::shared_ptr<ur::Shader> Use(model::EffectType effect);
 
-	void SetMaterial(model::EffectType effect, const sm::vec3& ambient,
-		const sm::vec3& diffuse, const sm::vec3& specular, float shininess);
-
 	void SetLightPosition(model::EffectType effect, const sm::vec3& pos);
 
 	void SetProjMat(model::EffectType effect, const sm::mat4& mat);

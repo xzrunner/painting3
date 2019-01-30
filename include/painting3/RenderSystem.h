@@ -4,14 +4,14 @@
 #include <SM_Matrix.h>
 
 #include <memory>
+#include <vector>
 
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; }
 namespace ur { class Texture3D; }
+namespace pt0 { class Material; class RenderPass; }
 
 namespace pt3
 {
-
-class Material;
 
 class RenderParams
 {
@@ -47,22 +47,29 @@ struct RenderContext
 class RenderSystem
 {
 public:
-	void DrawMaterial(const Material& material, const RenderParams& params, const RenderContext& ctx = RenderContext()) const;
+	void DrawMaterial(const pt0::Material& material, const RenderParams& params,
+        const RenderContext& ctx = RenderContext()) const;
 
-	static void DrawModel(const model::ModelInstance& model, const RenderParams& params, const RenderContext& ctx = RenderContext());
+	static void DrawModel(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
+        const RenderParams& params, const RenderContext& ctx = RenderContext());
 
 	static void DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params);
 
     static void DrawLines3D(size_t num, const float* positions, uint32_t color);
 
+//    static void DrawPasses(const std::vector<pt0::RenderPass>& passes);
+
 private:
 	void CreateMaterialSphere() const;
 
-	static void DrawMesh(const model::Model& model, const RenderParams& params, const RenderContext& ctx);
+	static void DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
+        const RenderParams& params, const RenderContext& ctx);
 
-	static void DrawMorphAnim(const model::Model& model, const RenderParams& params);
+	static void DrawMorphAnim(const model::Model& model,
+        const std::vector<pt0::Material>& materials, const RenderParams& params);
 
-	static void DrawSkeletalNode(const model::ModelInstance& model, int node_idx, const RenderParams& params);
+	static void DrawSkeletalNode(const model::ModelInstance& model,
+        const std::vector<pt0::Material>& materials, int node_idx, const RenderParams& params);
 	//static void DrawSkeletalNodeDebug(const model::ModelInstance& model, int node_idx, const RenderParams& params);
 
 	static void DrawQuakeBSP(const model::Model& model, const RenderParams& params);

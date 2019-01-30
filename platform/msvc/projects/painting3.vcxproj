@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Blackboard.cpp" />
+    <ClCompile Include="..\..\..\source\MaterialMgr.cpp" />
     <ClCompile Include="..\..\..\source\OrthoCam.cpp" />
     <ClCompile Include="..\..\..\source\PerspCam.cpp" />
     <ClCompile Include="..\..\..\source\EffectsManager.cpp" />
@@ -25,7 +26,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\AABB.h" />
     <ClInclude Include="..\..\..\include\painting3\Blackboard.h" />
-    <ClInclude Include="..\..\..\include\painting3\Material.h" />
+    <ClInclude Include="..\..\..\include\painting3\MaterialMgr.h" />
     <ClInclude Include="..\..\..\include\painting3\OrthoCam.h" />
     <ClInclude Include="..\..\..\include\painting3\PerspCam.h" />
     <ClInclude Include="..\..\..\include\painting3\EffectsManager.h" />
@@ -87,7 +88,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\rendergraph\include;..\..\..\..\tessellation\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\rendergraph\include;..\..\..\..\tessellation\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;__STDC_LIMIT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -101,7 +102,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\rendergraph\include;..\..\..\..\tessellation\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\rendergraph\include;..\..\..\..\tessellation\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;__STDC_LIMIT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
