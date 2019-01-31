@@ -25,6 +25,9 @@
     <Filter Include="data\component">
       <UniqueIdentifier>{1f13740d-56e5-4ab7-9b2c-e70c87c7f8ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data\light">
+      <UniqueIdentifier>{f04882d2-f33a-4dcb-99b5-357a7b568812}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Viewport.cpp">
@@ -97,6 +100,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\MaterialMgr.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\Light.h">
+      <Filter>data\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\PointLight.h">
+      <Filter>data\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\DirectionalLight.h">
+      <Filter>data\shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
