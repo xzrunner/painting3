@@ -2,11 +2,13 @@
 
 #include <cu/cu_macro.h>
 #include <SM_Matrix.h>
+#include <model/EffectType.h>
+#include <unirender/Texture.h>
 
 #include <memory>
 #include <vector>
 
-namespace model { struct Model; class ModelInstance; class QuakeMapEntity; }
+namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
 namespace ur { class Texture3D; }
 namespace pt0 { class Material; class RenderPass; }
 
@@ -50,6 +52,9 @@ public:
 	void DrawMaterial(const pt0::Material& material, const RenderParams& params,
         const RenderContext& ctx = RenderContext()) const;
 
+    static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
+        const RenderParams& params, const RenderContext& ctx = RenderContext());
+
 	static void DrawModel(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const RenderContext& ctx = RenderContext());
 
@@ -57,11 +62,12 @@ public:
 
     static void DrawLines3D(size_t num, const float* positions, uint32_t color);
 
-//    static void DrawPasses(const std::vector<pt0::RenderPass>& passes);
-
 private:
 	void CreateMaterialSphere() const;
 
+    static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
+        model::EffectType effect, const ur::TexturePtr& diffuse_tex,
+        const RenderParams& params, const RenderContext& ctx);
 	static void DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const RenderContext& ctx);
 

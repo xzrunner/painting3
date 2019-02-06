@@ -85,6 +85,12 @@ void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParam
     DrawMesh(*m_mat_sphere, { material }, params, ctx);
 }
 
+void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
+                            const RenderParams& params, const RenderContext& ctx)
+{
+    DrawMesh(mesh, material, model::EFFECT_DEFAULT_NO_TEX, nullptr, params, ctx);
+}
+
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
                              const RenderParams& params, const RenderContext& ctx)
 {
@@ -210,6 +216,81 @@ void RenderSystem::CreateMaterialSphere() const
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
+void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
+                            model::EffectType effect_type, const ur::TexturePtr& diffuse_tex,
+                            const RenderParams& params, const RenderContext& ctx)
+{
+    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    auto mgr = EffectsManager::Instance();
+
+	if (params.user_effect) {
+		effect_type = model::EFFECT_USER;
+	}
+	auto effect = mgr->Use(effect_type);
+	if (!effect) {
+		return;
+	}
+
+    if (ctx.resolution.IsValid()) {
+        std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(
+            static_cast<float>(ctx.resolution.x), static_cast<float>(ctx.resolution.y)
+        );
+    }
+    if (ctx.cam_pos.IsValid()) {
+        std::static_pointer_cast<pt0::Shader>(effect)->SetCamraPos(ctx.cam_pos);
+    }
+
+
+	if (params.user_effect)
+	{
+		effect->SetMat4("u_model", sm::mat4().x);
+	}
+	else
+	{
+		effect->DrawBefore(diffuse_tex);
+
+		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
+		mgr->SetModelViewMat(effect_type, params.mt.x);
+
+        material.Bind(*effect);
+
+		if (effect_type == model::EFFECT_DEFAULT ||
+			effect_type == model::EFFECT_DEFAULT_NO_TEX ||
+			effect_type == model::EFFECT_COLOR) {
+			mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
+			mgr->SetNormalMat(effect_type, params.mt);
+		}
+	}
+
+	auto& geo = mesh;
+	auto mode = effect->GetDrawMode();
+	for (auto& sub : geo.sub_geometries)
+	{
+		if (geo.vao > 0)
+		{
+			if (sub.index) {
+				ur::Blackboard::Instance()->GetRenderContext().DrawElementsVAO(
+					mode, sub.offset, sub.count, geo.vao);
+			} else {
+				ur::Blackboard::Instance()->GetRenderContext().DrawArraysVAO(
+					mode, sub.offset, sub.count, geo.vao);
+			}
+		}
+		else
+		{
+			auto& sub = geo.sub_geometries[0];
+			if (geo.ebo) {
+				rc.BindBuffer(ur::INDEXBUFFER, geo.ebo);
+				rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
+				rc.DrawElements(mode, sub.offset, sub.count);
+			} else {
+				rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
+				rc.DrawArrays(mode, sub.offset, sub.count);
+			}
+		}
+	}
+}
+
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
                             const RenderParams& params, const RenderContext& ctx)
 {
@@ -219,83 +300,18 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 	auto& meshes = params.type == RenderParams::DRAW_MESH ? model.meshes : model.border_meshes;
 	for (auto& mesh : meshes)
 	{
-		ur::TexturePtr tex = nullptr;
+		ur::TexturePtr diffuse_tex = nullptr;
 
 		auto& material = model.materials[mesh->material];
 		if (material->diffuse_tex != -1) {
-			tex = model.textures[material->diffuse_tex].second;
-			if (tex) {
-				ur::Blackboard::Instance()->GetRenderContext().BindTexture(tex->TexID(), 0);
+            diffuse_tex = model.textures[material->diffuse_tex].second;
+			if (diffuse_tex) {
+				ur::Blackboard::Instance()->GetRenderContext().BindTexture(diffuse_tex->TexID(), 0);
 			}
 		}
 
 		auto effect_type = model::EffectType(mesh->effect);
-		if (params.user_effect) {
-			effect_type = model::EFFECT_USER;
-		}
-		auto effect = mgr->Use(effect_type);
-		if (!effect) {
-			return;
-		}
-
-        if (ctx.resolution.IsValid()) {
-            std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(
-                static_cast<float>(ctx.resolution.x), static_cast<float>(ctx.resolution.y)
-            );
-        }
-        if (ctx.cam_pos.IsValid()) {
-            std::static_pointer_cast<pt0::Shader>(effect)->SetCamraPos(ctx.cam_pos);
-        }
-
-
-		if (params.user_effect)
-		{
-			effect->SetMat4("u_model", sm::mat4().x);
-		}
-		else
-		{
-			effect->DrawBefore(tex);
-
-			mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-			mgr->SetModelViewMat(effect_type, params.mt.x);
-
-            materials[mesh->material].Bind(*effect);
-
-			if (effect_type == model::EFFECT_DEFAULT ||
-				effect_type == model::EFFECT_DEFAULT_NO_TEX ||
-				effect_type == model::EFFECT_COLOR) {
-				mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
-				mgr->SetNormalMat(effect_type, params.mt);
-			}
-		}
-
-		auto& geo = mesh->geometry;
-		auto mode = effect->GetDrawMode();
-		for (auto& sub : geo.sub_geometries)
-		{
-			if (geo.vao > 0)
-			{
-				if (sub.index) {
-					ur::Blackboard::Instance()->GetRenderContext().DrawElementsVAO(
-						mode, sub.offset, sub.count, geo.vao);
-				} else {
-					ur::Blackboard::Instance()->GetRenderContext().DrawArraysVAO(
-						mode, sub.offset, sub.count, geo.vao);
-				}
-			}
-			else
-			{
-				auto& sub = geo.sub_geometries[0];
-				if (geo.ebo) {
-					rc.BindBuffer(ur::INDEXBUFFER, geo.ebo);
-					rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
-					rc.DrawElements(mode, sub.offset, sub.count);
-				} else {
-					rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
-					rc.DrawArrays(mode, sub.offset, sub.count);
-				}
-			}
-		}
+        DrawMesh(mesh->geometry, materials[mesh->material], effect_type, diffuse_tex, params, ctx);
 	}
 }
 
