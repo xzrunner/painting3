@@ -63,6 +63,8 @@
     <ClCompile Include="..\..\..\source\MaterialMgr.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
+    <ClCompile Include="..\..\..\source\Painting3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\AABB.h">
@@ -105,11 +107,12 @@
       <Filter>data\light</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\PointLight.h">
-      <Filter>data\shader</Filter>
+      <Filter>data\light</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\DirectionalLight.h">
-      <Filter>data\shader</Filter>
+      <Filter>data\light</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\Painting3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl">
