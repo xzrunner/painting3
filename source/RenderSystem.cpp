@@ -145,7 +145,7 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 		vertices[3] = sm::vec3(-hw,  hh, z);
 		// trans
 		for (auto& v : vertices) {
-			v = params.mt_trans * v;
+			v = params.model_local * v;
 		}
 
 		const float slice = 1.0f / slice_n * i;
@@ -250,7 +250,8 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
 		effect->DrawBefore(diffuse_tex);
 
 		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-		mgr->SetModelViewMat(effect_type, params.mt.x);
+		mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
+        mgr->SetModelMat(effect_type, params.model_world.x);
 
         material.Bind(*effect);
         ctx.uniforms.Bind(*effect);
@@ -258,7 +259,7 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
 		if (effect_type == model::EFFECT_DEFAULT ||
 			effect_type == model::EFFECT_DEFAULT_NO_TEX ||
 			effect_type == model::EFFECT_COLOR) {
-			mgr->SetNormalMat(effect_type, params.mt);
+			mgr->SetNormalMat(effect_type, params.model_world);
 		}
 	}
 
@@ -315,9 +316,8 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 	}
 }
 
-void RenderSystem::DrawMorphAnim(const model::Model& model,
-                                 const std::vector<pt0::Material>& materials,
-                                 const RenderParams& params)
+void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt0::Material>& materials,
+                                 const RenderParams& params, const RenderContext& ctx)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -339,12 +339,13 @@ void RenderSystem::DrawMorphAnim(const model::Model& model,
 		auto effect = mgr->Use(effect_type);
 
 		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-		mgr->SetNormalMat(effect_type, params.mt);
+		mgr->SetNormalMat(effect_type, params.model_world);
 
         materials[mesh->material].Bind(*effect);
         ctx.uniforms.Bind(*effect);
 
-		mgr->SetModelViewMat(effect_type, params.mt.x);
+        mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
+        mgr->SetModelMat(effect_type, params.model_world.x);
 
 		auto& geo = mesh->geometry;
 //		assert(frame >= 0 && frame < geo.sub_geometries.size());
@@ -399,7 +400,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 	else
 	{
 		auto mgr = EffectsManager::Instance();
-		auto child_mat = g_trans[node_idx] * params.mt;
+		auto child_mat = g_trans[node_idx] * params.model_world;
 		assert(node.children.empty());
 		for (auto& mesh_idx : node.meshes)
 		{
@@ -429,7 +430,8 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
             materials[mesh->material].Bind(*effect);
             ctx.uniforms.Bind(*effect);
 
-			mgr->SetModelViewMat(effect_type, child_mat.x);
+            mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
+            mgr->SetModelMat(effect_type, child_mat.x);
 
 			auto& geo = mesh->geometry;
 			for (auto& sub : geo.sub_geometries)
@@ -476,7 +478,8 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
 	auto effect = mgr->Use(effect_type);
 	auto mode = effect->GetDrawMode();
 	mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-	mgr->SetModelViewMat(effect_type, params.mt.x);
+    mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
+    mgr->SetModelMat(effect_type, params.model_world.x);
 
 	num_vbo_indices = 0;
 

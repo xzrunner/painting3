@@ -5,7 +5,8 @@ attribute vec3 normal;
 attribute vec2 texcoord;
 
 uniform mat4 u_projection;
-uniform mat4 u_modelview;
+uniform mat4 u_view;
+uniform mat4 u_model;
 uniform vec3 u_diffuse_material;
 uniform vec3 u_ambient_material;
 uniform vec3 u_specular_material;
@@ -18,13 +19,10 @@ varying vec2 v_texcoord;
 
 void main()
 {
-	gl_Position = u_projection * u_modelview * position;
+	gl_Position = u_projection * u_view * u_model * position;
 
 	vec3 eye_normal = normalize(u_normal_matrix * normal);
- 	//vec4 pos4 = u_modelview * position;
- 	//vec3 pos3 = pos4.xyz / pos4.w;
-	// todo: vec3 pos3 = vec3(u_model * vec4(position.xyz, 1.0));
- 	vec3 light_dir = normalize(u_light_position - position.xyz);
+ 	vec3 light_dir = normalize(u_light_position - (u_model * position).xyz);
  	float diff = max(0.0, dot(eye_normal, light_dir));
 
  	vec4 gouraud_col = vec4(diff * u_diffuse_material, 1);

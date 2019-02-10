@@ -109,13 +109,6 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(model::EffectType effect)
 	}
 }
 
-void EffectsManager::SetLightPosition(model::EffectType effect, const sm::vec3& pos)
-{
-	if (effect < model::EFFECT_MAX_COUNT) {
-		m_effects[effect]->SetVec3("u_light_position", pos.xyz);
-	}
-}
-
 void EffectsManager::SetProjMat(model::EffectType effect, const sm::mat4& mat)
 {
 	if (effect < model::EFFECT_MAX_COUNT) {
@@ -123,17 +116,25 @@ void EffectsManager::SetProjMat(model::EffectType effect, const sm::mat4& mat)
 	}
 }
 
-void EffectsManager::SetModelViewMat(model::EffectType effect, const sm::mat4& mat)
+void EffectsManager::SetViewMat(model::EffectType effect, const sm::mat4& mat)
 {
-	if (effect < model::EFFECT_MAX_COUNT) {
-		m_effects[effect]->SetMat4("u_modelview", mat.x);
-	}
+    if (effect < model::EFFECT_MAX_COUNT) {
+        m_effects[effect]->SetMat4("u_view", mat.x);
+    }
 }
 
-void EffectsManager::SetNormalMat(model::EffectType effect, const sm::mat4& mat)
+void EffectsManager::SetModelMat(model::EffectType effect, const sm::mat4& mat)
+{
+    if (effect < model::EFFECT_MAX_COUNT) {
+        m_effects[effect]->SetMat4("u_model", mat.x);
+    }
+}
+
+void EffectsManager::SetNormalMat(model::EffectType effect, const sm::mat4& model_mat)
 {
 	if (effect < model::EFFECT_MAX_COUNT) {
-		m_effects[effect]->SetMat3("u_normal_matrix", sm::mat3(mat).x);
+        auto normal_mat = model_mat.Inverted().Transposed();
+		m_effects[effect]->SetMat3("u_normal_matrix", sm::mat3(normal_mat).x);
 	}
 }
 

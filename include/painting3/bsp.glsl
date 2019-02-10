@@ -5,14 +5,15 @@ attribute vec2 texcoord;
 attribute vec2 texcoord_light;
 
 uniform mat4 u_projection;
-uniform mat4 u_modelview;
+uniform mat4 u_view;
+uniform mat4 u_model;
 
 varying vec2 v_texcoord;
 varying vec2 v_texcoord_light;
 
 void main()
 {
-	gl_Position = u_projection * u_modelview * position;
+	gl_Position = u_projection * u_view * u_model * position;
 	v_texcoord = texcoord;
 	v_texcoord_light = texcoord_light;
 }

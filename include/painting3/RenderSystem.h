@@ -27,8 +27,8 @@ public:
 	};
 
 public:
-	sm::mat4 mt;
-	sm::mat4 mt_trans;
+	sm::mat4 model_world;
+	sm::mat4 model_local;
 
 	DrawType type = DRAW_MESH;
 

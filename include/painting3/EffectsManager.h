@@ -19,8 +19,9 @@ public:
 	std::shared_ptr<ur::Shader> Use(model::EffectType effect);
 
 	void SetProjMat(model::EffectType effect, const sm::mat4& mat);
-	void SetModelViewMat(model::EffectType effect, const sm::mat4& mat);
-	void SetNormalMat(model::EffectType effect, const sm::mat4& mat);
+    void SetViewMat(model::EffectType effect, const sm::mat4& mat);
+    void SetModelMat(model::EffectType effect, const sm::mat4& mat);
+	void SetNormalMat(model::EffectType effect, const sm::mat4& model_mat);
 
 	void SetBoneMatrixes(model::EffectType effect, const sm::mat4* mat, int n);
 
