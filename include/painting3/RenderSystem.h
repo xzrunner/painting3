@@ -4,6 +4,8 @@
 #include <SM_Matrix.h>
 #include <model/EffectType.h>
 #include <unirender/Texture.h>
+#include <painting0/RenderVariant.h>
+#include <painting0/ShaderUniforms.h>
 
 #include <memory>
 #include <vector>
@@ -44,19 +46,21 @@ struct RenderContext
     sm::ivec2 resolution;
     sm::vec3  cam_pos;
 
+    pt0::ShaderUniforms uniforms;
+
 }; // RenderContext
 
 class RenderSystem
 {
 public:
 	void DrawMaterial(const pt0::Material& material, const RenderParams& params,
-        const RenderContext& ctx = RenderContext()) const;
+        const RenderContext& ctx) const;
 
     static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-        const RenderParams& params, const RenderContext& ctx = RenderContext());
+        const RenderParams& params, const RenderContext& ctx);
 
 	static void DrawModel(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
-        const RenderParams& params, const RenderContext& ctx = RenderContext());
+        const RenderParams& params, const RenderContext& ctx);
 
 	static void DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params);
 
@@ -71,11 +75,11 @@ private:
 	static void DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const RenderContext& ctx);
 
-	static void DrawMorphAnim(const model::Model& model,
-        const std::vector<pt0::Material>& materials, const RenderParams& params);
+	static void DrawMorphAnim(const model::Model& model, const std::vector<pt0::Material>& materials,
+        const RenderParams& params, const RenderContext& ctx);
 
-	static void DrawSkeletalNode(const model::ModelInstance& model,
-        const std::vector<pt0::Material>& materials, int node_idx, const RenderParams& params);
+	static void DrawSkeletalNode(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
+        int node_idx, const RenderParams& params, const RenderContext& ctx);
 	//static void DrawSkeletalNodeDebug(const model::ModelInstance& model, int node_idx, const RenderParams& params);
 
 	static void DrawQuakeBSP(const model::Model& model, const RenderParams& params);

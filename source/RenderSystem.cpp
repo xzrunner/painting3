@@ -101,10 +101,10 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 		switch (ext->Type())
 		{
 		case model::EXT_MORPH_TARGET:
-			DrawMorphAnim(*model, materials, params);
+			DrawMorphAnim(*model, materials, params, ctx);
 			break;
 		case model::EXT_SKELETAL:
-			DrawSkeletalNode(model_inst, materials, 0, params);
+			DrawSkeletalNode(model_inst, materials, 0, params, ctx);
 			//DrawSkeletalNodeDebug(model, 0, params.mt);
 			break;
 		case model::EXT_QUAKE_BSP:
@@ -253,11 +253,11 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
 		mgr->SetModelViewMat(effect_type, params.mt.x);
 
         material.Bind(*effect);
+        ctx.uniforms.Bind(*effect);
 
 		if (effect_type == model::EFFECT_DEFAULT ||
 			effect_type == model::EFFECT_DEFAULT_NO_TEX ||
 			effect_type == model::EFFECT_COLOR) {
-			mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
 			mgr->SetNormalMat(effect_type, params.mt);
 		}
 	}
@@ -338,11 +338,11 @@ void RenderSystem::DrawMorphAnim(const model::Model& model,
 		auto effect_type = model::EffectType(mesh->effect);
 		auto effect = mgr->Use(effect_type);
 
-		mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
 		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
 		mgr->SetNormalMat(effect_type, params.mt);
 
         materials[mesh->material].Bind(*effect);
+        ctx.uniforms.Bind(*effect);
 
 		mgr->SetModelViewMat(effect_type, params.mt.x);
 
@@ -383,7 +383,7 @@ void RenderSystem::DrawMorphAnim(const model::Model& model,
 }
 
 void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                                    int node_idx, const RenderParams& params)
+                                    int node_idx, const RenderParams& params, const RenderContext& ctx)
 {
 	auto& model = *model_inst.GetModel();
 	auto& g_trans = model_inst.GetGlobalTrans();
@@ -393,7 +393,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 	{
 		assert(node.meshes.empty());
 		for (auto& child : node.children) {
-			DrawSkeletalNode(model_inst, materials, child, params);
+			DrawSkeletalNode(model_inst, materials, child, params, ctx);
 		}
 	}
 	else
@@ -423,11 +423,11 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 				mgr->SetBoneMatrixes(effect_type, &mat, 1);
 			}
 
-			mgr->SetLightPosition(effect_type, sm::vec3(0, 2, -4));
 			mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
 			mgr->SetNormalMat(effect_type, child_mat);
 
             materials[mesh->material].Bind(*effect);
+            ctx.uniforms.Bind(*effect);
 
 			mgr->SetModelViewMat(effect_type, child_mat.x);
 

@@ -18,8 +18,6 @@ class EffectsManager
 public:
 	std::shared_ptr<ur::Shader> Use(model::EffectType effect);
 
-	void SetLightPosition(model::EffectType effect, const sm::vec3& pos);
-
 	void SetProjMat(model::EffectType effect, const sm::mat4& mat);
 	void SetModelViewMat(model::EffectType effect, const sm::mat4& mat);
 	void SetNormalMat(model::EffectType effect, const sm::mat4& mat);
