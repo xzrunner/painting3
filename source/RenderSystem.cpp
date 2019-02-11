@@ -239,18 +239,10 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
         std::static_pointer_cast<pt0::Shader>(effect)->SetCamraPos(ctx.cam_pos);
     }
 
+	effect->DrawBefore(diffuse_tex);
 
-	if (params.user_effect)
-	{
-		effect->SetMat4("u_model", sm::mat4().x);
-	}
-	else
-	{
-		effect->DrawBefore(diffuse_tex);
-
-        material.Bind(*effect);
-        ctx.uniforms.Bind(*effect);
-	}
+    material.Bind(*effect);
+    ctx.uniforms.Bind(*effect);
 
 	auto& geo = mesh;
 	auto mode = effect->GetDrawMode();
