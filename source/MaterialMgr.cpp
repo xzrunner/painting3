@@ -4,10 +4,12 @@ namespace pt3
 {
 
 // CoordsUniforms
-MaterialMgr::Uniform MaterialMgr::CoordsUniforms::projection
+MaterialMgr::Uniform MaterialMgr::PosTransUniforms::projection
     = { pt0::RenderVarType::MAT4, "u_projection" };
-MaterialMgr::Uniform MaterialMgr::CoordsUniforms::modelview
-    = { pt0::RenderVarType::MAT4, "u_modelview" };
+MaterialMgr::Uniform MaterialMgr::PosTransUniforms::view
+    = { pt0::RenderVarType::MAT4, "u_view" };
+MaterialMgr::Uniform MaterialMgr::PosTransUniforms::model
+    = { pt0::RenderVarType::MAT4, "u_model" };
 
 // PhongUniforms
 MaterialMgr::Uniform MaterialMgr::PhongUniforms::ambient
@@ -26,5 +28,11 @@ MaterialMgr::Uniform MaterialMgr::PositionUniforms::normal_mat
     = { pt0::RenderVarType::MAT3, "u_normal_matrix" };
 MaterialMgr::Uniform MaterialMgr::PositionUniforms::light_pos
     = { pt0::RenderVarType::VEC3, "u_light_position" };
+
+// AnimUniforms
+MaterialMgr::Uniform MaterialMgr::AnimUniforms::bone_matrix
+    = { pt0::RenderVarType::ARRAY, "u_bone_matrix" };
+MaterialMgr::Uniform MaterialMgr::AnimUniforms::blend
+    = { pt0::RenderVarType::FLOAT, "u_blend" };
 
 }

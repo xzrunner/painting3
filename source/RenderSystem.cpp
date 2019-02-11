@@ -1,7 +1,6 @@
 #include "painting3/RenderSystem.h"
 #include "painting3/EffectsManager.h"
-#include "painting3/WindowContext.h"
-#include "painting3/Blackboard.h"
+#include "painting3/MaterialMgr.h"
 
 #include <model/typedef.h>
 #include <model/BspModel.h>
@@ -249,18 +248,8 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
 	{
 		effect->DrawBefore(diffuse_tex);
 
-		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-		mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
-        mgr->SetModelMat(effect_type, params.model_world.x);
-
         material.Bind(*effect);
         ctx.uniforms.Bind(*effect);
-
-		if (effect_type == model::EFFECT_DEFAULT ||
-			effect_type == model::EFFECT_DEFAULT_NO_TEX ||
-			effect_type == model::EFFECT_COLOR) {
-			mgr->SetNormalMat(effect_type, params.model_world);
-		}
 	}
 
 	auto& geo = mesh;
@@ -338,14 +327,14 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 		auto effect_type = model::EffectType(mesh->effect);
 		auto effect = mgr->Use(effect_type);
 
-		mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-		mgr->SetNormalMat(effect_type, params.model_world);
+        // update anim blend
+        const_cast<RenderContext&>(ctx).uniforms.AddVar(
+            MaterialMgr::AnimUniforms::blend.name,
+            pt0::RenderVariant(anim->GetBlend())
+        );
 
         materials[mesh->material].Bind(*effect);
         ctx.uniforms.Bind(*effect);
-
-        mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
-        mgr->SetModelMat(effect_type, params.model_world.x);
 
 		auto& geo = mesh->geometry;
 //		assert(frame >= 0 && frame < geo.sub_geometries.size());
@@ -362,9 +351,6 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 		//}
 		//else
 		{
-			// update anim blend
-			mgr->SetMorphAnimBlend(anim->GetBlend());
-
 			// pose1_vert, pose1_normal
 			int offset = stride * frame;
 			geo.vertex_layout[0].offset = offset;
@@ -418,20 +404,29 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 
 			auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
 			if (!bone_trans.empty()) {
-				mgr->SetBoneMatrixes(effect_type, &bone_trans[0], bone_trans.size());
+                const_cast<RenderContext&>(ctx).uniforms.AddVar(
+                    MaterialMgr::AnimUniforms::bone_matrix.name,
+                    pt0::RenderVariant(&bone_trans[0], bone_trans.size())
+                );
 			} else {
 				sm::mat4 mat;
-				mgr->SetBoneMatrixes(effect_type, &mat, 1);
+                const_cast<RenderContext&>(ctx).uniforms.AddVar(
+                    MaterialMgr::AnimUniforms::bone_matrix.name,
+                    pt0::RenderVariant(&mat, 1)
+                );
 			}
 
-			mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-			mgr->SetNormalMat(effect_type, child_mat);
-
+            const_cast<RenderContext&>(ctx).uniforms.AddVar(
+                MaterialMgr::PosTransUniforms::model.name,
+                pt0::RenderVariant(child_mat)
+            );
+            auto normal_mat = child_mat.Inverted().Transposed();
+            const_cast<RenderContext&>(ctx).uniforms.AddVar(
+                MaterialMgr::PositionUniforms::normal_mat.name,
+                pt0::RenderVariant(sm::mat3(normal_mat))
+            );
             materials[mesh->material].Bind(*effect);
             ctx.uniforms.Bind(*effect);
-
-            mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
-            mgr->SetModelMat(effect_type, child_mat.x);
 
 			auto& geo = mesh->geometry;
 			for (auto& sub : geo.sub_geometries)
@@ -477,9 +472,6 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
 	auto effect_type = model::EFFECT_BSP;
 	auto effect = mgr->Use(effect_type);
 	auto mode = effect->GetDrawMode();
-	mgr->SetProjMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetProjMat().x);
-    mgr->SetViewMat(effect_type, Blackboard::Instance()->GetWindowContext()->GetViewMat().x);
-    mgr->SetModelMat(effect_type, params.model_world.x);
 
 	num_vbo_indices = 0;
 

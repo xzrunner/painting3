@@ -16,10 +16,11 @@ public:
         std::string        name;
     };
 
-    struct CoordsUniforms
+    struct PosTransUniforms
     {
         static Uniform projection;
-        static Uniform modelview;
+        static Uniform view;
+        static Uniform model;
     };
 
     struct PhongUniforms
@@ -36,6 +37,12 @@ public:
     {
         static Uniform normal_mat;
         static Uniform light_pos;
+    };
+
+    struct AnimUniforms
+    {
+        static Uniform bone_matrix;
+        static Uniform blend;
     };
 
 }; // MaterialMgr

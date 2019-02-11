@@ -109,45 +109,4 @@ std::shared_ptr<ur::Shader> EffectsManager::Use(model::EffectType effect)
 	}
 }
 
-void EffectsManager::SetProjMat(model::EffectType effect, const sm::mat4& mat)
-{
-	if (effect < model::EFFECT_MAX_COUNT) {
-		m_effects[effect]->SetMat4("u_projection", mat.x);
-	}
-}
-
-void EffectsManager::SetViewMat(model::EffectType effect, const sm::mat4& mat)
-{
-    if (effect < model::EFFECT_MAX_COUNT) {
-        m_effects[effect]->SetMat4("u_view", mat.x);
-    }
-}
-
-void EffectsManager::SetModelMat(model::EffectType effect, const sm::mat4& mat)
-{
-    if (effect < model::EFFECT_MAX_COUNT) {
-        m_effects[effect]->SetMat4("u_model", mat.x);
-    }
-}
-
-void EffectsManager::SetNormalMat(model::EffectType effect, const sm::mat4& model_mat)
-{
-	if (effect < model::EFFECT_MAX_COUNT) {
-        auto normal_mat = model_mat.Inverted().Transposed();
-		m_effects[effect]->SetMat3("u_normal_matrix", sm::mat3(normal_mat).x);
-	}
-}
-
-void EffectsManager::SetBoneMatrixes(model::EffectType effect, const sm::mat4* mat, int n)
-{
-	if (effect < model::EFFECT_MAX_COUNT) {
-		m_effects[effect]->SetMultiMat4("u_bone_matrix", &mat->x[0], n);
-	}
-}
-
-void EffectsManager::SetMorphAnimBlend(float blend)
-{
-	m_effects[model::EFFECT_MORPH_TARGET]->SetFloat("u_blend", blend);
-}
-
 }
