@@ -6,13 +6,14 @@
 #include <unirender/Texture.h>
 #include <painting0/RenderVariant.h>
 #include <painting0/ShaderUniforms.h>
+#include <painting0/Material.h>
 
 #include <memory>
 #include <vector>
 
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
 namespace ur { class Texture3D; }
-namespace pt0 { class Material; class RenderPass; }
+namespace pt0 { class RenderPass; }
 
 namespace pt3
 {
