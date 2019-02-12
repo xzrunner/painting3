@@ -53,7 +53,7 @@ RenderSystem::RenderSystem()
 {
 }
 
-void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParams& params, const RenderContext& ctx) const
+void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParams& params, const pt0::RenderContext& ctx) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere();
@@ -85,13 +85,13 @@ void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParam
 }
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const RenderParams& params, const RenderContext& ctx)
+                            const RenderParams& params, const pt0::RenderContext& ctx)
 {
     DrawMesh(mesh, material, model::EFFECT_DEFAULT_NO_TEX, nullptr, params, ctx);
 }
 
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                             const RenderParams& params, const RenderContext& ctx)
+                             const RenderParams& params, const pt0::RenderContext& ctx)
 {
 	auto& model = model_inst.GetModel();
 	auto& ext = model->ext;
@@ -217,7 +217,7 @@ void RenderSystem::CreateMaterialSphere() const
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
                             model::EffectType effect_type, const ur::TexturePtr& diffuse_tex,
-                            const RenderParams& params, const RenderContext& ctx)
+                            const RenderParams& params, const pt0::RenderContext& ctx)
 {
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
     auto mgr = EffectsManager::Instance();
@@ -230,19 +230,10 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
 		return;
 	}
 
-    if (ctx.resolution.IsValid()) {
-        std::static_pointer_cast<pt0::Shader>(effect)->SetResolution(
-            static_cast<float>(ctx.resolution.x), static_cast<float>(ctx.resolution.y)
-        );
-    }
-    if (ctx.cam_pos.IsValid()) {
-        std::static_pointer_cast<pt0::Shader>(effect)->SetCamraPos(ctx.cam_pos);
-    }
-
 	effect->DrawBefore(diffuse_tex);
 
     material.Bind(*effect);
-    ctx.uniforms.Bind(*effect);
+    ctx.Bind(*effect);
 
 	auto& geo = mesh;
 	auto mode = effect->GetDrawMode();
@@ -274,7 +265,7 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
 }
 
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
-                            const RenderParams& params, const RenderContext& ctx)
+                            const RenderParams& params, const pt0::RenderContext& ctx)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -298,7 +289,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 }
 
 void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt0::Material>& materials,
-                                 const RenderParams& params, const RenderContext& ctx)
+                                 const RenderParams& params, const pt0::RenderContext& ctx)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -320,13 +311,13 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 		auto effect = mgr->Use(effect_type);
 
         // update anim blend
-        const_cast<RenderContext&>(ctx).uniforms.AddVar(
+        const_cast<pt0::RenderContext&>(ctx).AddVar(
             MaterialMgr::AnimUniforms::blend.name,
             pt0::RenderVariant(anim->GetBlend())
         );
 
         materials[mesh->material].Bind(*effect);
-        ctx.uniforms.Bind(*effect);
+        ctx.Bind(*effect);
 
 		auto& geo = mesh->geometry;
 //		assert(frame >= 0 && frame < geo.sub_geometries.size());
@@ -362,7 +353,7 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 }
 
 void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                                    int node_idx, const RenderParams& params, const RenderContext& ctx)
+                                    int node_idx, const RenderParams& params, const pt0::RenderContext& ctx)
 {
 	auto& model = *model_inst.GetModel();
 	auto& g_trans = model_inst.GetGlobalTrans();
@@ -396,29 +387,29 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 
 			auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
 			if (!bone_trans.empty()) {
-                const_cast<RenderContext&>(ctx).uniforms.AddVar(
+                const_cast<pt0::RenderContext&>(ctx).AddVar(
                     MaterialMgr::AnimUniforms::bone_matrix.name,
                     pt0::RenderVariant(&bone_trans[0], bone_trans.size())
                 );
 			} else {
 				sm::mat4 mat;
-                const_cast<RenderContext&>(ctx).uniforms.AddVar(
+                const_cast<pt0::RenderContext&>(ctx).AddVar(
                     MaterialMgr::AnimUniforms::bone_matrix.name,
                     pt0::RenderVariant(&mat, 1)
                 );
 			}
 
-            const_cast<RenderContext&>(ctx).uniforms.AddVar(
+            const_cast<pt0::RenderContext&>(ctx).AddVar(
                 MaterialMgr::PosTransUniforms::model.name,
                 pt0::RenderVariant(child_mat)
             );
             auto normal_mat = child_mat.Inverted().Transposed();
-            const_cast<RenderContext&>(ctx).uniforms.AddVar(
+            const_cast<pt0::RenderContext&>(ctx).AddVar(
                 MaterialMgr::PositionUniforms::normal_mat.name,
                 pt0::RenderVariant(sm::mat3(normal_mat))
             );
             materials[mesh->material].Bind(*effect);
-            ctx.uniforms.Bind(*effect);
+            ctx.Bind(*effect);
 
 			auto& geo = mesh->geometry;
 			for (auto& sub : geo.sub_geometries)
