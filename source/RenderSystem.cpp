@@ -21,7 +21,7 @@
 #include <quake/Lightmaps.h>
 #include <rendergraph/RenderMgr.h>
 #include <rendergraph/VolumeRenderer.h>
-#include <rendergraph/MeshRenderer.h>
+#include <rendergraph/Shape3Renderer.h>
 
 namespace
 {
@@ -162,7 +162,7 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t color)
 {
     auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
-    std::static_pointer_cast<rg::MeshRenderer>(mr)->DrawLines(num, positions, color);
+    std::static_pointer_cast<rg::Shape3Renderer>(mr)->DrawLines(num, positions, color);
 }
 
 //void RenderSystem::DrawPasses(const std::vector<pt0::RenderPass>& passes)
