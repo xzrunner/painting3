@@ -34,7 +34,8 @@ void Shader::UpdateViewMat(const sm::mat4& view_mat)
 
 	Use();
 
-	SetMat4(m_uniform_names.view_mat.c_str(), view_mat.x);
+    assert(!m_uniform_names[pt0::U_VIEW_MAT].empty());
+	SetMat4(m_uniform_names[pt0::U_VIEW_MAT], view_mat.x);
 }
 
 void Shader::UpdateProjMat(const sm::mat4& proj_mat)
@@ -46,7 +47,8 @@ void Shader::UpdateProjMat(const sm::mat4& proj_mat)
 
 	Use();
 
-	SetMat4(m_uniform_names.proj_mat.c_str(), proj_mat.x);
+    assert(!m_uniform_names[pt0::U_PROJ_MAT].empty());
+	SetMat4(m_uniform_names[pt0::U_PROJ_MAT], proj_mat.x);
 }
 
 }
