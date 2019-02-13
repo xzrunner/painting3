@@ -22,6 +22,8 @@
 #include <rendergraph/RenderMgr.h>
 #include <rendergraph/VolumeRenderer.h>
 #include <rendergraph/Shape3Renderer.h>
+#include <rendergraph/MeshRenderer.h>
+#include <rendergraph/SkinRenderer.h>
 
 namespace
 {
@@ -161,7 +163,7 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 
 void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t color)
 {
-    auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
+    auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SHAPE3D);
     std::static_pointer_cast<rg::Shape3Renderer>(mr)->DrawLines(num, positions, color);
 }
 
@@ -219,49 +221,11 @@ void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material
                             model::EffectType effect_type, const ur::TexturePtr& diffuse_tex,
                             const RenderParams& params, const pt0::RenderContext& ctx)
 {
-    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-    auto mgr = EffectsManager::Instance();
+    //auto mgr = EffectsManager::Instance();
+    //mgr->Use(model::EFFECT_USER);
 
-	if (params.user_effect) {
-		effect_type = model::EFFECT_USER;
-	}
-	auto effect = mgr->Use(effect_type);
-	if (!effect) {
-		return;
-	}
-
-	effect->DrawBefore(diffuse_tex);
-
-    material.Bind(*effect);
-    ctx.Bind(*effect);
-
-	auto& geo = mesh;
-	auto mode = effect->GetDrawMode();
-	for (auto& sub : geo.sub_geometries)
-	{
-		if (geo.vao > 0)
-		{
-			if (sub.index) {
-				ur::Blackboard::Instance()->GetRenderContext().DrawElementsVAO(
-					mode, sub.offset, sub.count, geo.vao);
-			} else {
-				ur::Blackboard::Instance()->GetRenderContext().DrawArraysVAO(
-					mode, sub.offset, sub.count, geo.vao);
-			}
-		}
-		else
-		{
-			auto& sub = geo.sub_geometries[0];
-			if (geo.ebo) {
-				rc.BindBuffer(ur::INDEXBUFFER, geo.ebo);
-				rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
-				rc.DrawElements(mode, sub.offset, sub.count);
-			} else {
-				rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
-				rc.DrawArrays(mode, sub.offset, sub.count);
-			}
-		}
-	}
+    auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
+    std::static_pointer_cast<rg::MeshRenderer>(mr)->Draw(mesh, material, ctx);
 }
 
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
@@ -381,9 +345,9 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 				ur::Blackboard::Instance()->GetRenderContext().BindTexture(tex_id, 0);
 			}
 
-			auto effect_type = model::EffectType(mesh->effect);
-			auto effect = mgr->Use(effect_type);
-			auto mode = effect->GetDrawMode();
+//			auto effect_type = model::EffectType(mesh->effect);
+//			auto effect = mgr->Use(effect_type);
+//			auto mode = effect->GetDrawMode();
 
 			auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
 			if (!bone_trans.empty()) {
@@ -408,20 +372,12 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
                 MaterialMgr::PositionUniforms::normal_mat.name,
                 pt0::RenderVariant(sm::mat3(normal_mat))
             );
-            materials[mesh->material].Bind(*effect);
-            ctx.Bind(*effect);
 
-			auto& geo = mesh->geometry;
-			for (auto& sub : geo.sub_geometries)
-			{
-				if (sub.index) {
-					ur::Blackboard::Instance()->GetRenderContext().DrawElementsVAO(
-						mode, sub.offset, sub.count, geo.vao);
-				} else {
-					ur::Blackboard::Instance()->GetRenderContext().DrawArraysVAO(
-						mode, sub.offset, sub.count, geo.vao);
-				}
-			}
+            //auto mgr = EffectsManager::Instance();
+            //mgr->Use(model::EFFECT_USER);
+
+            auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
+            std::static_pointer_cast<rg::SkinRenderer>(mr)->Draw(mesh->geometry, materials[mesh->material], ctx);
 		}
 	}
 }
