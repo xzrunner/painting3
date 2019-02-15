@@ -16,7 +16,6 @@
     <ClCompile Include="..\..\..\source\OrthoCam.cpp" />
     <ClCompile Include="..\..\..\source\Painting3.cpp" />
     <ClCompile Include="..\..\..\source\PerspCam.cpp" />
-    <ClCompile Include="..\..\..\source\EffectsManager.cpp" />
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\RenderSystem.cpp" />
     <ClCompile Include="..\..\..\source\Shader.cpp" />
@@ -34,7 +33,6 @@
     <ClInclude Include="..\..\..\include\painting3\OrthoCam.h" />
     <ClInclude Include="..\..\..\include\painting3\Painting3.h" />
     <ClInclude Include="..\..\..\include\painting3\PerspCam.h" />
-    <ClInclude Include="..\..\..\include\painting3\EffectsManager.h" />
     <ClInclude Include="..\..\..\include\painting3\PointLight.h" />
     <ClInclude Include="..\..\..\include\painting3\RenderSystem.h" />
     <ClInclude Include="..\..\..\include\painting3\Shader.h" />
@@ -45,11 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl" />
-    <None Include="..\..\..\include\painting3\bsp.glsl" />
-    <None Include="..\..\..\include\painting3\color.glsl" />
-    <None Include="..\..\..\include\painting3\default.glsl" />
-    <None Include="..\..\..\include\painting3\morph.glsl" />
-    <None Include="..\..\..\include\painting3\skinned.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>3.painting3</ProjectName>

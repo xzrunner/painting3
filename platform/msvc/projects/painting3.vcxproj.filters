@@ -16,9 +16,6 @@
     <Filter Include="ctx">
       <UniqueIdentifier>{3269d8fd-8c20-4ec5-bd27-479b9e3978ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="render\shader">
-      <UniqueIdentifier>{29ead7e4-7bae-493c-a609-22ab0561b25f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="data\shader">
       <UniqueIdentifier>{6333dd07-dfed-45c7-9398-c6147ce87b58}</UniqueIdentifier>
     </Filter>
@@ -38,9 +35,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Blackboard.cpp">
       <Filter>ctx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\EffectsManager.cpp">
-      <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\ViewFrustum.cpp">
       <Filter>data\camera</Filter>
@@ -79,9 +73,6 @@
     <ClInclude Include="..\..\..\include\painting3\Blackboard.h">
       <Filter>ctx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\painting3\EffectsManager.h">
-      <Filter>render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\ViewFrustum.h">
       <Filter>data\camera</Filter>
     </ClInclude>
@@ -117,21 +108,6 @@
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl">
       <Filter>data\bb</Filter>
-    </None>
-    <None Include="..\..\..\include\painting3\skinned.glsl">
-      <Filter>render\shader</Filter>
-    </None>
-    <None Include="..\..\..\include\painting3\default.glsl">
-      <Filter>render\shader</Filter>
-    </None>
-    <None Include="..\..\..\include\painting3\morph.glsl">
-      <Filter>render\shader</Filter>
-    </None>
-    <None Include="..\..\..\include\painting3\bsp.glsl">
-      <Filter>render\shader</Filter>
-    </None>
-    <None Include="..\..\..\include\painting3\color.glsl">
-      <Filter>render\shader</Filter>
     </None>
   </ItemGroup>
 </Project>

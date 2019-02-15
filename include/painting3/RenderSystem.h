@@ -2,7 +2,6 @@
 
 #include <cu/cu_macro.h>
 #include <SM_Matrix.h>
-#include <model/EffectType.h>
 #include <unirender/Texture.h>
 #include <painting0/RenderVariant.h>
 #include <painting0/ShaderUniforms.h>
@@ -45,7 +44,7 @@ public:
         const pt0::RenderContext& ctx) const;
 
     static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-        const RenderParams& params, const pt0::RenderContext& ctx);
+        const pt0::RenderContext& ctx);
 
 	static void DrawModel(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const pt0::RenderContext& ctx);
@@ -57,9 +56,6 @@ public:
 private:
 	void CreateMaterialSphere() const;
 
-    static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-        model::EffectType effect, const ur::TexturePtr& diffuse_tex,
-        const RenderParams& params, const pt0::RenderContext& ctx);
 	static void DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const pt0::RenderContext& ctx);
 

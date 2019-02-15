@@ -1,5 +1,4 @@
 #include "painting3/RenderSystem.h"
-#include "painting3/EffectsManager.h"
 #include "painting3/MaterialMgr.h"
 
 #include <model/typedef.h>
@@ -24,6 +23,8 @@
 #include <rendergraph/Shape3Renderer.h>
 #include <rendergraph/MeshRenderer.h>
 #include <rendergraph/SkinRenderer.h>
+#include <rendergraph/BSPRenderer.h>
+#include <rendergraph/MorphRenderer.h>
 
 namespace
 {
@@ -61,35 +62,14 @@ void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParam
 		CreateMaterialSphere();
 	}
 
-	//auto& dst = m_mat_sphere->materials[0];
-	//dst->ambient   = material.ambient;
-	//dst->diffuse   = material.diffuse;
-	//dst->specular  = material.specular;
-	//dst->shininess = material.shininess;
-	//dst->diffuse_tex = -1;
-	//if (material.diffuse_tex)
-	//{
-	//	dst->diffuse_tex = 0;
-	//	m_mat_sphere->textures.clear();
-	//	m_mat_sphere->textures.push_back({ "unknown", material.diffuse_tex });
-	//	for (auto& mesh : m_mat_sphere->meshes) {
-	//		mesh->effect = model::EFFECT_DEFAULT;
-	//	}
-	//}
-	//else
-	//{
-		for (auto& mesh : m_mat_sphere->meshes) {
-			mesh->effect = model::EFFECT_DEFAULT_NO_TEX;
-		}
-	//}
-
     DrawMesh(*m_mat_sphere, { material }, params, ctx);
 }
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const RenderParams& params, const pt0::RenderContext& ctx)
+                            const pt0::RenderContext& ctx)
 {
-    DrawMesh(mesh, material, model::EFFECT_DEFAULT_NO_TEX, nullptr, params, ctx);
+    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
+    std::static_pointer_cast<rg::MeshRenderer>(rd)->Draw(mesh, material, ctx);
 }
 
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
@@ -155,16 +135,16 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 		texcoords[2] = sm::vec3(1, 1, slice);
 		texcoords[3] = sm::vec3(0, 1, slice);
 
-		auto sr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::TEX3D);
-		std::static_pointer_cast<rg::VolumeRenderer>(sr)->
+		auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::TEX3D);
+		std::static_pointer_cast<rg::VolumeRenderer>(rd)->
 			DrawCube(vertices[0].xyz, texcoords[0].xyz, t3d.TexID(), 0xffffffff);
 	}
 }
 
 void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t color)
 {
-    auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SHAPE3D);
-    std::static_pointer_cast<rg::Shape3Renderer>(mr)->DrawLines(num, positions, color);
+    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SHAPE3D);
+    std::static_pointer_cast<rg::Shape3Renderer>(rd)->DrawLines(num, positions, color);
 }
 
 //void RenderSystem::DrawPasses(const std::vector<pt0::RenderPass>& passes)
@@ -213,19 +193,7 @@ void RenderSystem::CreateMaterialSphere() const
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_NORMALS;
 	mesh->geometry.vertex_type |= model::VERTEX_FLAG_TEXCOORDS;
 	mesh->material = 0;
-	mesh->effect = model::EFFECT_DEFAULT;
 	m_mat_sphere->meshes.push_back(std::move(mesh));
-}
-
-void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-                            model::EffectType effect_type, const ur::TexturePtr& diffuse_tex,
-                            const RenderParams& params, const pt0::RenderContext& ctx)
-{
-    //auto mgr = EffectsManager::Instance();
-    //mgr->Use(model::EFFECT_USER);
-
-    auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
-    std::static_pointer_cast<rg::MeshRenderer>(mr)->Draw(mesh, material, ctx);
 }
 
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
@@ -233,7 +201,6 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
-	auto mgr = EffectsManager::Instance();
 	auto& meshes = params.type == RenderParams::DRAW_MESH ? model.meshes : model.border_meshes;
 	for (auto& mesh : meshes)
 	{
@@ -247,8 +214,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 			}
 		}
 
-		auto effect_type = model::EffectType(mesh->effect);
-        DrawMesh(mesh->geometry, materials[mesh->material], effect_type, diffuse_tex, params, ctx);
+        DrawMesh(mesh->geometry, materials[mesh->material], ctx);
 	}
 }
 
@@ -262,7 +228,10 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 	assert(frame < anim->GetNumFrames());
 	int stride = anim->GetNumVertices() * (4 * 3 * 2);
 
-	auto mgr = EffectsManager::Instance();
+    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MORPH);
+    auto mrd = std::static_pointer_cast<rg::MorphRenderer>(rd);
+    mrd->Draw();
+
 	for (auto& mesh : model.meshes)
 	{
 		auto& material = model.materials[mesh->material];
@@ -271,17 +240,14 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 			rc.BindTexture(tex_id, 0);
 		}
 
-		auto effect_type = model::EffectType(mesh->effect);
-		auto effect = mgr->Use(effect_type);
-
         // update anim blend
         const_cast<pt0::RenderContext&>(ctx).AddVar(
             MaterialMgr::AnimUniforms::blend.name,
             pt0::RenderVariant(anim->GetBlend())
         );
 
-        materials[mesh->material].Bind(*effect);
-        ctx.Bind(*effect);
+        materials[mesh->material].Bind(*mrd->GetShader());
+        ctx.Bind(*mrd->GetShader());
 
 		auto& geo = mesh->geometry;
 //		assert(frame >= 0 && frame < geo.sub_geometries.size());
@@ -311,7 +277,7 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 
 			auto& sub = geo.sub_geometries[0];
 			rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
-			rc.DrawArrays(effect->GetDrawMode(), sub.offset, sub.count);
+			rc.DrawArrays(mrd->GetShader()->GetDrawMode(), sub.offset, sub.count);
 		}
 	}
 }
@@ -332,7 +298,6 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 	}
 	else
 	{
-		auto mgr = EffectsManager::Instance();
 		auto child_mat = g_trans[node_idx] * params.model_world;
 		assert(node.children.empty());
 		for (auto& mesh_idx : node.meshes)
@@ -344,10 +309,6 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 				int tex_id = model.textures[material->diffuse_tex].second->TexID();
 				ur::Blackboard::Instance()->GetRenderContext().BindTexture(tex_id, 0);
 			}
-
-//			auto effect_type = model::EffectType(mesh->effect);
-//			auto effect = mgr->Use(effect_type);
-//			auto mode = effect->GetDrawMode();
 
 			auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
 			if (!bone_trans.empty()) {
@@ -373,11 +334,8 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
                 pt0::RenderVariant(sm::mat3(normal_mat))
             );
 
-            //auto mgr = EffectsManager::Instance();
-            //mgr->Use(model::EFFECT_USER);
-
-            auto mr = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
-            std::static_pointer_cast<rg::SkinRenderer>(mr)->Draw(mesh->geometry, materials[mesh->material], ctx);
+            auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
+            std::static_pointer_cast<rg::SkinRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx);
 		}
 	}
 }
@@ -407,10 +365,10 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 	rc.SetCull(ur::CULL_DISABLE);
 
-	auto mgr = EffectsManager::Instance();
-	auto effect_type = model::EFFECT_BSP;
-	auto effect = mgr->Use(effect_type);
-	auto mode = effect->GetDrawMode();
+    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::BSP);
+    std::static_pointer_cast<rg::BSPRenderer>(rd)->Draw();
+
+	auto mode = rd->GetShader()->GetDrawMode();
 
 	num_vbo_indices = 0;
 
