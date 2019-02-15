@@ -34,6 +34,8 @@ private:
 
     std::vector<std::pair<boost::signals2::connection, boost::signals2::connection>> m_notifies;
 
+    RTTR_ENABLE(pt0::Shader)
+
 }; // Shader
 
 }
