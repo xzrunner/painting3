@@ -22,17 +22,25 @@ public:
 	Shader(ur::RenderContext* rc, const pt0::Shader::Params& params);
 	virtual ~Shader();
 
-    void AddNotify(WindowContext& wc);
+    void AddNotify(std::shared_ptr<WindowContext>& wc);
+    void ClearNotifies();
 
 private:
 	void UpdateViewMat(const sm::mat4& view_mat);
 	void UpdateProjMat(const sm::mat4& proj_mat);
 
 private:
+    struct Notify
+    {
+        boost::signals2::connection view;
+        boost::signals2::connection proj;
+    };
+
+private:
 	sm::mat4 m_view_mat;
 	sm::mat4 m_proj_mat;
 
-    std::vector<std::pair<boost::signals2::connection, boost::signals2::connection>> m_notifies;
+    std::map<std::shared_ptr<WindowContext>, Notify> m_notifies;
 
     RTTR_ENABLE(pt0::Shader)
 
