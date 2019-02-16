@@ -246,8 +246,9 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
             pt0::RenderVariant(anim->GetBlend())
         );
 
-        materials[mesh->material].Bind(*mrd->GetShader());
-        ctx.Bind(*mrd->GetShader());
+        auto& shader = mrd->GetAllShaders()[0];
+        materials[mesh->material].Bind(*shader);
+        ctx.Bind(*shader);
 
 		auto& geo = mesh->geometry;
 //		assert(frame >= 0 && frame < geo.sub_geometries.size());
@@ -277,7 +278,7 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 
 			auto& sub = geo.sub_geometries[0];
 			rc.BindBuffer(ur::VERTEXBUFFER, geo.vbo);
-			rc.DrawArrays(mrd->GetShader()->GetDrawMode(), sub.offset, sub.count);
+			rc.DrawArrays(mrd->GetAllShaders()[0]->GetDrawMode(), sub.offset, sub.count);
 		}
 	}
 }
@@ -302,14 +303,6 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 		assert(node.children.empty());
 		for (auto& mesh_idx : node.meshes)
 		{
-			auto& mesh = model.meshes[mesh_idx];
-
-			auto& material = model.materials[mesh->material];
-			if (material->diffuse_tex != -1) {
-				int tex_id = model.textures[material->diffuse_tex].second->TexID();
-				ur::Blackboard::Instance()->GetRenderContext().BindTexture(tex_id, 0);
-			}
-
 			auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
 			if (!bone_trans.empty()) {
                 const_cast<pt0::RenderContext&>(ctx).AddVar(
@@ -335,7 +328,8 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
             );
 
             auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
-            std::static_pointer_cast<rg::SkinRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx);
+            auto& mesh = model.meshes[mesh_idx];
+            std::static_pointer_cast<rg::SkinRenderer>(rd)->Draw(model, *mesh, materials[mesh->material], ctx);
 		}
 	}
 }
@@ -368,7 +362,7 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
     auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::BSP);
     std::static_pointer_cast<rg::BSPRenderer>(rd)->Draw();
 
-	auto mode = rd->GetShader()->GetDrawMode();
+	auto mode = rd->GetAllShaders()[0]->GetDrawMode();
 
 	num_vbo_indices = 0;
 
