@@ -56,20 +56,23 @@ RenderSystem::RenderSystem()
 {
 }
 
-void RenderSystem::DrawMaterial(const pt0::Material& material, const RenderParams& params, const pt0::RenderContext& ctx) const
+void RenderSystem::DrawMaterial(const pt0::Material& material,
+                                const RenderParams& params,
+                                const pt0::RenderContext& ctx,
+                                const std::shared_ptr<pt0::Shader>& shader) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere();
 	}
 
-    DrawMesh(*m_mat_sphere, { material }, params, ctx);
+    DrawMesh(*m_mat_sphere, { material }, params, ctx, shader);
 }
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const pt0::RenderContext& ctx)
+                            const pt0::RenderContext& ctx, const std::shared_ptr<pt0::Shader>& shader)
 {
     auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
-    std::static_pointer_cast<rg::MeshRenderer>(rd)->Draw(mesh, material, ctx);
+    std::static_pointer_cast<rg::MeshRenderer>(rd)->Draw(mesh, material, ctx, shader);
 }
 
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
@@ -197,7 +200,8 @@ void RenderSystem::CreateMaterialSphere() const
 }
 
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
-                            const RenderParams& params, const pt0::RenderContext& ctx)
+                            const RenderParams& params, const pt0::RenderContext& ctx,
+                            const std::shared_ptr<pt0::Shader>& shader)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -214,7 +218,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 			}
 		}
 
-        DrawMesh(mesh->geometry, materials[mesh->material], ctx);
+        DrawMesh(mesh->geometry, materials[mesh->material], ctx, shader);
 	}
 }
 

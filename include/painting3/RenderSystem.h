@@ -13,7 +13,7 @@
 
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
 namespace ur { class Texture3D; }
-namespace pt0 { class RenderPass; }
+namespace pt0 { class RenderPass; class Shader; }
 
 namespace pt3
 {
@@ -41,10 +41,10 @@ class RenderSystem
 {
 public:
 	void DrawMaterial(const pt0::Material& material, const RenderParams& params,
-        const pt0::RenderContext& ctx) const;
+        const pt0::RenderContext& ctx, const std::shared_ptr<pt0::Shader>& shader = nullptr) const;
 
     static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-        const pt0::RenderContext& ctx);
+        const pt0::RenderContext& ctx, const std::shared_ptr<pt0::Shader>& shader = nullptr);
 
 	static void DrawModel(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const pt0::RenderContext& ctx);
@@ -57,7 +57,7 @@ private:
 	void CreateMaterialSphere() const;
 
 	static void DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
-        const RenderParams& params, const pt0::RenderContext& ctx);
+        const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<pt0::Shader>& shader = nullptr);
 
 	static void DrawMorphAnim(const model::Model& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const pt0::RenderContext& ctx);
