@@ -307,20 +307,6 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 		assert(node.children.empty());
 		for (auto& mesh_idx : node.meshes)
 		{
-			auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
-			if (!bone_trans.empty()) {
-                const_cast<pt0::RenderContext&>(ctx).AddVar(
-                    MaterialMgr::AnimUniforms::bone_matrix.name,
-                    pt0::RenderVariant(&bone_trans[0], bone_trans.size())
-                );
-			} else {
-				sm::mat4 mat;
-                const_cast<pt0::RenderContext&>(ctx).AddVar(
-                    MaterialMgr::AnimUniforms::bone_matrix.name,
-                    pt0::RenderVariant(&mat, 1)
-                );
-			}
-
             const_cast<pt0::RenderContext&>(ctx).AddVar(
                 MaterialMgr::PosTransUniforms::model.name,
                 pt0::RenderVariant(child_mat)
@@ -331,9 +317,30 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
                 pt0::RenderVariant(sm::mat3(normal_mat))
             );
 
-            auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
             auto& mesh = model.meshes[mesh_idx];
-            std::static_pointer_cast<rg::SkinRenderer>(rd)->Draw(model, *mesh, materials[mesh->material], ctx);
+            if (mesh->geometry.vertex_type & model::VERTEX_FLAG_SKINNED)
+            {
+			    auto& bone_trans = model_inst.CalcBoneMatrices(node_idx, mesh_idx);
+			    if (!bone_trans.empty()) {
+                    const_cast<pt0::RenderContext&>(ctx).AddVar(
+                        MaterialMgr::AnimUniforms::bone_matrix.name,
+                        pt0::RenderVariant(&bone_trans[0], bone_trans.size())
+                    );
+			    } else {
+				    sm::mat4 mat;
+                    const_cast<pt0::RenderContext&>(ctx).AddVar(
+                        MaterialMgr::AnimUniforms::bone_matrix.name,
+                        pt0::RenderVariant(&mat, 1)
+                    );
+			    }
+                auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
+                std::static_pointer_cast<rg::SkinRenderer>(rd)->Draw(model, *mesh, materials[mesh->material], ctx);
+            }
+            else
+            {
+                auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
+                std::static_pointer_cast<rg::MeshRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx);
+            }
 		}
 	}
 }
