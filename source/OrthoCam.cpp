@@ -76,7 +76,7 @@ void OrthoCam::Scale(float scale, float x, float y, float width, float height)
 sm::vec2 OrthoCam::TransPosScreenToProject(int x, int y) const
 {
 	sm::vec2 proj;
-	const int vx = x, vy = m_height - y;
+	const int vx = x, vy = static_cast<int>(m_height - y);
 	proj.x = (vx - m_width * 0.5f)  * m_scale + m_position.x;
 	proj.y = (vy - m_height * 0.5f) * m_scale + m_position.y;
 	return proj;
