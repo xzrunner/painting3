@@ -25,6 +25,7 @@
 #include <rendergraph/SkinRenderer.h>
 #include <rendergraph/BSPRenderer.h>
 #include <rendergraph/MorphRenderer.h>
+#include <rendergraph/SkyboxRenderer.h>
 
 namespace
 {
@@ -148,6 +149,12 @@ void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t colo
 {
     auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SHAPE3D);
     std::static_pointer_cast<rg::Shape3Renderer>(rd)->DrawLines(num, positions, color);
+}
+
+void RenderSystem::DrawSkybox(const ur::TextureCube& tcube)
+{
+    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKYBOX);
+    std::static_pointer_cast<rg::SkyboxRenderer>(rd)->Draw(tcube);
 }
 
 //void RenderSystem::DrawPasses(const std::vector<pt0::RenderPass>& passes)

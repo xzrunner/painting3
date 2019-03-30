@@ -12,7 +12,7 @@
 #include <vector>
 
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
-namespace ur { class Texture3D; }
+namespace ur { class Texture3D; class TextureCube; }
 namespace pt0 { class RenderPass; class Shader; }
 
 namespace pt3
@@ -52,6 +52,8 @@ public:
 	static void DrawTex3D(const ur::Texture3D& t3d, const RenderParams& params);
 
     static void DrawLines3D(size_t num, const float* positions, uint32_t color);
+
+    static void DrawSkybox(const ur::TextureCube& tcube);
 
 private:
 	void CreateMaterialSphere() const;
