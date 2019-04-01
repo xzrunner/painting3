@@ -104,6 +104,9 @@
       <Filter>data\light</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\Painting3.h" />
+    <ClInclude Include="..\..\..\include\painting3\GlobalIllumination.h">
+      <Filter>data\light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\include\painting3\AABB.inl">

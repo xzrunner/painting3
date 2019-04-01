@@ -28,6 +28,7 @@
     <ClInclude Include="..\..\..\include\painting3\AABB.h" />
     <ClInclude Include="..\..\..\include\painting3\Blackboard.h" />
     <ClInclude Include="..\..\..\include\painting3\DirectionalLight.h" />
+    <ClInclude Include="..\..\..\include\painting3\GlobalIllumination.h" />
     <ClInclude Include="..\..\..\include\painting3\Light.h" />
     <ClInclude Include="..\..\..\include\painting3\MaterialMgr.h" />
     <ClInclude Include="..\..\..\include\painting3\OrthoCam.h" />
