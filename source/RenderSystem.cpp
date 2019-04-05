@@ -18,14 +18,14 @@
 #include <painting0/RenderPass.h>
 #include <painting2/RenderSystem.h>
 #include <quake/Lightmaps.h>
-#include <rendergraph/RenderMgr.h>
-#include <rendergraph/VolumeRenderer.h>
-#include <rendergraph/Shape3Renderer.h>
-#include <rendergraph/MeshRenderer.h>
-#include <rendergraph/SkinRenderer.h>
-#include <rendergraph/BSPRenderer.h>
-#include <rendergraph/MorphRenderer.h>
-#include <rendergraph/SkyboxRenderer.h>
+#include <renderpipeline/RenderMgr.h>
+#include <renderpipeline/VolumeRenderer.h>
+#include <renderpipeline/Shape3Renderer.h>
+#include <renderpipeline/MeshRenderer.h>
+#include <renderpipeline/SkinRenderer.h>
+#include <renderpipeline/BSPRenderer.h>
+#include <renderpipeline/MorphRenderer.h>
+#include <renderpipeline/SkyboxRenderer.h>
 
 namespace
 {
@@ -72,8 +72,8 @@ void RenderSystem::DrawMaterial(const pt0::Material& material,
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
                             const pt0::RenderContext& ctx, const std::shared_ptr<pt0::Shader>& shader)
 {
-    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
-    std::static_pointer_cast<rg::MeshRenderer>(rd)->Draw(mesh, material, ctx, shader);
+    auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::MESH);
+    std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh, material, ctx, shader);
 }
 
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
@@ -139,22 +139,22 @@ void RenderSystem::DrawTex3D(const ur::Texture3D& t3d, const RenderParams& param
 		texcoords[2] = sm::vec3(1, 1, slice);
 		texcoords[3] = sm::vec3(0, 1, slice);
 
-		auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::TEX3D);
-		std::static_pointer_cast<rg::VolumeRenderer>(rd)->
+		auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::TEX3D);
+		std::static_pointer_cast<rp::VolumeRenderer>(rd)->
 			DrawCube(vertices[0].xyz, texcoords[0].xyz, t3d.TexID(), 0xffffffff);
 	}
 }
 
 void RenderSystem::DrawLines3D(size_t num, const float* positions, uint32_t color)
 {
-    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SHAPE3D);
-    std::static_pointer_cast<rg::Shape3Renderer>(rd)->DrawLines(num, positions, color);
+    auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::SHAPE3D);
+    std::static_pointer_cast<rp::Shape3Renderer>(rd)->DrawLines(num, positions, color);
 }
 
 void RenderSystem::DrawSkybox(const ur::TextureCube& tcube)
 {
-    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKYBOX);
-    std::static_pointer_cast<rg::SkyboxRenderer>(rd)->Draw(tcube);
+    auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::SKYBOX);
+    std::static_pointer_cast<rp::SkyboxRenderer>(rd)->Draw(tcube);
 }
 
 //void RenderSystem::DrawPasses(const std::vector<pt0::RenderPass>& passes)
@@ -239,8 +239,8 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 	assert(frame < anim->GetNumFrames());
 	int stride = anim->GetNumVertices() * (4 * 3 * 2);
 
-    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MORPH);
-    auto mrd = std::static_pointer_cast<rg::MorphRenderer>(rd);
+    auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::MORPH);
+    auto mrd = std::static_pointer_cast<rp::MorphRenderer>(rd);
     mrd->Draw();
 
 	for (auto& mesh : model.meshes)
@@ -311,6 +311,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 	else
 	{
 		auto child_mat = g_trans[node_idx] * params.model_world;
+        child_mat.Scale(100, 100, 100);
 		assert(node.children.empty());
 		for (auto& mesh_idx : node.meshes)
 		{
@@ -340,13 +341,13 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
                         pt0::RenderVariant(&mat, 1)
                     );
 			    }
-                auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::SKIN);
-                std::static_pointer_cast<rg::SkinRenderer>(rd)->Draw(model, *mesh, materials[mesh->material], ctx);
+                auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::SKIN);
+                std::static_pointer_cast<rp::SkinRenderer>(rd)->Draw(model, *mesh, materials[mesh->material], ctx);
             }
             else
             {
-                auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::MESH);
-                std::static_pointer_cast<rg::MeshRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx);
+                auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::MESH);
+                std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx);
             }
 		}
 	}
@@ -377,8 +378,8 @@ void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& p
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 	rc.SetCull(ur::CULL_DISABLE);
 
-    auto rd = rg::RenderMgr::Instance()->SetRenderer(rg::RenderType::BSP);
-    std::static_pointer_cast<rg::BSPRenderer>(rd)->Draw();
+    auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::BSP);
+    std::static_pointer_cast<rp::BSPRenderer>(rd)->Draw();
 
 	auto mode = rd->GetAllShaders()[0]->GetDrawMode();
 
