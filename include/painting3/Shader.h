@@ -23,6 +23,7 @@ public:
 	virtual ~Shader();
 
     void AddNotify(std::shared_ptr<WindowContext>& wc);
+    void RemoveNotify(std::shared_ptr<WindowContext>& wc);
     void ClearNotifies();
 
 private:

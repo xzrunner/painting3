@@ -24,6 +24,17 @@ void Shader::AddNotify(std::shared_ptr<WindowContext>& wc)
     }
 }
 
+void Shader::RemoveNotify(std::shared_ptr<WindowContext>& wc)
+{
+    auto itr = m_notifies.find(wc);
+    if (itr != m_notifies.end())
+    {
+        itr->second.view.disconnect();
+        itr->second.proj.disconnect();
+        m_notifies.erase(wc);
+    }
+}
+
 void Shader::ClearNotifies()
 {
     for (auto& n : m_notifies) {

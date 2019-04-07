@@ -20,6 +20,7 @@ public:
 
 public:
 	WindowContext();
+    ~WindowContext();
 
 	boost::signals2::connection DoOnView(const OnView::slot_type& slot);
 	boost::signals2::connection DoOnProj(const OnProj::slot_type& slot);
