@@ -310,8 +310,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 	}
 	else
 	{
-		auto child_mat = g_trans[node_idx] * params.model_world;
-        child_mat.Scale(100, 100, 100);
+		auto child_mat = params.model_world * g_trans[node_idx];
 		assert(node.children.empty());
 		for (auto& mesh_idx : node.meshes)
 		{
