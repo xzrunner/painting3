@@ -300,7 +300,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
                                     const std::shared_ptr<ur::Shader>& shader, const pt0::UniformNames& uniforms)
 {
     std::string model_mat_name;
-    auto name = uniforms.Query(pt0::U_MODEL_MAT);
+    auto name = uniforms.Query(pt0::UniformTypes::ModelMat);
     if (!name.empty()) {
         model_mat_name = name;
     } else {

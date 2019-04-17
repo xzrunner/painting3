@@ -53,7 +53,7 @@ void Shader::UpdateViewMat(const sm::mat4& view_mat)
 
 	Use();
 
-    auto name = m_uniform_names.Query(pt0::U_VIEW_MAT);
+    auto name = m_uniform_names.Query(pt0::UniformTypes::ViewMat);
     if (!name.empty()) {
         SetMat4(name, view_mat.x);
     }
@@ -68,7 +68,7 @@ void Shader::UpdateProjMat(const sm::mat4& proj_mat)
 
 	Use();
 
-    auto name = m_uniform_names.Query(pt0::U_PROJ_MAT);
+    auto name = m_uniform_names.Query(pt0::UniformTypes::ProjMat);
     if (!name.empty()) {
         SetMat4(name, proj_mat.x);
     }
