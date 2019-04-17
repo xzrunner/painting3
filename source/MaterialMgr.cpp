@@ -28,6 +28,8 @@ MaterialMgr::Uniform MaterialMgr::PositionUniforms::normal_mat
     = { pt0::RenderVarType::MAT3, "u_normal_matrix" };
 MaterialMgr::Uniform MaterialMgr::PositionUniforms::light_pos
     = { pt0::RenderVarType::VEC3, "u_light_position" };
+MaterialMgr::Uniform MaterialMgr::PositionUniforms::cam_pos
+    = { pt0::RenderVarType::VEC3, "u_cam_pos" };
 
 // AnimUniforms
 MaterialMgr::Uniform MaterialMgr::AnimUniforms::bone_matrix

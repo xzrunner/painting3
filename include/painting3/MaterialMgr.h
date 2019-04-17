@@ -37,6 +37,7 @@ public:
     {
         static Uniform normal_mat;
         static Uniform light_pos;
+        static Uniform cam_pos;
     };
 
     struct AnimUniforms
