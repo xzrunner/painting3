@@ -60,7 +60,7 @@ RenderSystem::RenderSystem()
 void RenderSystem::DrawMaterial(const pt0::Material& material,
                                 const RenderParams& params,
                                 const pt0::RenderContext& ctx,
-                                const std::shared_ptr<pt0::Shader>& shader) const
+                                const std::shared_ptr<ur::Shader>& shader) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere();
@@ -70,14 +70,15 @@ void RenderSystem::DrawMaterial(const pt0::Material& material,
 }
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const pt0::RenderContext& ctx, const std::shared_ptr<pt0::Shader>& shader)
+                            const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::MESH);
     std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh, material, ctx, shader);
 }
 
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                             const RenderParams& params, const pt0::RenderContext& ctx)
+                             const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader,
+                             const pt0::UniformNames& uniforms)
 {
 	auto& model = model_inst.GetModel();
 	auto& ext = model->ext;
@@ -89,14 +90,14 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 			DrawMorphAnim(*model, materials, params, ctx);
 			break;
 		case model::EXT_SKELETAL:
-			DrawSkeletalNode(model_inst, materials, 0, params, ctx);
+			DrawSkeletalNode(model_inst, materials, 0, params, ctx, shader, uniforms);
 			//DrawSkeletalNodeDebug(model, 0, params.mt);
 			break;
 		case model::EXT_QUAKE_BSP:
 			DrawQuakeBSP(*model, params);
 			break;
 		case model::EXT_QUAKE_MAP:
-			DrawMesh(*model, materials, params, ctx);
+			DrawMesh(*model, materials, params, ctx, shader);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
 			break;
@@ -104,7 +105,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 	}
 	else
 	{
-		DrawMesh(*model, materials, params, ctx);
+		DrawMesh(*model, materials, params, ctx, shader);
 	}
 }
 
@@ -208,7 +209,7 @@ void RenderSystem::CreateMaterialSphere() const
 
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
                             const RenderParams& params, const pt0::RenderContext& ctx,
-                            const std::shared_ptr<pt0::Shader>& shader)
+                            const std::shared_ptr<ur::Shader>& shader)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -295,8 +296,17 @@ void RenderSystem::DrawMorphAnim(const model::Model& model, const std::vector<pt
 }
 
 void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                                    int node_idx, const RenderParams& params, const pt0::RenderContext& ctx)
+                                    int node_idx, const RenderParams& params, const pt0::RenderContext& ctx,
+                                    const std::shared_ptr<ur::Shader>& shader, const pt0::UniformNames& uniforms)
 {
+    std::string model_mat_name;
+    auto name = uniforms.Query(pt0::U_MODEL_MAT);
+    if (!name.empty()) {
+        model_mat_name = name;
+    } else {
+        model_mat_name = MaterialMgr::PosTransUniforms::model.name;
+    }
+
 	auto& model = *model_inst.GetModel();
 	auto& g_trans = model_inst.GetGlobalTrans();
 	auto& nodes = static_cast<model::SkeletalAnim*>(model.ext.get())->GetNodes();
@@ -305,7 +315,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 	{
 		assert(node.meshes.empty());
 		for (auto& child : node.children) {
-			DrawSkeletalNode(model_inst, materials, child, params, ctx);
+			DrawSkeletalNode(model_inst, materials, child, params, ctx, shader, uniforms);
 		}
 	}
 	else
@@ -315,8 +325,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 		for (auto& mesh_idx : node.meshes)
 		{
             const_cast<pt0::RenderContext&>(ctx).AddVar(
-                MaterialMgr::PosTransUniforms::model.name,
-                pt0::RenderVariant(child_mat)
+                model_mat_name, pt0::RenderVariant(child_mat)
             );
             auto normal_mat = child_mat.Inverted().Transposed();
             const_cast<pt0::RenderContext&>(ctx).AddVar(
@@ -346,7 +355,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
             else
             {
                 auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::MESH);
-                std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx);
+                std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh->geometry, materials[mesh->material], ctx, shader);
             }
 		}
 	}
