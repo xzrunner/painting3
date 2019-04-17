@@ -384,7 +384,7 @@ void RenderSystem::DrawSkeletalNode(const model::ModelInstance& model_inst, cons
 void RenderSystem::DrawQuakeBSP(const model::Model& model, const RenderParams& params)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-	rc.SetCull(ur::CULL_DISABLE);
+	rc.SetCullMode(ur::CULL_DISABLE);
 
     auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::BSP);
     std::static_pointer_cast<rp::BSPRenderer>(rd)->Draw();
