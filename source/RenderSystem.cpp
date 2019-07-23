@@ -7,7 +7,7 @@
 #include <model/ModelInstance.h>
 #include <model/ParametricEquations.h>
 #include <model/MorphTargetAnim.h>
-#include <model/QuakeMapEntity.h>
+#include <model/BrushModel.h>
 #include <tessellation/Painter.h>
 #include <unirender/Shader.h>
 #include <unirender/RenderContext.h>
@@ -97,6 +97,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 			DrawQuakeBSP(*model, params);
 			break;
 		case model::EXT_QUAKE_MAP:
+        case model::EXT_BRUSH:
 			DrawMesh(*model, materials, params, ctx, shader);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
