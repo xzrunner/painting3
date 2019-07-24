@@ -66,14 +66,14 @@ void RenderSystem::DrawMaterial(const pt0::Material& material,
 		CreateMaterialSphere();
 	}
 
-    DrawMesh(*m_mat_sphere, { material }, params, ctx, shader);
+    DrawMesh(*m_mat_sphere, { material }, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
 }
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader)
+                            const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader, bool face)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::MESH);
-    std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh, material, ctx, shader);
+    std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(mesh, material, ctx, shader, face);
 }
 
 void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
@@ -98,7 +98,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 			break;
 		case model::EXT_QUAKE_MAP:
         case model::EXT_BRUSH:
-			DrawMesh(*model, materials, params, ctx, shader);
+			DrawMesh(*model, materials, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
 			break;
@@ -106,7 +106,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 	}
 	else
 	{
-		DrawMesh(*model, materials, params, ctx, shader);
+		DrawMesh(*model, materials, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
 	}
 }
 
@@ -210,7 +210,7 @@ void RenderSystem::CreateMaterialSphere() const
 
 void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
                             const RenderParams& params, const pt0::RenderContext& ctx,
-                            const std::shared_ptr<ur::Shader>& shader)
+                            const std::shared_ptr<ur::Shader>& shader, bool face)
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
@@ -227,7 +227,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 			}
 		}
 
-        DrawMesh(mesh->geometry, materials[mesh->material], ctx, shader);
+        DrawMesh(mesh->geometry, materials[mesh->material], ctx, shader, face);
 	}
 }
 

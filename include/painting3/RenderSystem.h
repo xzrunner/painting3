@@ -45,7 +45,7 @@ public:
         const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader = nullptr) const;
 
     static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
-        const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader = nullptr);
+        const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader = nullptr, bool face = true);
 
 	static void DrawModel(const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader = nullptr,
@@ -61,7 +61,7 @@ private:
 	void CreateMaterialSphere() const;
 
 	static void DrawMesh(const model::Model& model, const std::vector<pt0::Material>& materials,
-        const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader);
+        const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader, bool face);
 
 	static void DrawMorphAnim(const model::Model& model, const std::vector<pt0::Material>& materials,
         const RenderParams& params, const pt0::RenderContext& ctx);
