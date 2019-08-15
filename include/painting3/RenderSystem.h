@@ -12,12 +12,16 @@
 #include <memory>
 #include <vector>
 
+namespace tess { class Painter; }
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
 namespace ur { class Texture3D; class TextureCube; class Shader; }
+namespace gs { class Shape3D; }
 namespace pt0 { class RenderPass; }
 
 namespace pt3
 {
+
+class Viewport;
 
 class RenderParams
 {
@@ -36,13 +40,19 @@ public:
 
 	bool user_effect = false;
 
+    tess::Painter*  painter  = nullptr;
+    const Viewport* viewport = nullptr;
+    const sm::mat4* cam_mat  = nullptr;
+
 }; // RenderParams
 
 class RenderSystem
 {
 public:
-	void DrawMaterial(const pt0::Material& material, const RenderParams& params,
+    void DrawMaterial(const pt0::Material& material, const RenderParams& params,
         const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader = nullptr) const;
+
+    static void DrawShape(const gs::Shape3D& shape, const RenderParams& rp);
 
     static void DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,
         const pt0::RenderContext& ctx, const std::shared_ptr<ur::Shader>& shader = nullptr, bool face = true);

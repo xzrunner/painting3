@@ -59,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\Painting3.cpp" />
+    <ClCompile Include="..\..\..\source\DrawShape.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\painting3\AABB.h">
@@ -106,6 +109,9 @@
     <ClInclude Include="..\..\..\include\painting3\Painting3.h" />
     <ClInclude Include="..\..\..\include\painting3\GlobalIllumination.h">
       <Filter>data\light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\DrawShape.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

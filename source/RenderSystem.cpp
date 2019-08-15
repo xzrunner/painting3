@@ -1,5 +1,6 @@
 #include "painting3/RenderSystem.h"
 #include "painting3/MaterialMgr.h"
+#include "painting3/DrawShape.h"
 
 #include <model/typedef.h>
 #include <model/BspModel.h>
@@ -67,6 +68,13 @@ void RenderSystem::DrawMaterial(const pt0::Material& material,
 	}
 
     DrawMesh(*m_mat_sphere, { material }, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
+}
+
+void RenderSystem::DrawShape(const gs::Shape3D& shape, const RenderParams& rp)
+{
+    if (rp.painter && rp.viewport && rp.cam_mat) {
+        DrawShape::Draw(*rp.painter, shape, *rp.viewport, *rp.cam_mat);
+    }
 }
 
 void RenderSystem::DrawMesh(const model::MeshGeometry& mesh, const pt0::Material& material,

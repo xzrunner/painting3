@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Blackboard.cpp" />
+    <ClCompile Include="..\..\..\source\DrawShape.cpp" />
     <ClCompile Include="..\..\..\source\MaterialMgr.cpp" />
     <ClCompile Include="..\..\..\source\OrthoCam.cpp" />
     <ClCompile Include="..\..\..\source\Painting3.cpp" />
@@ -28,6 +29,7 @@
     <ClInclude Include="..\..\..\include\painting3\AABB.h" />
     <ClInclude Include="..\..\..\include\painting3\Blackboard.h" />
     <ClInclude Include="..\..\..\include\painting3\DirectionalLight.h" />
+    <ClInclude Include="..\..\..\include\painting3\DrawShape.h" />
     <ClInclude Include="..\..\..\include\painting3\GlobalIllumination.h" />
     <ClInclude Include="..\..\..\include\painting3\Light.h" />
     <ClInclude Include="..\..\..\include\painting3\MaterialMgr.h" />
@@ -88,7 +90,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;__STDC_LIMIT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -102,7 +104,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;__STDC_LIMIT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
