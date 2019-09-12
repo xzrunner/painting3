@@ -14,7 +14,8 @@ class DrawShape
 {
 public:
 	static void Draw(tess::Painter& pt, const gs::Shape3D& shape,
-        const Viewport& vp, const sm::mat4& cam_mat);
+        const Viewport& vp, const sm::mat4& cam_mat, 
+        float radius = 10.0f, uint32_t col = 0xffffffff);
 
 }; // DrawShape
 

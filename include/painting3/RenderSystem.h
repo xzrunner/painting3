@@ -44,6 +44,10 @@ public:
     const Viewport* viewport = nullptr;
     const sm::mat4* cam_mat  = nullptr;
 
+    // shape
+    float    radius = 10.0f;
+    uint32_t color  = 0xffffffff;
+
 }; // RenderParams
 
 class RenderSystem
