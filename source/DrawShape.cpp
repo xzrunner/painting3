@@ -2,7 +2,6 @@
 #include "painting3/Viewport.h"
 
 #include <geoshape/Point3D.h>
-#include <geoshape/PointSet3D.h>
 #include <geoshape/Polyline3D.h>
 #include <tessellation/Painter.h>
 
@@ -22,14 +21,6 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
     {
         auto& p3d = static_cast<const gs::Point3D&>(shape);
         pt.AddCircleFilled(trans3d(p3d.GetPos()), radius, col);
-    }
-    else if (type == rttr::type::get<gs::PointSet3D>())
-    {
-        auto& pos_set = static_cast<const gs::PointSet3D&>(shape);
-        auto& vertices = pos_set.GetVertices();
-        for (auto& v : vertices) {
-            pt.AddCircleFilled(trans3d(v), radius, col);
-        }
     }
     else if (type == rttr::type::get<gs::Polyline3D>())
     {
