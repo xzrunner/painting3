@@ -235,7 +235,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 			}
 		}
 
-        assert(mesh->material >= 0 && mesh->material < materials.size());
+        assert(mesh->material >= 0 && mesh->material < static_cast<int>(materials.size()));
         DrawMesh(mesh->geometry, materials[mesh->material], ctx, shader, face);
 	}
 }
