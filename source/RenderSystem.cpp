@@ -73,7 +73,8 @@ void RenderSystem::DrawMaterial(const pt0::Material& material,
 void RenderSystem::DrawShape(const gs::Shape3D& shape, const RenderParams& rp)
 {
     if (rp.painter && rp.viewport && rp.cam_mat) {
-        DrawShape::Draw(*rp.painter, shape, *rp.viewport, *rp.cam_mat, rp.radius, rp.color);
+        DrawShape::Draw(*rp.painter, shape, *rp.viewport, *rp.cam_mat,
+            rp.radius, rp.color, rp.draw_ctrl_node);
     }
 }
 

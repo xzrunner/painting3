@@ -47,6 +47,7 @@ public:
     // shape
     float    radius = 10.0f;
     uint32_t color  = 0xffffffff;
+    bool     draw_ctrl_node = false;
 
 }; // RenderParams
 

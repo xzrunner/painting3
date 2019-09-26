@@ -10,7 +10,7 @@ namespace pt3
 
 void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
                      const Viewport& vp, const sm::mat4& cam_mat,
-                     float radius, uint32_t col)
+                     float radius, uint32_t col, bool draw_ctrl_node)
 {
     auto trans3d = [&](const sm::vec3& pos3)->sm::vec2 {
         return vp.TransPosProj3ToProj2(pos3, cam_mat);
@@ -27,6 +27,11 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
         auto& polyline = static_cast<const gs::Polyline3D&>(shape);
         auto& vertices = polyline.GetVertices();
         pt.AddPolyline3D(&vertices[0], vertices.size(), trans3d, col);
+        if (draw_ctrl_node) {
+            for (auto& v : vertices) {
+                pt.AddCircleFilled(trans3d(v), radius, col);
+            }
+        }
     }
 }
 
