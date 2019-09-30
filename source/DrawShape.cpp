@@ -26,10 +26,13 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
     {
         auto& polyline = static_cast<const gs::Polyline3D&>(shape);
         auto& vertices = polyline.GetVertices();
-        pt.AddPolyline3D(&vertices[0], vertices.size(), trans3d, col);
-        if (draw_ctrl_node) {
-            for (auto& v : vertices) {
-                pt.AddCircleFilled(trans3d(v), radius, col);
+        if (!vertices.empty())
+        {
+            pt.AddPolyline3D(&vertices[0], vertices.size(), trans3d, col);
+            if (draw_ctrl_node) {
+                for (auto& v : vertices) {
+                    pt.AddCircleFilled(trans3d(v), radius, col);
+                }
             }
         }
     }
