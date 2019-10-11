@@ -41,7 +41,7 @@ sm::mat4 OrthoCam::GetViewMat() const
 	// translate
 	auto trans_mat = sm::mat4::Translated(mv_pos.x / m_scale, mv_pos.y / m_scale, 0);
 
-	return scale_mat * rot_mat * trans_mat;
+	return trans_mat * rot_mat * scale_mat;
 }
 
 sm::mat4 OrthoCam::GetProjectionMat() const
