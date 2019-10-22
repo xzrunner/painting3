@@ -1,6 +1,7 @@
 #include "painting3/DrawShape.h"
 #include "painting3/Viewport.h"
 
+#include <geoshape/Box.h>
 #include <geoshape/Point3D.h>
 #include <geoshape/Polyline3D.h>
 #include <tessellation/Painter.h>
@@ -17,7 +18,12 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
     };
 
     auto type = shape.get_type();
-    if (type == rttr::type::get<gs::Point3D>())
+    if (type == rttr::type::get<gs::Box>())
+    {
+        auto& box = static_cast<const gs::Box&>(shape);
+        pt.AddCube(box.GetCube(), trans3d, col);
+    }
+    else if (type == rttr::type::get<gs::Point3D>())
     {
         auto& p3d = static_cast<const gs::Point3D&>(shape);
         pt.AddCircleFilled(trans3d(p3d.GetPos()), radius, col);
