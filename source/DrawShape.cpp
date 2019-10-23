@@ -4,6 +4,7 @@
 #include <geoshape/Box.h>
 #include <geoshape/Point3D.h>
 #include <geoshape/Polyline3D.h>
+#include <geoshape/Polygon3D.h>
 #include <tessellation/Painter.h>
 
 namespace pt3
@@ -42,6 +43,13 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
             }
         }
     }
-}
+    else if (type == rttr::type::get<gs::Polygon3D>())
+    {
+        auto& polygon = static_cast<const gs::Polygon3D&>(shape);
+        auto& vertices = polygon.GetVertices();
+        if (!vertices.empty()) {
+            pt.AddPolygonFilled3D(&vertices[0], vertices.size(), trans3d, col);
+        }
+    }}
 
 }
