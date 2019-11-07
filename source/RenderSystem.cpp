@@ -18,6 +18,7 @@
 #include <painting0/Material.h>
 #include <painting0/RenderPass.h>
 #include <painting2/RenderSystem.h>
+#include <painting3/MaterialMgr.h>
 #include <quake/Lightmaps.h>
 #include <renderpipeline/RenderMgr.h>
 #include <renderpipeline/VolumeRenderer.h>
@@ -231,13 +232,16 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 		auto& material = model.materials[mesh->material];
 		if (material->diffuse_tex != -1) {
             diffuse_tex = model.textures[material->diffuse_tex].second;
-			if (diffuse_tex) {
-				ur::Blackboard::Instance()->GetRenderContext().BindTexture(diffuse_tex->TexID(), 0);
-			}
 		}
 
         assert(mesh->material >= 0 && mesh->material < static_cast<int>(materials.size()));
-        DrawMesh(mesh->geometry, materials[mesh->material], ctx, shader, face);
+        if (diffuse_tex) {
+            auto material = materials[mesh->material];
+            material.AddVar(pt3::MaterialMgr::PhongUniforms::diffuse_tex.name, pt0::RenderVariant(diffuse_tex.get()));
+            DrawMesh(mesh->geometry, material, ctx, shader, face);
+        } else {
+            DrawMesh(mesh->geometry, materials[mesh->material], ctx, shader, face);
+        }
 	}
 }
 
