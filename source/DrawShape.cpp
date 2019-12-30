@@ -35,7 +35,8 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
         auto& vertices = polyline.GetVertices();
         if (!vertices.empty())
         {
-            pt.AddPolyline3D(&vertices[0], vertices.size(), trans3d, col);
+            pt.AddPolyline3D(&vertices[0], vertices.size(), trans3d, col,
+                tess::DEFAULT_LINE_WIDTH, polyline.GetClosed());
             if (draw_ctrl_node) {
                 for (auto& v : vertices) {
                     pt.AddCircleFilled(trans3d(v), radius, col);
