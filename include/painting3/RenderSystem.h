@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <vector>
+#include <bitset>
 
 namespace tess { class Painter; }
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
@@ -26,19 +27,23 @@ class Viewport;
 class RenderParams
 {
 public:
-	enum DrawType
-	{
-		DRAW_MESH = 0,
-		DRAW_BORDER_MESH,
-	};
+    enum MaskType
+    {
+        DrawMeshBorder = 0,
+        UserEffect,
+        DrawCtrlNode,
+
+        NotDrawShape,
+        NotDrawModel,
+        NotDrawImage,
+        NotDrawCloth,
+    };
 
 public:
 	sm::mat4 model_world;
 	sm::mat4 model_local;
 
-	DrawType type = DRAW_MESH;
-
-	bool user_effect = false;
+    std::bitset<32> mask;
 
     tess::Painter*  painter  = nullptr;
     const Viewport* viewport = nullptr;
@@ -47,7 +52,6 @@ public:
     // shape
     float    radius = 10.0f;
     uint32_t color  = 0xffffffff;
-    bool     draw_ctrl_node = false;
 
 }; // RenderParams
 

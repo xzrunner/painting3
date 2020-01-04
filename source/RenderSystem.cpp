@@ -68,14 +68,14 @@ void RenderSystem::DrawMaterial(const pt0::Material& material,
 		CreateMaterialSphere();
 	}
 
-    DrawMesh(*m_mat_sphere, { material }, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
+    DrawMesh(*m_mat_sphere, { material }, params, ctx, shader, !params.mask[RenderParams::DrawMeshBorder]);
 }
 
 void RenderSystem::DrawShape(const gs::Shape3D& shape, const RenderParams& rp)
 {
     if (rp.painter && rp.viewport && rp.cam_mat) {
         DrawShape::Draw(*rp.painter, shape, *rp.viewport, *rp.cam_mat,
-            rp.radius, rp.color, rp.draw_ctrl_node);
+            rp.radius, rp.color, rp.mask[RenderParams::DrawCtrlNode]);
     }
 }
 
@@ -108,7 +108,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 			break;
 		case model::EXT_QUAKE_MAP:
         case model::EXT_BRUSH:
-			DrawMesh(*model, materials, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
+			DrawMesh(*model, materials, params, ctx, shader, !params.mask[RenderParams::DrawMeshBorder]);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
 			break;
@@ -116,7 +116,7 @@ void RenderSystem::DrawModel(const model::ModelInstance& model_inst, const std::
 	}
 	else
 	{
-		DrawMesh(*model, materials, params, ctx, shader, params.type == RenderParams::DRAW_MESH);
+		DrawMesh(*model, materials, params, ctx, shader, !params.mask[RenderParams::DrawMeshBorder]);
 	}
 }
 
@@ -224,7 +224,7 @@ void RenderSystem::DrawMesh(const model::Model& model, const std::vector<pt0::Ma
 {
 	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 
-	auto& meshes = params.type == RenderParams::DRAW_MESH ? model.meshes : model.border_meshes;
+	auto& meshes = params.mask[RenderParams::DrawMeshBorder] ? model.border_meshes : model.meshes;
 	for (auto& mesh : meshes)
 	{
 		ur::TexturePtr diffuse_tex = nullptr;
