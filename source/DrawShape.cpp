@@ -3,6 +3,7 @@
 
 #include <geoshape/Box.h>
 #include <geoshape/Point3D.h>
+#include <geoshape/Line3D.h>
 #include <geoshape/Polyline3D.h>
 #include <geoshape/Polygon3D.h>
 #include <tessellation/Painter.h>
@@ -26,8 +27,13 @@ void DrawShape::Draw(tess::Painter& pt, const gs::Shape3D& shape,
     }
     else if (type == rttr::type::get<gs::Point3D>())
     {
-        auto& p3d = static_cast<const gs::Point3D&>(shape);
-        pt.AddCircleFilled(trans3d(p3d.GetPos()), radius, col);
+        auto& p = static_cast<const gs::Point3D&>(shape);
+        pt.AddCircleFilled(trans3d(p.GetPos()), radius, col);
+    }
+    else if (type == rttr::type::get<gs::Line3D>())
+    {
+        auto& line = static_cast<const gs::Line3D&>(shape);
+        pt.AddLine(trans3d(line.GetStart()), trans3d(line.GetEnd()), col);
     }
     else if (type == rttr::type::get<gs::Polyline3D>())
     {
