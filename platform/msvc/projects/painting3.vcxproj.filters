@@ -25,6 +25,9 @@
     <Filter Include="data\light">
       <UniqueIdentifier>{f04882d2-f33a-4dcb-99b5-357a7b568812}</UniqueIdentifier>
     </Filter>
+    <Filter Include="render\uniforms">
+      <UniqueIdentifier>{eedaa061-200b-426f-8e7d-5a7b244b6a71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Viewport.cpp">
@@ -61,6 +64,12 @@
     <ClCompile Include="..\..\..\source\Painting3.cpp" />
     <ClCompile Include="..\..\..\source\DrawShape.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\ViewMatUpdater.cpp">
+      <Filter>render\uniforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\ProjectMatUpdater.cpp">
+      <Filter>render\uniforms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\painting3\DrawShape.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\ViewMatUpdater.h">
+      <Filter>render\uniforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\painting3\ProjectMatUpdater.h">
+      <Filter>render\uniforms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

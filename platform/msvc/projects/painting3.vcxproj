@@ -17,11 +17,13 @@
     <ClCompile Include="..\..\..\source\OrthoCam.cpp" />
     <ClCompile Include="..\..\..\source\Painting3.cpp" />
     <ClCompile Include="..\..\..\source\PerspCam.cpp" />
+    <ClCompile Include="..\..\..\source\ProjectMatUpdater.cpp" />
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\RenderSystem.cpp" />
     <ClCompile Include="..\..\..\source\Shader.cpp" />
     <ClCompile Include="..\..\..\source\Texture3D.cpp" />
     <ClCompile Include="..\..\..\source\ViewFrustum.cpp" />
+    <ClCompile Include="..\..\..\source\ViewMatUpdater.cpp" />
     <ClCompile Include="..\..\..\source\Viewport.cpp" />
     <ClCompile Include="..\..\..\source\WindowContext.cpp" />
   </ItemGroup>
@@ -37,10 +39,12 @@
     <ClInclude Include="..\..\..\include\painting3\Painting3.h" />
     <ClInclude Include="..\..\..\include\painting3\PerspCam.h" />
     <ClInclude Include="..\..\..\include\painting3\PointLight.h" />
+    <ClInclude Include="..\..\..\include\painting3\ProjectMatUpdater.h" />
     <ClInclude Include="..\..\..\include\painting3\RenderSystem.h" />
     <ClInclude Include="..\..\..\include\painting3\Shader.h" />
     <ClInclude Include="..\..\..\include\painting3\Texture3D.h" />
     <ClInclude Include="..\..\..\include\painting3\ViewFrustum.h" />
+    <ClInclude Include="..\..\..\include\painting3\ViewMatUpdater.h" />
     <ClInclude Include="..\..\..\include\painting3\Viewport.h" />
     <ClInclude Include="..\..\..\include\painting3\WindowContext.h" />
   </ItemGroup>
@@ -90,7 +94,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender2\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;__STDC_LIMIT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -104,7 +108,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\memmgr\include;..\..\..\..\unirender2\include;..\..\..\..\renderpipeline\include;..\..\..\..\tessellation\include;..\..\..\..\geoshape\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\model\include;..\..\..\..\quake\include;..\..\..\..\polymesh3\include;..\..\..\..\halfedge\include;..\..\..\..\external\boost\include;..\..\..\..\external\rttr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;__STDC_LIMIT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

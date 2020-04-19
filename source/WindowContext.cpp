@@ -1,7 +1,6 @@
 #include "painting3/WindowContext.h"
 
-#include <unirender/RenderContext.h>
-#include <unirender/Blackboard.h>
+#include <unirender2/Context.h>
 
 namespace pt3
 {
@@ -54,8 +53,6 @@ void WindowContext::SetScreen(int width, int height)
 {
 	m_screen_width = width;
 	m_screen_height = height;
-
-	UpdateViewport();
 }
 
 void WindowContext::UpdateView() const
@@ -68,21 +65,20 @@ void WindowContext::UpdateProjection() const
 	m_on_proj(m_proj_mat);
 }
 
-void WindowContext::UpdateViewport() const
+void WindowContext::UpdateViewport(ur2::Context& ctx) const
 {
 	if (m_screen_width == 0 && m_screen_height == 0) {
 		return;
 	}
 
-	auto& ur_rc = ur::Blackboard::Instance()->GetRenderContext();
-	ur_rc.SetViewport(0, 0, m_screen_width, m_screen_height);
+    ctx.SetViewport(0, 0, m_screen_width, m_screen_height);
 }
 
-void WindowContext::Bind()
+void WindowContext::Bind(ur2::Context& ctx)
 {
 	UpdateView();
 	UpdateProjection();
-	UpdateViewport();
+	UpdateViewport(ctx);
 }
 
 }

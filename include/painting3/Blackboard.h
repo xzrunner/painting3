@@ -12,8 +12,8 @@ class WindowContext;
 class Blackboard
 {
 public:
-	void SetWindowContext(const std::shared_ptr<WindowContext>& wc) { m_wc = wc; }
-	const std::shared_ptr<WindowContext>& GetWindowContext() { return m_wc; }
+	//void SetWindowContext(const std::shared_ptr<WindowContext>& wc) { m_wc = wc; }
+	//const std::shared_ptr<WindowContext>& GetWindowContext() { return m_wc; }
 
 private:
 	std::shared_ptr<WindowContext> m_wc = nullptr;

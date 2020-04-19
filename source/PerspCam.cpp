@@ -40,6 +40,8 @@ PerspCam::PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& 
 
 void PerspCam::OnSize(float w, float h)
 {
+    pt0::Camera::OnSize(w, h);
+
 	SetAspect(w / h);
 }
 
@@ -216,15 +218,15 @@ sm::mat4 PerspCam::GetRotateMat() const
 	return mat;
 }
 
-void PerspCam::SetAspect(float aspect) 
-{ 
-    m_aspect = aspect; 
+void PerspCam::SetAspect(float aspect)
+{
+    m_aspect = aspect;
     UpdateProjMat();
 }
 
-void PerspCam::SetAngleOfView(float aov) 
-{ 
-    m_angle_of_view = aov; 
+void PerspCam::SetAngleOfView(float aov)
+{
+    m_angle_of_view = aov;
     UpdateProjMat();
 }
 
@@ -254,22 +256,22 @@ void PerspCam::CalcUVN(const sm::vec3& up)
 
 void PerspCam::UpdateViewMat() const
 {
-	auto& wc = Blackboard::Instance()->GetWindowContext();
-	if (!wc) {
-		return;
-	}
+	//auto& wc = Blackboard::Instance()->GetWindowContext();
+	//if (!wc) {
+	//	return;
+	//}
 
-	wc->SetView(GetViewMat());
+	//wc->SetView(GetViewMat());
 }
 
 void PerspCam::UpdateProjMat() const
 {
-    auto& wc = Blackboard::Instance()->GetWindowContext();
-    if (!wc) {
-        return;
-    }
+    //auto& wc = Blackboard::Instance()->GetWindowContext();
+    //if (!wc) {
+    //    return;
+    //}
 
-    wc->SetProjection(GetProjectionMat());
+    //wc->SetProjection(GetProjectionMat());
 }
 
 }

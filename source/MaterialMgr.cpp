@@ -21,7 +21,7 @@ MaterialMgr::Uniform MaterialMgr::PhongUniforms::specular
 MaterialMgr::Uniform MaterialMgr::PhongUniforms::shininess
     = { pt0::RenderVarType::FLOAT, "u_shininess" };
 MaterialMgr::Uniform MaterialMgr::PhongUniforms::diffuse_tex
-    = { pt0::RenderVarType::SAMPLER2D, "u_texture0" };
+    = { pt0::RenderVarType::SAMPLER, "u_texture0" };
 
 // PositionUniforms
 MaterialMgr::Uniform MaterialMgr::PositionUniforms::normal_mat

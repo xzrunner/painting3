@@ -9,6 +9,8 @@
 
 #include <boost/signals2.hpp>
 
+namespace ur2 { class Context; }
+
 namespace pt3
 {
 
@@ -31,9 +33,9 @@ public:
 
 	void UpdateView() const;
 	void UpdateProjection() const;
-	void UpdateViewport() const;
+	void UpdateViewport(ur2::Context& ctx) const;
 
-	void Bind();
+	void Bind(ur2::Context& ctx);
 
 	const sm::mat4& GetViewMat() const { return m_mv_mat; }
 	const sm::mat4& GetProjMat() const { return m_proj_mat; }

@@ -1,17 +1,15 @@
 #pragma once
 
-#include <memory>
-
-namespace ur { class TextureCube; class Texture; }
+#include <unirender2/typedef.h>
 
 namespace pt3
 {
 
 struct GlobalIllumination
 {
-    std::shared_ptr<ur::TextureCube> irradiance_map = nullptr;
-    std::shared_ptr<ur::TextureCube> prefilter_map = nullptr;
-    std::shared_ptr<ur::Texture>     brdf_lut = nullptr;
+    ur2::TexturePtr irradiance_map = nullptr;
+    ur2::TexturePtr prefilter_map  = nullptr;
+    ur2::TexturePtr brdf_lut       = nullptr;
 
 }; // GlobalIllumination
 
