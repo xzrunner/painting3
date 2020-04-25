@@ -175,7 +175,7 @@ void RenderSystem::DrawSkybox(const ur2::Device& dev, ur2::Context& ctx,
                               const ur2::Texture& cube_map)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(dev, ctx, rp::RenderType::SKYBOX);
-    std::static_pointer_cast<rp::SkyboxRenderer>(rd)->Draw(ctx, cube_map);
+    std::static_pointer_cast<rp::SkyboxRenderer>(rd)->Draw(dev, ctx, cube_map);
 }
 
 //void RenderSystem::DrawPasses(const std::vector<pt0::RenderPass>& passes)
