@@ -7,7 +7,7 @@
 //namespace pt3
 //{
 //
-//class Texture3D : public ur2::Texture
+//class Texture3D : public ur::Texture
 //{
 //public:
 //	Texture3D(ur::RenderContext* rc, uint16_t w, uint16_t h, uint16_t d, uint32_t id, int format);

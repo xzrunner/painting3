@@ -2,20 +2,20 @@
 #include "painting3/WindowContext.h"
 
 #include <SM_Matrix.h>
-#include <unirender2/Uniform.h>
-#include <unirender2/ShaderProgram.h>
+#include <unirender/Uniform.h>
+#include <unirender/ShaderProgram.h>
 
 namespace pt3
 {
 
-ViewMatUpdater::ViewMatUpdater(const ur2::ShaderProgram& shader, const std::string& name)
+ViewMatUpdater::ViewMatUpdater(const ur::ShaderProgram& shader, const std::string& name)
 {
     m_uniform = shader.QueryUniform(name);
 
     m_mat.Scale(0, 0, 0);
 }
 
-void ViewMatUpdater::Update(const ur2::Context& ctx, const ur2::DrawState& draw,
+void ViewMatUpdater::Update(const ur::Context& ctx, const ur::DrawState& draw,
                             const void* scene)
 {
     if (!m_uniform || !scene) {

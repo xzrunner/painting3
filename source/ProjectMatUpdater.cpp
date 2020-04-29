@@ -2,13 +2,13 @@
 #include "painting3/WindowContext.h"
 
 #include <SM_Matrix.h>
-#include <unirender2/Uniform.h>
-#include <unirender2/ShaderProgram.h>
+#include <unirender/Uniform.h>
+#include <unirender/ShaderProgram.h>
 
 namespace pt3
 {
 
-ProjectMatUpdater::ProjectMatUpdater(const ur2::ShaderProgram& shader,
+ProjectMatUpdater::ProjectMatUpdater(const ur::ShaderProgram& shader,
                                      const std::string& name)
 {
     m_uniform = shader.QueryUniform(name);
@@ -16,7 +16,7 @@ ProjectMatUpdater::ProjectMatUpdater(const ur2::ShaderProgram& shader,
     m_mat.Scale(0, 0, 0);
 }
 
-void ProjectMatUpdater::Update(const ur2::Context& ctx, const ur2::DrawState& draw,
+void ProjectMatUpdater::Update(const ur::Context& ctx, const ur::DrawState& draw,
                                const void* scene)
 {
     if (!m_uniform || !scene) {

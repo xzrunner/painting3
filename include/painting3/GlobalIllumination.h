@@ -1,15 +1,15 @@
 #pragma once
 
-#include <unirender2/typedef.h>
+#include <unirender/typedef.h>
 
 namespace pt3
 {
 
 struct GlobalIllumination
 {
-    ur2::TexturePtr irradiance_map = nullptr;
-    ur2::TexturePtr prefilter_map  = nullptr;
-    ur2::TexturePtr brdf_lut       = nullptr;
+    ur::TexturePtr irradiance_map = nullptr;
+    ur::TexturePtr prefilter_map  = nullptr;
+    ur::TexturePtr brdf_lut       = nullptr;
 
 }; // GlobalIllumination
 

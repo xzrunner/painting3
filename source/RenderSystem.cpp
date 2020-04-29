@@ -10,10 +10,10 @@
 #include <model/MorphTargetAnim.h>
 #include <model/BrushModel.h>
 #include <tessellation/Painter.h>
-#include <unirender2/Context.h>
-#include <unirender2/Texture.h>
-#include <unirender2/ComponentDataType.h>
-#include <unirender2/VertexBufferAttribute.h>
+#include <unirender/Context.h>
+#include <unirender/Texture.h>
+#include <unirender/ComponentDataType.h>
+#include <unirender/VertexBufferAttribute.h>
 #include <painting0/Shader.h>
 #include <painting0/Material.h>
 #include <painting0/RenderPass.h>
@@ -38,7 +38,7 @@
 //static unsigned int vbo_indices[MAX_BATCH_SIZE];
 //static unsigned int num_vbo_indices;
 //
-//void FlushBatch(ur2::Context& ctx, ur2::PrimitiveType mode)
+//void FlushBatch(ur::Context& ctx, ur::PrimitiveType mode)
 //{
 //	if (num_vbo_indices > 0)
 //	{
@@ -62,11 +62,11 @@ RenderSystem::RenderSystem()
 {
 }
 
-void RenderSystem::DrawMaterial(const ur2::Device& dev, ur2::Context& ur_ctx,
+void RenderSystem::DrawMaterial(const ur::Device& dev, ur::Context& ur_ctx,
                                 const pt0::Material& material,
                                 const RenderParams& params,
                                 const pt0::RenderContext& ctx,
-                                const std::shared_ptr<ur2::ShaderProgram>& shader) const
+                                const std::shared_ptr<ur::ShaderProgram>& shader) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere(dev);
@@ -83,15 +83,15 @@ void RenderSystem::DrawShape(const gs::Shape3D& shape, const RenderParams& rp)
     }
 }
 
-void RenderSystem::DrawMesh(const ur2::Device& dev, ur2::Context& ur_ctx, const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const pt0::RenderContext& ctx, const std::shared_ptr<ur2::ShaderProgram>& shader, bool face)
+void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const model::MeshGeometry& mesh, const pt0::Material& material,
+                            const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader, bool face)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(dev, ur_ctx, rp::RenderType::MESH);
     std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(ur_ctx, mesh, material, ctx, shader, face);
 }
 
-void RenderSystem::DrawModel(const ur2::Device& dev, ur2::Context& ur_ctx, const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                             const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur2::ShaderProgram>& shader)
+void RenderSystem::DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
+                             const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader)
 {
 	auto& model = model_inst.GetModel();
 	auto& ext = model->ext;
@@ -123,10 +123,10 @@ void RenderSystem::DrawModel(const ur2::Device& dev, ur2::Context& ur_ctx, const
 	}
 }
 
-void RenderSystem::DrawTex3D(const ur2::Device& dev, ur2::Context& ctx,
-                             const ur2::Texture& t3d, const RenderParams& params)
+void RenderSystem::DrawTex3D(const ur::Device& dev, ur::Context& ctx,
+                             const ur::Texture& t3d, const RenderParams& params)
 {
-    ur2::RenderState rs;
+    ur::RenderState rs;
 
 	float hw = static_cast<float>(t3d.GetWidth());
 	float hh = static_cast<float>(t3d.GetHeight());
@@ -163,16 +163,16 @@ void RenderSystem::DrawTex3D(const ur2::Device& dev, ur2::Context& ctx,
 	}
 }
 
-void RenderSystem::DrawLines3D(const ur2::Device& dev, ur2::Context& ctx,
+void RenderSystem::DrawLines3D(const ur::Device& dev, ur::Context& ctx,
                                size_t num, const float* positions, uint32_t color)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(dev, ctx, rp::RenderType::SHAPE3D);
-    ur2::RenderState rs;
+    ur::RenderState rs;
     std::static_pointer_cast<rp::Shape3Renderer>(rd)->DrawLines(ctx, rs, num, positions, color);
 }
 
-void RenderSystem::DrawSkybox(const ur2::Device& dev, ur2::Context& ctx,
-                              const ur2::Texture& cube_map)
+void RenderSystem::DrawSkybox(const ur::Device& dev, ur::Context& ctx,
+                              const ur::Texture& cube_map)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(dev, ctx, rp::RenderType::SKYBOX);
     std::static_pointer_cast<rp::SkyboxRenderer>(rd)->Draw(dev, ctx, cube_map);
@@ -186,7 +186,7 @@ void RenderSystem::DrawSkybox(const ur2::Device& dev, ur2::Context& ctx,
 //    }
 //}
 
-void RenderSystem::CreateMaterialSphere(const ur2::Device& dev) const
+void RenderSystem::CreateMaterialSphere(const ur::Device& dev) const
 {
 	m_mat_sphere = std::make_unique<model::Model>(&dev);
 
@@ -203,7 +203,7 @@ void RenderSystem::CreateMaterialSphere(const ur2::Device& dev) const
 
     auto va = dev.CreateVertexArray();
 
-    auto usage = ur2::BufferUsageHint::StaticDraw;
+    auto usage = ur::BufferUsageHint::StaticDraw;
 
     auto ibuf_sz = sizeof(unsigned short) * indices.size();
     auto ibuf = dev.CreateIndexBuffer(usage, ibuf_sz);
@@ -211,22 +211,22 @@ void RenderSystem::CreateMaterialSphere(const ur2::Device& dev) const
     va->SetIndexBuffer(ibuf);
 
     auto vbuf_sz = sizeof(float) * vertices.size();
-    auto vbuf = dev.CreateVertexBuffer(ur2::BufferUsageHint::StaticDraw, vbuf_sz);
+    auto vbuf = dev.CreateVertexBuffer(ur::BufferUsageHint::StaticDraw, vbuf_sz);
     vbuf->ReadFromMemory(vertices.data(), vbuf_sz, 0);
     va->SetVertexBuffer(vbuf);
 
-    std::vector<std::shared_ptr<ur2::VertexBufferAttribute>> vbuf_attrs(3);
+    std::vector<std::shared_ptr<ur::VertexBufferAttribute>> vbuf_attrs(3);
     // pos
-    vbuf_attrs[0] = std::make_shared<ur2::VertexBufferAttribute>(
-        ur2::ComponentDataType::Float, 3, 0, 32
+    vbuf_attrs[0] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 3, 0, 32
     );
     // normal
-    vbuf_attrs[1] = std::make_shared<ur2::VertexBufferAttribute>(
-        ur2::ComponentDataType::Float, 3, 12, 32
+    vbuf_attrs[1] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 3, 12, 32
     );
     // texcoord
-    vbuf_attrs[2] = std::make_shared<ur2::VertexBufferAttribute>(
-        ur2::ComponentDataType::Float, 2, 24, 32
+    vbuf_attrs[2] = std::make_shared<ur::VertexBufferAttribute>(
+        ur::ComponentDataType::Float, 2, 24, 32
     );
     va->SetVertexBufferAttrs(vbuf_attrs);
 
@@ -244,15 +244,15 @@ void RenderSystem::CreateMaterialSphere(const ur2::Device& dev) const
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
-void RenderSystem::DrawMesh(const ur2::Device& dev, ur2::Context& ur_ctx, const model::Model& model,
+void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const model::Model& model,
                             const std::vector<pt0::Material>& materials,
                             const RenderParams& params, const pt0::RenderContext& ctx,
-                            const std::shared_ptr<ur2::ShaderProgram>& shader, bool face)
+                            const std::shared_ptr<ur::ShaderProgram>& shader, bool face)
 {
 	auto& meshes = params.mask[RenderParams::DrawMeshBorder] ? model.border_meshes : model.meshes;
 	for (auto& mesh : meshes)
 	{
-		ur2::TexturePtr diffuse_tex = nullptr;
+		ur::TexturePtr diffuse_tex = nullptr;
 
 		auto& material = model.materials[mesh->material];
 		if (material->diffuse_tex != -1) {
@@ -270,7 +270,7 @@ void RenderSystem::DrawMesh(const ur2::Device& dev, ur2::Context& ur_ctx, const 
 	}
 }
 
-void RenderSystem::DrawMorphAnim(const ur2::Device& dev, ur2::Context& ur_ctx, const model::Model& model,
+void RenderSystem::DrawMorphAnim(const ur::Device& dev, ur::Context& ur_ctx, const model::Model& model,
                                  const std::vector<pt0::Material>& materials, const RenderParams& params, const pt0::RenderContext& ctx)
 {
 //	auto anim = static_cast<model::MorphTargetAnim*>(model.ext.get());
@@ -333,11 +333,11 @@ void RenderSystem::DrawMorphAnim(const ur2::Device& dev, ur2::Context& ur_ctx, c
 //	}
 }
 
-void RenderSystem::DrawSkeletalNode(const ur2::Device& dev, ur2::Context& ur_ctx, const model::ModelInstance& model_inst,
+void RenderSystem::DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, const model::ModelInstance& model_inst,
                                     const std::vector<pt0::Material>& materials, int node_idx, const RenderParams& params,
-                                    const pt0::RenderContext& ctx, const std::shared_ptr<ur2::ShaderProgram>& shader)
+                                    const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader)
 {
-    auto model_updater = shader->QueryUniformUpdater(ur2::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    auto model_updater = shader->QueryUniformUpdater(ur::GetUpdaterTypeID<pt0::ModelMatUpdater>());
 
 	auto& model = *model_inst.GetModel();
 	auto& g_trans = model_inst.GetGlobalTrans();

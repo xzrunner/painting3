@@ -1,6 +1,6 @@
 #include "painting3/WindowContext.h"
 
-#include <unirender2/Context.h>
+#include <unirender/Context.h>
 
 namespace pt3
 {
@@ -65,7 +65,7 @@ void WindowContext::UpdateProjection() const
 	m_on_proj(m_proj_mat);
 }
 
-void WindowContext::UpdateViewport(ur2::Context& ctx) const
+void WindowContext::UpdateViewport(ur::Context& ctx) const
 {
 	if (m_screen_width == 0 && m_screen_height == 0) {
 		return;
@@ -74,7 +74,7 @@ void WindowContext::UpdateViewport(ur2::Context& ctx) const
     ctx.SetViewport(0, 0, m_screen_width, m_screen_height);
 }
 
-void WindowContext::Bind(ur2::Context& ctx)
+void WindowContext::Bind(ur::Context& ctx)
 {
 	UpdateView();
 	UpdateProjection();
