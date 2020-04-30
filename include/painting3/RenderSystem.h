@@ -16,7 +16,7 @@ namespace tess { class Painter; }
 namespace model { struct Model; class ModelInstance; class QuakeMapEntity; struct MeshGeometry; }
 namespace gs { class Shape3D; }
 namespace pt0 { class RenderPass; }
-namespace ur { class Device; class Context; class ShaderProgram; }
+namespace ur { class Device; class Context; class ShaderProgram; struct DrawState; }
 
 namespace pt3
 {
@@ -57,16 +57,17 @@ public:
 class RenderSystem
 {
 public:
-    void DrawMaterial(const ur::Device& dev, ur::Context& ur_ctx, const pt0::Material& material, const RenderParams& params,
-        const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader = nullptr) const;
+    void DrawMaterial(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+        const pt0::Material& material, const RenderParams& params, const pt0::RenderContext& ctx) const;
 
     static void DrawShape(const gs::Shape3D& shape, const RenderParams& rp);
 
-    static void DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const model::MeshGeometry& mesh, const pt0::Material& material,
-        const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader = nullptr, bool face = true);
+    static void DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+        const model::MeshGeometry& mesh, const pt0::Material& material, const pt0::RenderContext& ctx, bool face = true);
 
-	static void DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
-        const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader = nullptr);
+	static void DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+        const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
+        const RenderParams& params, const pt0::RenderContext& ctx);
 
 	static void DrawTex3D(const ur::Device& dev, ur::Context& ctx,
         const ur::Texture& t3d, const RenderParams& params);
@@ -80,14 +81,16 @@ public:
 private:
 	void CreateMaterialSphere(const ur::Device& dev) const;
 
-	static void DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const model::Model& model, const std::vector<pt0::Material>& materials,
-        const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader, bool face);
+	static void DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+        const model::Model& model, const std::vector<pt0::Material>& materials, const RenderParams& params,
+        const pt0::RenderContext& ctx, bool face);
 
 	static void DrawMorphAnim(const ur::Device& dev, ur::Context& ur_ctx, const model::Model& model,
         const std::vector<pt0::Material>& materials, const RenderParams& params, const pt0::RenderContext& ctx);
 
-	static void DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
-        int node_idx, const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader);
+	static void DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+        const model::ModelInstance& model, const std::vector<pt0::Material>& materials,
+        int node_idx, const RenderParams& params, const pt0::RenderContext& ctx);
 	//static void DrawSkeletalNodeDebug(const model::ModelInstance& model, int node_idx, const RenderParams& params);
 
 //	static void DrawQuakeBSP(const model::Model& model, const RenderParams& params);

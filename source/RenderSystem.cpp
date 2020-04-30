@@ -14,6 +14,7 @@
 #include <unirender/Texture.h>
 #include <unirender/ComponentDataType.h>
 #include <unirender/VertexBufferAttribute.h>
+#include <unirender/DrawState.h>
 #include <painting0/Shader.h>
 #include <painting0/Material.h>
 #include <painting0/RenderPass.h>
@@ -62,17 +63,14 @@ RenderSystem::RenderSystem()
 {
 }
 
-void RenderSystem::DrawMaterial(const ur::Device& dev, ur::Context& ur_ctx,
-                                const pt0::Material& material,
-                                const RenderParams& params,
-                                const pt0::RenderContext& ctx,
-                                const std::shared_ptr<ur::ShaderProgram>& shader) const
+void RenderSystem::DrawMaterial(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+                                const pt0::Material& material, const RenderParams& params, const pt0::RenderContext& ctx) const
 {
 	if (!m_mat_sphere) {
 		CreateMaterialSphere(dev);
 	}
 
-    DrawMesh(dev, ur_ctx, *m_mat_sphere, { material }, params, ctx, shader, !params.mask[RenderParams::DrawMeshBorder]);
+    DrawMesh(dev, ur_ctx, ds, *m_mat_sphere, { material }, params, ctx, !params.mask[RenderParams::DrawMeshBorder]);
 }
 
 void RenderSystem::DrawShape(const gs::Shape3D& shape, const RenderParams& rp)
@@ -83,15 +81,16 @@ void RenderSystem::DrawShape(const gs::Shape3D& shape, const RenderParams& rp)
     }
 }
 
-void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const model::MeshGeometry& mesh, const pt0::Material& material,
-                            const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader, bool face)
+void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds, const model::MeshGeometry& mesh,
+                            const pt0::Material& material, const pt0::RenderContext& ctx, bool face)
 {
     auto rd = rp::RenderMgr::Instance()->SetRenderer(dev, ur_ctx, rp::RenderType::MESH);
-    std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(ur_ctx, mesh, material, ctx, shader, face);
+    std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(ur_ctx, ds, mesh, material, ctx, face);
 }
 
-void RenderSystem::DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
-                             const RenderParams& params, const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader)
+void RenderSystem::DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+                             const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
+                             const RenderParams& params, const pt0::RenderContext& ctx)
 {
 	auto& model = model_inst.GetModel();
 	auto& ext = model->ext;
@@ -103,7 +102,7 @@ void RenderSystem::DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const m
 			DrawMorphAnim(dev, ur_ctx, *model, materials, params, ctx);
 			break;
 		case model::EXT_SKELETAL:
-			DrawSkeletalNode(dev, ur_ctx, model_inst, materials, 0, params, ctx, shader);
+			DrawSkeletalNode(dev, ur_ctx, ds, model_inst, materials, 0, params, ctx);
 			//DrawSkeletalNodeDebug(model, 0, params.mt);
 			break;
 		//case model::EXT_QUAKE_BSP:
@@ -111,7 +110,7 @@ void RenderSystem::DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const m
 		//	break;
 		case model::EXT_QUAKE_MAP:
         case model::EXT_BRUSH:
-			DrawMesh(dev, ur_ctx, *model, materials, params, ctx, shader, !params.mask[RenderParams::DrawMeshBorder]);
+			DrawMesh(dev, ur_ctx, ds, *model, materials, params, ctx, !params.mask[RenderParams::DrawMeshBorder]);
 			//// debug draw, brush's border
 			//DrawHalfEdgeMesh(*static_cast<model::QuakeMapEntity*>(model->ext.get()), params);
 			break;
@@ -119,7 +118,7 @@ void RenderSystem::DrawModel(const ur::Device& dev, ur::Context& ur_ctx, const m
 	}
 	else
 	{
-		DrawMesh(dev, ur_ctx, *model, materials, params, ctx, shader, !params.mask[RenderParams::DrawMeshBorder]);
+		DrawMesh(dev, ur_ctx, ds, *model, materials, params, ctx, !params.mask[RenderParams::DrawMeshBorder]);
 	}
 }
 
@@ -244,10 +243,9 @@ void RenderSystem::CreateMaterialSphere(const ur::Device& dev) const
 	m_mat_sphere->meshes.push_back(std::move(mesh));
 }
 
-void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const model::Model& model,
-                            const std::vector<pt0::Material>& materials,
-                            const RenderParams& params, const pt0::RenderContext& ctx,
-                            const std::shared_ptr<ur::ShaderProgram>& shader, bool face)
+void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+                            const model::Model& model, const std::vector<pt0::Material>& materials,
+                            const RenderParams& params, const pt0::RenderContext& ctx, bool face)
 {
 	auto& meshes = params.mask[RenderParams::DrawMeshBorder] ? model.border_meshes : model.meshes;
 	for (auto& mesh : meshes)
@@ -263,9 +261,9 @@ void RenderSystem::DrawMesh(const ur::Device& dev, ur::Context& ur_ctx, const mo
         if (diffuse_tex) {
             auto material = materials[mesh->material];
             material.AddVar(pt3::MaterialMgr::PhongUniforms::diffuse_tex.name, pt0::RenderVariant(diffuse_tex.get()));
-            DrawMesh(dev, ur_ctx, mesh->geometry, material, ctx, shader, face);
+            DrawMesh(dev, ur_ctx, ds, mesh->geometry, material, ctx, face);
         } else {
-            DrawMesh(dev, ur_ctx, mesh->geometry, materials[mesh->material], ctx, shader, face);
+            DrawMesh(dev, ur_ctx, ds, mesh->geometry, materials[mesh->material], ctx, face);
         }
 	}
 }
@@ -333,11 +331,14 @@ void RenderSystem::DrawMorphAnim(const ur::Device& dev, ur::Context& ur_ctx, con
 //	}
 }
 
-void RenderSystem::DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, const model::ModelInstance& model_inst,
-                                    const std::vector<pt0::Material>& materials, int node_idx, const RenderParams& params,
-                                    const pt0::RenderContext& ctx, const std::shared_ptr<ur::ShaderProgram>& shader)
+void RenderSystem::DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, const ur::DrawState& ds,
+                                    const model::ModelInstance& model_inst, const std::vector<pt0::Material>& materials,
+                                    int node_idx, const RenderParams& params, const pt0::RenderContext& ctx)
 {
-    auto model_updater = shader->QueryUniformUpdater(ur::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    std::shared_ptr<ur::UniformUpdater> model_updater = nullptr;
+    if (ds.program) {
+        model_updater = ds.program->QueryUniformUpdater(ur::GetUpdaterTypeID<pt0::ModelMatUpdater>());
+    }
 
 	auto& model = *model_inst.GetModel();
 	auto& g_trans = model_inst.GetGlobalTrans();
@@ -347,7 +348,7 @@ void RenderSystem::DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, 
 	{
 		assert(node.meshes.empty());
 		for (auto& child : node.children) {
-			DrawSkeletalNode(dev, ur_ctx, model_inst, materials, child, params, ctx, shader);
+			DrawSkeletalNode(dev, ur_ctx, ds, model_inst, materials, child, params, ctx);
 		}
 	}
 	else
@@ -387,7 +388,7 @@ void RenderSystem::DrawSkeletalNode(const ur::Device& dev, ur::Context& ur_ctx, 
             else
             {
                 auto rd = rp::RenderMgr::Instance()->SetRenderer(dev, ur_ctx, rp::RenderType::MESH);
-                std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(ur_ctx, mesh->geometry, materials[mesh->material], ctx, shader);
+                std::static_pointer_cast<rp::MeshRenderer>(rd)->Draw(ur_ctx, ds, mesh->geometry, materials[mesh->material], ctx);
             }
 		}
 	}
