@@ -8,6 +8,8 @@
 namespace pt3
 {
 
+class WindowContext;
+
 class PerspCam : public pt0::Camera
 {
 public:
@@ -62,6 +64,8 @@ public:
 
 	void Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& up);
 
+    void SetWndCtx(const std::shared_ptr<WindowContext>& wc) { m_wc = wc; }
+
 private:
 	void CalcUVN(const sm::vec3& up);
 
@@ -85,6 +89,8 @@ private:
 	float m_znear, m_zfar;
 	float m_aspect;
 	float m_angle_of_view;
+
+    std::shared_ptr<WindowContext> m_wc = nullptr;
 
 }; // PerspCam
 

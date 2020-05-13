@@ -262,6 +262,10 @@ void PerspCam::UpdateViewMat() const
 	//}
 
 	//wc->SetView(GetViewMat());
+
+    if (m_wc) {
+        m_wc->SetView(GetViewMat());
+    }
 }
 
 void PerspCam::UpdateProjMat() const
@@ -272,6 +276,10 @@ void PerspCam::UpdateProjMat() const
     //}
 
     //wc->SetProjection(GetProjectionMat());
+
+    if (m_wc) {
+        m_wc->SetProjection(GetProjectionMat());
+    }
 }
 
 }
