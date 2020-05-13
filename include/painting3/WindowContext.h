@@ -7,7 +7,7 @@
 
 #include <SM_Matrix.h>
 
-#include <boost/signals2.hpp>
+//#include <boost/signals2.hpp>
 
 namespace ur { class Context; }
 
@@ -16,23 +16,23 @@ namespace pt3
 
 class WindowContext
 {
-public:
-	typedef boost::signals2::signal<void(const sm::mat4& mt)> OnView;
-	typedef boost::signals2::signal<void(const sm::mat4& mt)> OnProj;
+//public:
+//	typedef boost::signals2::signal<void(const sm::mat4& mt)> OnView;
+//	typedef boost::signals2::signal<void(const sm::mat4& mt)> OnProj;
 
 public:
 	WindowContext();
-    ~WindowContext();
+    //~WindowContext();
 
-	boost::signals2::connection DoOnView(const OnView::slot_type& slot);
-	boost::signals2::connection DoOnProj(const OnProj::slot_type& slot);
+	//boost::signals2::connection DoOnView(const OnView::slot_type& slot);
+	//boost::signals2::connection DoOnProj(const OnProj::slot_type& slot);
 
 	void SetView(const sm::mat4& mt);
 	void SetProjection(const sm::mat4& mt);
 	void SetScreen(int width, int height);
 
-	void UpdateView() const;
-	void UpdateProjection() const;
+	//void UpdateView() const;
+	//void UpdateProjection() const;
 	void UpdateViewport(ur::Context& ctx) const;
 
 	void Bind(ur::Context& ctx);
@@ -43,8 +43,8 @@ public:
 	sm::ivec2 GetScreenSize() { return sm::ivec2(m_screen_width, m_screen_height); }
 
 private:
-	OnView m_on_view;
-	OnProj m_on_proj;
+	//OnView m_on_view;
+	//OnProj m_on_proj;
 
 	sm::mat4 m_mv_mat;
 	sm::mat4 m_proj_mat;

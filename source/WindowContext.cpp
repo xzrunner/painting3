@@ -11,21 +11,21 @@ WindowContext::WindowContext()
 {
 }
 
-WindowContext::~WindowContext()
-{
-    m_on_view.disconnect_all_slots();
-    m_on_proj.disconnect_all_slots();
-}
-
-boost::signals2::connection WindowContext::DoOnView(const OnView::slot_type& slot)
-{
-	return m_on_view.connect(slot);
-}
-
-boost::signals2::connection WindowContext::DoOnProj(const OnProj::slot_type& slot)
-{
-	return m_on_proj.connect(slot);
-}
+//WindowContext::~WindowContext()
+//{
+//    m_on_view.disconnect_all_slots();
+//    m_on_proj.disconnect_all_slots();
+//}
+//
+//boost::signals2::connection WindowContext::DoOnView(const OnView::slot_type& slot)
+//{
+//	return m_on_view.connect(slot);
+//}
+//
+//boost::signals2::connection WindowContext::DoOnProj(const OnProj::slot_type& slot)
+//{
+//	return m_on_proj.connect(slot);
+//}
 
 void WindowContext::SetView(const sm::mat4& mt)
 {
@@ -35,7 +35,7 @@ void WindowContext::SetView(const sm::mat4& mt)
 
 	m_mv_mat = mt;
 
-	UpdateView();
+	//UpdateView();
 }
 
 void WindowContext::SetProjection(const sm::mat4& mt)
@@ -46,7 +46,7 @@ void WindowContext::SetProjection(const sm::mat4& mt)
 
 	m_proj_mat = mt;
 
-	UpdateProjection();
+	//UpdateProjection();
 }
 
 void WindowContext::SetScreen(int width, int height)
@@ -55,15 +55,15 @@ void WindowContext::SetScreen(int width, int height)
 	m_screen_height = height;
 }
 
-void WindowContext::UpdateView() const
-{
-	m_on_view(m_mv_mat);
-}
-
-void WindowContext::UpdateProjection() const
-{
-	m_on_proj(m_proj_mat);
-}
+//void WindowContext::UpdateView() const
+//{
+//	m_on_view(m_mv_mat);
+//}
+//
+//void WindowContext::UpdateProjection() const
+//{
+//	m_on_proj(m_proj_mat);
+//}
 
 void WindowContext::UpdateViewport(ur::Context& ctx) const
 {
@@ -76,8 +76,8 @@ void WindowContext::UpdateViewport(ur::Context& ctx) const
 
 void WindowContext::Bind(ur::Context& ctx)
 {
-	UpdateView();
-	UpdateProjection();
+	//UpdateView();
+	//UpdateProjection();
 	UpdateViewport(ctx);
 }
 
