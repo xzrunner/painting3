@@ -54,20 +54,16 @@ sm::mat4 PerspCam::GetViewMat() const
 {
 	sm::mat4 mat;
 	float* m = mat.x;
-	m[0] = m_u.x; m[4] = m_u.y; m[8] = m_u.z; m[12] = -m_pos.Dot(m_u);
-	m[1] = m_v.x; m[5] = m_v.y; m[9] = m_v.z; m[13] = -m_pos.Dot(m_v);
-	m[2] = m_n.x; m[6] = m_n.y; m[10]= m_n.z; m[14] = -m_pos.Dot(m_n);
-	m[3] = 0;     m[7] = 0;     m[11]= 0;     m[15] = 1.0;
+	m[0] =  m_u.x; m[4] =  m_u.y; m[8] =  m_u.z; m[12] = -m_pos.Dot(m_u);
+	m[1] =  m_v.x; m[5] =  m_v.y; m[9] =  m_v.z; m[13] = -m_pos.Dot(m_v);
+	m[2] = -m_n.x; m[6] = -m_n.y; m[10]= -m_n.z; m[14] =  m_pos.Dot(m_n);
+	m[3] =      0; m[7] =      0; m[11]=      0; m[15] =             1.0;
 	return mat;
 }
 
 sm::mat4 PerspCam::GetProjectionMat() const
 {
-	//return sm::mat4::Perspective(m_angle_of_view, m_aspect, m_znear, m_zfar);
-
-	float scale = tan(m_angle_of_view * 0.5f * SM_DEG_TO_RAD) * m_znear;
-	auto mat_proj = sm::mat4::Perspective(-m_aspect * scale, m_aspect * scale, -scale, scale, m_znear, m_zfar);
-	return mat_proj;
+	return sm::mat4::Perspective(m_angle_of_view, m_aspect, m_znear, m_zfar);
 }
 
 void PerspCam::Reset()
@@ -150,9 +146,8 @@ void PerspCam::Pitch(float angle)
 
 void PerspCam::SetUpDir(const sm::vec3& up)
 {
-	m_v = up;
-	m_u = m_v.Cross(m_n).Normalized();
-	m_v = m_n.Cross(m_u).Normalized();
+	m_u = m_n.Cross(up).Normalized();
+	m_v = m_u.Cross(m_n);
 
 	UpdateViewMat();
 }
@@ -249,9 +244,8 @@ void PerspCam::Reset(const sm::vec3& pos, const sm::vec3& target, const sm::vec3
 void PerspCam::CalcUVN(const sm::vec3& up)
 {
 	m_n = (m_target - m_pos).Normalized();
-	m_v = up.Normalized();
-	m_u = m_v.Cross(m_n).Normalized();
-	m_v = m_n.Cross(m_u).Normalized();
+	m_u = m_n.Cross(up).Normalized();
+	m_v = m_u.Cross(m_n);
 }
 
 void PerspCam::UpdateViewMat() const
