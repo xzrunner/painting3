@@ -57,6 +57,8 @@ public:
 	float GetAspect() const { return m_aspect; }
 	float GetAngleOfView() const { return m_angle_of_view; }
 
+	void SetNear(float znear);
+	void SetFar(float zfar);
     void SetAspect(float aspect);
     void SetAngleOfView(float aov);
 

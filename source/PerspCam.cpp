@@ -213,6 +213,18 @@ sm::mat4 PerspCam::GetRotateMat() const
 	return mat;
 }
 
+void PerspCam::SetNear(float znear)
+{
+	m_znear = znear;
+	UpdateProjMat();
+}
+
+void PerspCam::SetFar(float zfar)
+{
+	m_zfar = zfar;
+	UpdateProjMat();
+}
+
 void PerspCam::SetAspect(float aspect)
 {
     m_aspect = aspect;
