@@ -7,16 +7,16 @@
 namespace pt3
 {
 
-static const float ZNEAR  = 0.01f;
-static const float ZFAR   = 1000;
-static const float ASPECT = 45;
+static const float ZNEAR = 0.01f;
+static const float ZFAR  = 1000;
+static const float AOV   = 45;
 
 PerspCam::PerspCam()
 	: m_distance(0)
 	, m_znear(ZNEAR)
 	, m_zfar(ZFAR)
 	, m_aspect(1)
-	, m_angle_of_view(ASPECT)
+	, m_angle_of_view(AOV)
 {
 }
 
@@ -30,7 +30,7 @@ PerspCam::PerspCam(const sm::vec3& pos, const sm::vec3& target, const sm::vec3& 
 	, m_znear(ZNEAR)
 	, m_zfar(ZFAR)
 	, m_aspect(1)
-	, m_angle_of_view(ASPECT)
+	, m_angle_of_view(AOV)
 {
 	m_distance = (pos - target).Length();
 	CalcUVN(up);
