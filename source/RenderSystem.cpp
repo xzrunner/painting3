@@ -13,7 +13,7 @@
 #include <unirender/Context.h>
 #include <unirender/Texture.h>
 #include <unirender/ComponentDataType.h>
-#include <unirender/VertexBufferAttribute.h>
+#include <unirender/VertexInputAttribute.h>
 #include <unirender/DrawState.h>
 #include <painting0/Shader.h>
 #include <painting0/Material.h>
@@ -214,17 +214,17 @@ void RenderSystem::CreateMaterialSphere(const ur::Device& dev) const
     vbuf->ReadFromMemory(vertices.data(), vbuf_sz, 0);
     va->SetVertexBuffer(vbuf);
 
-    std::vector<std::shared_ptr<ur::VertexBufferAttribute>> vbuf_attrs(3);
+    std::vector<std::shared_ptr<ur::VertexInputAttribute>> vbuf_attrs(3);
     // pos
-    vbuf_attrs[0] = std::make_shared<ur::VertexBufferAttribute>(
+    vbuf_attrs[0] = std::make_shared<ur::VertexInputAttribute>(
         0, ur::ComponentDataType::Float, 3, 0, 32
     );
     // normal
-    vbuf_attrs[1] = std::make_shared<ur::VertexBufferAttribute>(
+    vbuf_attrs[1] = std::make_shared<ur::VertexInputAttribute>(
         1, ur::ComponentDataType::Float, 3, 12, 32
     );
     // texcoord
-    vbuf_attrs[2] = std::make_shared<ur::VertexBufferAttribute>(
+    vbuf_attrs[2] = std::make_shared<ur::VertexInputAttribute>(
         2, ur::ComponentDataType::Float, 2, 24, 32
     );
     va->SetVertexBufferAttrs(vbuf_attrs);
